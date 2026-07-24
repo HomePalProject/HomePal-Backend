@@ -4,24 +4,23 @@
     <meta charset="utf-8" />
     <title>دعوة من منزل HomePal</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; text-align: right; }
-        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 8px; padding: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .header { text-align: center; color: #8b5cf6; }
-        .btn { display: inline-block; padding: 12px 24px; background-color: #8b5cf6; color: #ffffff !important; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 20px; }
-        .footer { margin-top: 30px; font-size: 12px; color: #6b7280; text-align: center; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #FAF8F5; margin: 0; padding: 30px 15px; color: #2C3E35; text-align: right; }
+        .container { max-width: 520px; margin: 0 auto; background: #ffffff; border-radius: 16px; padding: 32px; box-shadow: 0 4px 20px rgba(47, 102, 82, 0.06); text-align: center; }
+        .brand { font-size: 22px; font-weight: 700; color: #2F6652; margin-bottom: 20px; }
+        h2 { color: #1C3A2F; margin: 0 0 12px 0; font-size: 20px; }
+        p { font-size: 15px; line-height: 1.5; color: #5A6B63; margin: 0 0 16px 0; }
+        .btn { display: inline-block; padding: 12px 28px; background-color: #2F6652; color: #ffffff !important; text-decoration: none; border-radius: 24px; font-weight: 600; font-size: 15px; margin: 16px 0; }
+        .footer { margin-top: 24px; font-size: 12px; color: #8A9B92; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2 class="header">دعوة للانضمام إلى منزل في HomePal</h2>
+        <div class="brand">HomePal</div>
+        <h2>دعوة للانضمام إلى منزل في HomePal</h2>
         <p>مرحباً،</p>
         <p>قام <strong>{{InviterName}}</strong> بدعوتك للانضمام إلى منزله في HomePal.</p>
-        <p style="text-align: center;">
-            <a href="{{InvitationLink}}" class="btn">قبول الدعوة</a>
-        </p>
-        <div class="footer">
-            &copy; 2026 HomePal. جميع الحقوق محفوظة.
-        </div>
+        <p><a href="{{InvitationLink}}" class="btn">قبول الدعوة</a></p>
+        <div class="footer">&copy; 2026 HomePal. جميع الحقوق محفوظة.</div>
     </div>
 </body>
 </html>
