@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="0" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- General Default Messages -->
+  <data name="Error.General" xml:space="preserve"><value>حدث خطأ ما.</value></data>
+  <data name="Success.General" xml:space="preserve"><value>تمت العملية بنجاح.</value></data>
+
+  <!-- Server Error Codes -->
+  <data name="Server.InternalError" xml:space="preserve"><value>حدث خطأ غير متوقع في الخادم.</value></data>
+
+  <!-- Generic Reusable Validation Codes -->
+  <data name="Validation.General" xml:space="preserve"><value>فشلت عملية التحقق من البيانات.</value></data>
+  <data name="Validation.Required" xml:space="preserve"><value>هذا الحقل مطلوب.</value></data>
+  <data name="Validation.Email" xml:space="preserve"><value>يرجى إدخال عنوان بريد إلكتروني صحيح.</value></data>
+  <data name="Validation.PasswordFormat" xml:space="preserve"><value>كلمة المرور يجب أن تحتوي على حرف كبير وحرف صغير ورقم ورمز خاص واحد على الأقل.</value></data>
+  <data name="Validation.Compare" xml:space="preserve"><value>الحقول غير متطابقة.</value></data>
+  <data name="Validation.InvalidValue" xml:space="preserve"><value>القيمة المدخلة غير صالحة.</value></data>
+
+  <!-- Auth Error Codes -->
+  <data name="Auth.EmailExists" xml:space="preserve"><value>يوجد حساب مسجل بالفعل بهذا البريد الإلكتروني.</value></data>
+  <data name="Auth.UsernameExists" xml:space="preserve"><value>اسم المستخدم هذا مستخدم بالفعل.</value></data>
+  <data name="Auth.RegistrationFailed" xml:space="preserve"><value>فشلت عملية التسجيل.</value></data>
+  <data name="Auth.InvalidCredentials" xml:space="preserve"><value>اسم المستخدم/البريد الإلكتروني أو كلمة المرور غير صحيحة.</value></data>
+  <data name="Auth.AccountInactive" xml:space="preserve"><value>تم تعطيل حسابك.</value></data>
+  <data name="Auth.InvalidGoogleToken" xml:space="preserve"><value>رمز جوجل غير صالح أو منتهي الصلاحية.</value></data>
+  <data name="Auth.GoogleRegistrationFailed" xml:space="preserve"><value>فشلت عملية التسجيل بواسطة جوجل.</value></data>
+  <data name="Auth.InvalidRefreshToken" xml:space="preserve"><value>رمز التحديث غير صالح.</value></data>
+  <data name="Auth.InactiveRefreshToken" xml:space="preserve"><value>رمز التحديث منتهي الصلاحية أو ملغى.</value></data>
+  <data name="Auth.UserNotFound" xml:space="preserve"><value>لم يتم العثور على المستخدم.</value></data>
+  <data name="Auth.ResetPasswordFailed" xml:space="preserve"><value>فشلت إعادة تعيين كلمة المرور.</value></data>
+  <data name="Auth.ChangePasswordFailed" xml:space="preserve"><value>فشل تغيير كلمة المرور.</value></data>
+  <data name="Auth.ConfirmEmailFailed" xml:space="preserve"><value>فشل تأكيد البريد الإلكتروني.</value></data>
+  <data name="Auth.EmailAlreadyConfirmed" xml:space="preserve"><value>عنوان البريد الإلكتروني هذا مؤكد بالفعل.</value></data>
+
+  <!-- Success Message Codes -->
+  <data name="Auth.RegisterSuccess" xml:space="preserve"><value>تم تسجيل المستخدم بنجاح. يرجى التحقق من بريدك الإلكتروني للحصول على تعليمات التأكيد.</value></data>
+  <data name="Auth.LoginSuccess" xml:space="preserve"><value>تم تسجيل الدخول بنجاح.</value></data>
+  <data name="Auth.GoogleLoginSuccess" xml:space="preserve"><value>تم تسجيل الدخول بواسطة جوجل بنجاح.</value></data>
+  <data name="Auth.RefreshTokenSuccess" xml:space="preserve"><value>تم تحديث الرمز بنجاح.</value></data>
+  <data name="Auth.LogoutSuccess" xml:space="preserve"><value>تم تسجيل الخروج بنجاح.</value></data>
+  <data name="Auth.ForgotPasswordSuccess" xml:space="preserve"><value>إذا كان البريد الإلكتروني مسجلاً، فقد تم إرسال رابط إعادة تعيين كلمة المرور.</value></data>
+  <data name="Auth.ResetPasswordSuccess" xml:space="preserve"><value>تم إعادة تعيين كلمة المرور بنجاح.</value></data>
+  <data name="Auth.ChangePasswordSuccess" xml:space="preserve"><value>تم تغيير كلمة المرور بنجاح.</value></data>
+  <data name="Auth.ConfirmEmailSuccess" xml:space="preserve"><value>تم تأكيد البريد الإلكتروني بنجاح.</value></data>
+  <data name="Auth.ResendConfirmationSuccess" xml:space="preserve"><value>تم إرسال بريد التأكيد مرة أخرى.</value></data>
+  <data name="Auth.GetCurrentUserSuccess" xml:space="preserve"><value>تم استرداد بيانات المستخدم الحالي بنجاح.</value></data>
+</root>

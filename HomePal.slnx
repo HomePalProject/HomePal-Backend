@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="HomePal.Domain/HomePal.Domain.csproj" />
+  <Project Path="HomePal.Shared/HomePal.Shared.csproj" />
+  <Project Path="HomePal.Application/HomePal.Application.csproj" />
+  <Project Path="HomePal.Persistence/HomePal.Persistence.csproj" />
+  <Project Path="HomePal.Infrastructure/HomePal.Infrastructure.csproj" />
+  <Project Path="HomePal.Api/HomePal.Api.csproj" />
+</Solution>
