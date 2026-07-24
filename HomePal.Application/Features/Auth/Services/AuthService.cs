@@ -1,0 +1,383 @@
+using HomePal.Application.Features.Auth.DTOs;
+using HomePal.Application.Common.Interfaces;
+using HomePal.Application.Features.Auth.Interfaces;
+using HomePal.Application.Features.Auth.Mappers;
+using HomePal.Application.Features.Auth.Options;
+using HomePal.Domain.Constants;
+using HomePal.Domain.Entities;
+using HomePal.Domain.Enums;
+using HomePal.Shared.Results;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+
+namespace HomePal.Application.Features.Auth.Services;
+
+public class AuthService : IAuthService
+{
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+    private readonly ITokenProvider _tokenProvider;
+    private readonly IEmailSender _emailSender;
+    private readonly IGoogleTokenValidator _googleTokenValidator;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ClientOptions _clientOptions;
+
+    public AuthService(
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
+        RoleManager<IdentityRole<Guid>> roleManager,
+        ITokenProvider tokenProvider,
+        IEmailSender emailSender,
+        IGoogleTokenValidator googleTokenValidator,
+        IUnitOfWork unitOfWork,
+        IOptions<ClientOptions> clientOptions)
+    {
+        _userManager = userManager;
+        _signInManager = signInManager;
+        _roleManager = roleManager;
+        _tokenProvider = tokenProvider;
+        _emailSender = emailSender;
+        _googleTokenValidator = googleTokenValidator;
+        _unitOfWork = unitOfWork;
+        _clientOptions = clientOptions.Value;
+    }
+
+    public async Task<Result<CurrentUserResponse>> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default)
+    {
+        var existingEmail = await _userManager.FindByEmailAsync(request.Email);
+        if (existingEmail != null)
+        {
+            return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.EmailExists, ResultStatus.Conflict);
+        }
+
+        var existingUsername = await _userManager.FindByNameAsync(request.Username);
+        if (existingUsername != null)
+        {
+            return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.UsernameExists, ResultStatus.Conflict);
+        }
+
+        var user = request.ToEntity();
+        var createResult = await _userManager.CreateAsync(user, request.Password);
+
+        if (!createResult.Succeeded)
+        {
+            var errorMessage = string.Join("; ", createResult.Errors.Select(e => e.Description));
+            return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.RegistrationFailed, ResultStatus.BadRequest);
+        }
+
+        if (!await _roleManager.RoleExistsAsync(Roles.HouseholdManager))
+        {
+            await _roleManager.CreateAsync(new IdentityRole<Guid>(Roles.HouseholdManager));
+        }
+        await _userManager.AddToRoleAsync(user, Roles.HouseholdManager);
+
+        try
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationLink = $"{_clientOptions.BaseUrl.TrimEnd('/')}/confirm-email?userId={user.Id}&token={Uri.EscapeDataString(token)}";
+            await _emailSender.SendConfirmationEmailAsync(user.Email!, user.FullName, confirmationLink, cancellationToken);
+        }
+        catch
+        {
+            // Email sending failure shouldn't abort user registration
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+        return Result<CurrentUserResponse>.Ok(user.ToCurrentUserResponse(roles), SuccessMessages.Auth.Register);
+    }
+
+    public async Task<Result<LoginResponse>> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByEmailAsync(request.EmailOrUsername)
+                   ?? await _userManager.FindByNameAsync(request.EmailOrUsername);
+
+        if (user == null)
+        {
+            return Result<LoginResponse>.Fail(ErrorMessages.Auth.InvalidCredentials, ResultStatus.Unauthorized);
+        }
+
+        if (!user.IsActive)
+        {
+            return Result<LoginResponse>.Fail(ErrorMessages.Auth.AccountInactive, ResultStatus.Forbidden);
+        }
+
+        var passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
+        if (!passwordValid)
+        {
+            return Result<LoginResponse>.Fail(ErrorMessages.Auth.InvalidCredentials, ResultStatus.Unauthorized);
+        }
+
+        user.LastLoginAt = DateTime.UtcNow;
+        await _userManager.UpdateAsync(user);
+
+        var roles = await _userManager.GetRolesAsync(user);
+        var tokenResponse = await _tokenProvider.GenerateTokensAsync(user, roles, cancellationToken);
+
+        var refreshTokenEntity = new RefreshToken
+        {
+            Id = Guid.NewGuid(),
+            Token = tokenResponse.RefreshToken,
+            UserId = user.Id,
+            CreatedAt = DateTime.UtcNow,
+            ExpiresAt = tokenResponse.RefreshTokenExpiresAt
+        };
+
+        await _unitOfWork.RefreshTokens.AddAsync(refreshTokenEntity, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        var response = new LoginResponse
+        {
+            User = user.ToCurrentUserResponse(roles),
+            Tokens = tokenResponse
+        };
+
+        return Result<LoginResponse>.Ok(response, SuccessMessages.Auth.Login);
+    }
+
+    public async Task<Result<LoginResponse>> GoogleLoginAsync(GoogleLoginRequest request, CancellationToken cancellationToken = default)
+    {
+        var payload = await _googleTokenValidator.ValidateTokenAsync(request.IdToken, cancellationToken);
+        if (payload == null)
+        {
+            return Result<LoginResponse>.Fail(ErrorMessages.Auth.InvalidGoogleToken, ResultStatus.Unauthorized);
+        }
+
+        var user = await _userManager.FindByEmailAsync(payload.Email);
+
+        if (user == null)
+        {
+            var username = payload.Email.Split('@')[0] + "_" + Guid.NewGuid().ToString("N")[..4];
+            user = new ApplicationUser
+            {
+                Id = Guid.NewGuid(),
+                FullName = string.IsNullOrWhiteSpace(payload.Name) ? payload.Email.Split('@')[0] : payload.Name,
+                UserName = username,
+                Email = payload.Email,
+                EmailConfirmed = payload.EmailVerified,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                LastLoginAt = DateTime.UtcNow,
+                Governorate = "Not Specified",
+                City = "Not Specified",
+                Gender = Gender.Male,
+                BirthDate = DateOnly.FromDateTime(DateTime.UtcNow.AddYears(-20))
+            };
+
+            var createResult = await _userManager.CreateAsync(user);
+            if (!createResult.Succeeded)
+            {
+                var errors = string.Join("; ", createResult.Errors.Select(e => e.Description));
+                return Result<LoginResponse>.Fail(ErrorMessages.Auth.GoogleRegistrationFailed, ResultStatus.BadRequest);
+            }
+
+            if (!await _roleManager.RoleExistsAsync(Roles.HouseholdManager))
+            {
+                await _roleManager.CreateAsync(new IdentityRole<Guid>(Roles.HouseholdManager));
+            }
+            await _userManager.AddToRoleAsync(user, Roles.HouseholdManager);
+
+            try
+            {
+                await _emailSender.SendWelcomeEmailAsync(user.Email!, user.FullName, cancellationToken);
+            }
+            catch
+            {
+                // Ignore email failure on registration
+            }
+        }
+        else
+        {
+            if (!user.IsActive)
+            {
+                return Result<LoginResponse>.Fail(ErrorMessages.Auth.AccountInactive, ResultStatus.Forbidden);
+            }
+
+            user.LastLoginAt = DateTime.UtcNow;
+            await _userManager.UpdateAsync(user);
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+        var tokenResponse = await _tokenProvider.GenerateTokensAsync(user, roles, cancellationToken);
+
+        var refreshTokenEntity = new RefreshToken
+        {
+            Id = Guid.NewGuid(),
+            Token = tokenResponse.RefreshToken,
+            UserId = user.Id,
+            CreatedAt = DateTime.UtcNow,
+            ExpiresAt = tokenResponse.RefreshTokenExpiresAt
+        };
+
+        await _unitOfWork.RefreshTokens.AddAsync(refreshTokenEntity, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        var loginResponse = new LoginResponse
+        {
+            User = user.ToCurrentUserResponse(roles),
+            Tokens = tokenResponse
+        };
+
+        return Result<LoginResponse>.Ok(loginResponse, SuccessMessages.Auth.GoogleLogin);
+    }
+
+    public async Task<Result<TokenResponse>> RefreshTokenAsync(RefreshTokenRequest request, CancellationToken cancellationToken = default)
+    {
+        var existingToken = await _unitOfWork.RefreshTokens.GetByTokenAsync(request.RefreshToken, cancellationToken);
+        if (existingToken == null)
+        {
+            return Result<TokenResponse>.Fail(ErrorMessages.Auth.InvalidRefreshToken, ResultStatus.Unauthorized);
+        }
+
+        if (!existingToken.IsActive)
+        {
+            return Result<TokenResponse>.Fail(ErrorMessages.Auth.InactiveRefreshToken, ResultStatus.Unauthorized);
+        }
+
+        var user = await _userManager.FindByIdAsync(existingToken.UserId.ToString());
+        if (user == null || !user.IsActive)
+        {
+            return Result<TokenResponse>.Fail(ErrorMessages.Auth.UserNotFound, ResultStatus.NotFound);
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+        var newTokens = await _tokenProvider.GenerateTokensAsync(user, roles, cancellationToken);
+
+        existingToken.RevokedAt = DateTime.UtcNow;
+        existingToken.ReplacedByToken = newTokens.RefreshToken;
+        _unitOfWork.RefreshTokens.Update(existingToken);
+
+        var newRefreshTokenEntity = new RefreshToken
+        {
+            Id = Guid.NewGuid(),
+            Token = newTokens.RefreshToken,
+            UserId = user.Id,
+            CreatedAt = DateTime.UtcNow,
+            ExpiresAt = newTokens.RefreshTokenExpiresAt
+        };
+
+        await _unitOfWork.RefreshTokens.AddAsync(newRefreshTokenEntity, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return Result<TokenResponse>.Ok(newTokens, SuccessMessages.Auth.RefreshToken);
+    }
+
+    public async Task<Result> LogoutAsync(Guid userId, string? refreshToken = null, CancellationToken cancellationToken = default)
+    {
+        if (!string.IsNullOrWhiteSpace(refreshToken))
+        {
+            var tokenEntity = await _unitOfWork.RefreshTokens.GetByTokenAsync(refreshToken, cancellationToken);
+            if (tokenEntity != null && tokenEntity.UserId == userId && tokenEntity.IsActive)
+            {
+                tokenEntity.RevokedAt = DateTime.UtcNow;
+                _unitOfWork.RefreshTokens.Update(tokenEntity);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+            }
+        }
+
+        await _signInManager.SignOutAsync();
+        return Result.Ok(SuccessMessages.Auth.Logout);
+    }
+
+    public async Task<Result> ForgotPasswordAsync(ForgotPasswordRequest request, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user == null || !user.IsActive)
+        {
+            // For security reasons, don't disclose whether email exists
+            return Result.Ok(SuccessMessages.Auth.ForgotPassword);
+        }
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var resetLink = $"{_clientOptions.BaseUrl.TrimEnd('/')}/reset-password?email={Uri.EscapeDataString(user.Email!)}&token={Uri.EscapeDataString(token)}";
+
+        await _emailSender.SendResetPasswordEmailAsync(user.Email!, user.FullName, resetLink, cancellationToken);
+        return Result.Ok(SuccessMessages.Auth.ForgotPassword);
+    }
+
+    public async Task<Result> ResetPasswordAsync(ResetPasswordRequest request, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user == null || !user.IsActive)
+        {
+            return Result.Fail(ErrorMessages.Auth.UserNotFound, ResultStatus.NotFound);
+        }
+
+        var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+        if (!result.Succeeded)
+        {
+            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+            return Result.Fail(ErrorMessages.Auth.ResetPasswordFailed, ResultStatus.BadRequest);
+        }
+
+        return Result.Ok(SuccessMessages.Auth.ResetPassword);
+    }
+
+    public async Task<Result> ChangePasswordAsync(Guid userId, ChangePasswordRequest request, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user == null || !user.IsActive)
+        {
+            return Result.Fail(ErrorMessages.Auth.UserNotFound, ResultStatus.NotFound);
+        }
+
+        var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+        if (!result.Succeeded)
+        {
+            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+            return Result.Fail(ErrorMessages.Auth.ChangePasswordFailed, ResultStatus.BadRequest);
+        }
+
+        return Result.Ok(SuccessMessages.Auth.ChangePassword);
+    }
+
+    public async Task<Result> ConfirmEmailAsync(ConfirmEmailRequest request, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+        if (user == null)
+        {
+            return Result.Fail(ErrorMessages.Auth.UserNotFound, ResultStatus.NotFound);
+        }
+
+        var result = await _userManager.ConfirmEmailAsync(user, request.Token);
+        if (!result.Succeeded)
+        {
+            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+            return Result.Fail(ErrorMessages.Auth.ConfirmEmailFailed, ResultStatus.BadRequest);
+        }
+
+        return Result.Ok(SuccessMessages.Auth.ConfirmEmail);
+    }
+
+    public async Task<Result> ResendConfirmationEmailAsync(ResendConfirmationEmailRequest request, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user == null)
+        {
+            return Result.Ok(SuccessMessages.Auth.ResendConfirmation); // Silent return for security
+        }
+
+        if (user.EmailConfirmed)
+        {
+            return Result.Fail(ErrorMessages.Auth.EmailAlreadyConfirmed, ResultStatus.Conflict);
+        }
+
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        var confirmationLink = $"{_clientOptions.BaseUrl.TrimEnd('/')}/confirm-email?userId={user.Id}&token={Uri.EscapeDataString(token)}";
+
+        await _emailSender.SendConfirmationEmailAsync(user.Email!, user.FullName, confirmationLink, cancellationToken);
+        return Result.Ok(SuccessMessages.Auth.ResendConfirmation);
+    }
+
+    public async Task<Result<CurrentUserResponse>> GetCurrentUserAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user == null)
+        {
+            return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.UserNotFound, ResultStatus.NotFound);
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+        return Result<CurrentUserResponse>.Ok(user.ToCurrentUserResponse(roles), SuccessMessages.Auth.GetCurrentUser);
+    }
+}
