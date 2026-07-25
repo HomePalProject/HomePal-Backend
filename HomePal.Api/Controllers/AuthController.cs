@@ -146,4 +146,19 @@ public class AuthController : BaseApiController
         var result = await _authService.GetCurrentUserAsync(CurrentUserId, cancellationToken);
         return HandleResult(result);
     }
+
+    /// <summary>
+    /// Update profile for logged in user
+    /// </summary>
+    [Authorize]
+    [HttpPut("profile")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _authService.UpdateProfileAsync(CurrentUserId, request, cancellationToken);
+        return HandleResult(result);
+    }
 }

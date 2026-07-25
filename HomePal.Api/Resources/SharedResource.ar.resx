@@ -81,6 +81,7 @@
   <data name="Auth.ChangePasswordFailed" xml:space="preserve"><value>فشل تغيير كلمة المرور.</value></data>
   <data name="Auth.ConfirmEmailFailed" xml:space="preserve"><value>فشل تأكيد البريد الإلكتروني.</value></data>
   <data name="Auth.EmailAlreadyConfirmed" xml:space="preserve"><value>عنوان البريد الإلكتروني هذا مؤكد بالفعل.</value></data>
+  <data name="Auth.UpdateProfileFailed" xml:space="preserve"><value>فشل تحديث الملف الشخصي.</value></data>
 
   <!-- Success Message Codes -->
   <data name="Auth.RegisterSuccess" xml:space="preserve"><value>تم تسجيل المستخدم بنجاح. يرجى التحقق من بريدك الإلكتروني للحصول على تعليمات التأكيد.</value></data>
@@ -94,4 +95,5 @@
   <data name="Auth.ConfirmEmailSuccess" xml:space="preserve"><value>تم تأكيد البريد الإلكتروني بنجاح.</value></data>
   <data name="Auth.ResendConfirmationSuccess" xml:space="preserve"><value>تم إرسال بريد التأكيد مرة أخرى.</value></data>
   <data name="Auth.GetCurrentUserSuccess" xml:space="preserve"><value>تم استرداد بيانات المستخدم الحالي بنجاح.</value></data>
+  <data name="Auth.UpdateProfileSuccess" xml:space="preserve"><value>تم تحديث الملف الشخصي بنجاح.</value></data>
 </root>

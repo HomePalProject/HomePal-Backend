@@ -380,4 +380,33 @@ public class AuthService : IAuthService
         var roles = await _userManager.GetRolesAsync(user);
         return Result<CurrentUserResponse>.Ok(user.ToCurrentUserResponse(roles), SuccessMessages.Auth.GetCurrentUser);
     }
+
+    public async Task<Result<CurrentUserResponse>> UpdateProfileAsync(Guid userId, UpdateProfileRequest request, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user == null)
+        {
+            return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.UserNotFound, ResultStatus.NotFound);
+        }
+
+        if (!user.IsActive)
+        {
+            return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.AccountInactive, ResultStatus.Forbidden);
+        }
+
+        user.FullName = request.FullName.Trim();
+        user.Gender = request.Gender;
+        user.BirthDate = request.BirthDate;
+        user.Governorate = request.Governorate.Trim();
+        user.City = request.City.Trim();
+
+        var updateResult = await _userManager.UpdateAsync(user);
+        if (!updateResult.Succeeded)
+        {
+            return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.UpdateProfileFailed, ResultStatus.BadRequest);
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+        return Result<CurrentUserResponse>.Ok(user.ToCurrentUserResponse(roles), SuccessMessages.Auth.UpdateProfile);
+    }
 }

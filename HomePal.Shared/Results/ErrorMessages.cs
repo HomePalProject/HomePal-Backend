@@ -35,5 +35,6 @@ public static class ErrorMessages
         public const string ChangePasswordFailed = "Auth.ChangePasswordFailed";
         public const string ConfirmEmailFailed = "Auth.ConfirmEmailFailed";
         public const string EmailAlreadyConfirmed = "Auth.EmailAlreadyConfirmed";
+        public const string UpdateProfileFailed = "Auth.UpdateProfileFailed";
     }
 }

@@ -17,5 +17,6 @@ public static class SuccessMessages
         public const string ConfirmEmail = "Auth.ConfirmEmailSuccess";
         public const string ResendConfirmation = "Auth.ResendConfirmationSuccess";
         public const string GetCurrentUser = "Auth.GetCurrentUserSuccess";
+        public const string UpdateProfile = "Auth.UpdateProfileSuccess";
     }
 }
