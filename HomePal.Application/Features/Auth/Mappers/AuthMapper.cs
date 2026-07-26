@@ -12,13 +12,14 @@ public static class AuthMapper
         {
             Id = Guid.NewGuid(),
             FullName = request.FullName.Trim(),
-            Gender = request.Gender,
+            Gender = request.Gender!.Value,
             UserName = request.Username.Trim(),
             Email = request.Email.Trim(),
-            BirthDate = request.BirthDate,
+            BirthDate = request.BirthDate!.Value,
             Governorate = request.Governorate.Trim(),
             City = request.City.Trim(),
             IsActive = true,
+            IsProfileComplete = true,
             CreatedAt = DateTime.UtcNow
         };
     }
@@ -36,27 +37,10 @@ public static class AuthMapper
             Governorate = user.Governorate,
             City = user.City,
             IsActive = user.IsActive,
+            IsProfileComplete = user.IsProfileComplete,
             EmailConfirmed = user.EmailConfirmed,
             CreatedAt = user.CreatedAt,
             LastLoginAt = user.LastLoginAt,
-            Roles = roles
-        };
-    }
-
-    public static UserProfileResponse ToUserProfileResponse(this ApplicationUser user, IList<string> roles)
-    {
-        return new UserProfileResponse
-        {
-            Id = user.Id,
-            FullName = user.FullName,
-            Gender = user.Gender,
-            Username = user.UserName ?? string.Empty,
-            Email = user.Email ?? string.Empty,
-            BirthDate = user.BirthDate,
-            Governorate = user.Governorate,
-            City = user.City,
-            IsActive = user.IsActive,
-            CreatedAt = user.CreatedAt,
             Roles = roles
         };
     }

@@ -12,8 +12,8 @@ public class RegisterRequest
 
     [Required(ErrorMessage = ErrorMessages.Validation.Required)]
     [EnumDataType(typeof(Gender), ErrorMessage = ErrorMessages.Validation.InvalidValue)]
-    public Gender Gender { get; set; }
-
+    public Gender? Gender { get; set; }
+ 
     [Required(ErrorMessage = ErrorMessages.Validation.Required)]
     [StringLength(50, MinimumLength = 3, ErrorMessage = ErrorMessages.Validation.InvalidValue)]
     [RegularExpression(@"^[a-zA-Z0-9._-]+$", ErrorMessage = ErrorMessages.Validation.InvalidValue)]
@@ -33,7 +33,7 @@ public class RegisterRequest
     public string ConfirmPassword { get; set; } = string.Empty;
 
     [Required(ErrorMessage = ErrorMessages.Validation.Required)]
-    public DateOnly BirthDate { get; set; }
+    public DateOnly? BirthDate { get; set; }
 
     [Required(ErrorMessage = ErrorMessages.Validation.Required)]
     [StringLength(100, ErrorMessage = ErrorMessages.Validation.InvalidValue)]

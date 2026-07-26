@@ -15,7 +15,6 @@ namespace HomePal.Application.Features.Auth.Services;
 public class AuthService : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
     private readonly ITokenProvider _tokenProvider;
     private readonly IEmailSender _emailSender;
@@ -25,7 +24,6 @@ public class AuthService : IAuthService
 
     public AuthService(
         UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager,
         RoleManager<IdentityRole<Guid>> roleManager,
         ITokenProvider tokenProvider,
         IEmailSender emailSender,
@@ -34,7 +32,6 @@ public class AuthService : IAuthService
         IOptions<ClientOptions> clientOptions)
     {
         _userManager = userManager;
-        _signInManager = signInManager;
         _roleManager = roleManager;
         _tokenProvider = tokenProvider;
         _emailSender = emailSender;
@@ -62,8 +59,8 @@ public class AuthService : IAuthService
 
         if (!createResult.Succeeded)
         {
-            var errorMessage = string.Join("; ", createResult.Errors.Select(e => e.Description));
-            return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.RegistrationFailed, ResultStatus.BadRequest);
+            var errors = createResult.Errors.Select(e => new Error(e.Description)).ToList();
+            return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.RegistrationFailed, ResultStatus.BadRequest, errors);
         }
 
         if (!await _roleManager.RoleExistsAsync(Roles.HouseholdManager))
@@ -100,6 +97,11 @@ public class AuthService : IAuthService
         if (!user.IsActive)
         {
             return Result<LoginResponse>.Fail(ErrorMessages.Auth.AccountInactive, ResultStatus.Forbidden);
+        }
+
+        if (!user.EmailConfirmed)
+        {
+            return Result<LoginResponse>.Fail(ErrorMessages.Auth.EmailNotConfirmed, ResultStatus.Forbidden);
         }
 
         var passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
@@ -156,6 +158,7 @@ public class AuthService : IAuthService
                 Email = payload.Email,
                 EmailConfirmed = payload.EmailVerified,
                 IsActive = true,
+                IsProfileComplete = false,
                 CreatedAt = DateTime.UtcNow,
                 LastLoginAt = DateTime.UtcNow,
                 Governorate = "Not Specified",
@@ -167,8 +170,8 @@ public class AuthService : IAuthService
             var createResult = await _userManager.CreateAsync(user);
             if (!createResult.Succeeded)
             {
-                var errors = string.Join("; ", createResult.Errors.Select(e => e.Description));
-                return Result<LoginResponse>.Fail(ErrorMessages.Auth.GoogleRegistrationFailed, ResultStatus.BadRequest);
+                var errors = createResult.Errors.Select(e => new Error(e.Description)).ToList();
+                return Result<LoginResponse>.Fail(ErrorMessages.Auth.GoogleRegistrationFailed, ResultStatus.BadRequest, errors);
             }
 
             if (!await _roleManager.RoleExistsAsync(Roles.HouseholdManager))
@@ -191,6 +194,11 @@ public class AuthService : IAuthService
             if (!user.IsActive)
             {
                 return Result<LoginResponse>.Fail(ErrorMessages.Auth.AccountInactive, ResultStatus.Forbidden);
+            }
+
+            if (!user.EmailConfirmed && payload.EmailVerified)
+            {
+                user.EmailConfirmed = true;
             }
 
             user.LastLoginAt = DateTime.UtcNow;
@@ -274,8 +282,12 @@ public class AuthService : IAuthService
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
             }
         }
+        else
+        {
+            await _unitOfWork.RefreshTokens.RevokeAllUserTokensAsync(userId, cancellationToken: cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
 
-        await _signInManager.SignOutAsync();
         return Result.Ok(SuccessMessages.Auth.Logout);
     }
 
@@ -306,9 +318,13 @@ public class AuthService : IAuthService
         var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
         if (!result.Succeeded)
         {
-            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
-            return Result.Fail(ErrorMessages.Auth.ResetPasswordFailed, ResultStatus.BadRequest);
+            var errors = result.Errors.Select(e => new Error(e.Description)).ToList();
+            return Result.Fail(ErrorMessages.Auth.ResetPasswordFailed, ResultStatus.BadRequest, errors);
         }
+
+        await _userManager.UpdateSecurityStampAsync(user);
+        await _unitOfWork.RefreshTokens.RevokeAllUserTokensAsync(user.Id, cancellationToken: cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Ok(SuccessMessages.Auth.ResetPassword);
     }
@@ -324,9 +340,13 @@ public class AuthService : IAuthService
         var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
         if (!result.Succeeded)
         {
-            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
-            return Result.Fail(ErrorMessages.Auth.ChangePasswordFailed, ResultStatus.BadRequest);
+            var errors = result.Errors.Select(e => new Error(e.Description)).ToList();
+            return Result.Fail(ErrorMessages.Auth.ChangePasswordFailed, ResultStatus.BadRequest, errors);
         }
+
+        await _userManager.UpdateSecurityStampAsync(user);
+        await _unitOfWork.RefreshTokens.RevokeAllUserTokensAsync(user.Id, cancellationToken: cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Ok(SuccessMessages.Auth.ChangePassword);
     }
@@ -339,11 +359,16 @@ public class AuthService : IAuthService
             return Result.Fail(ErrorMessages.Auth.UserNotFound, ResultStatus.NotFound);
         }
 
+        if (user.EmailConfirmed)
+        {
+            return Result.Fail(ErrorMessages.Auth.EmailAlreadyConfirmed, ResultStatus.Conflict);
+        }
+
         var result = await _userManager.ConfirmEmailAsync(user, request.Token);
         if (!result.Succeeded)
         {
-            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
-            return Result.Fail(ErrorMessages.Auth.ConfirmEmailFailed, ResultStatus.BadRequest);
+            var errors = result.Errors.Select(e => new Error(e.Description)).ToList();
+            return Result.Fail(ErrorMessages.Auth.ConfirmEmailFailed, ResultStatus.BadRequest, errors);
         }
 
         return Result.Ok(SuccessMessages.Auth.ConfirmEmail);
@@ -355,6 +380,11 @@ public class AuthService : IAuthService
         if (user == null)
         {
             return Result.Ok(SuccessMessages.Auth.ResendConfirmation); // Silent return for security
+        }
+
+        if (!user.IsActive)
+        {
+            return Result.Fail(ErrorMessages.Auth.AccountInactive, ResultStatus.Forbidden);
         }
 
         if (user.EmailConfirmed)
@@ -395,10 +425,11 @@ public class AuthService : IAuthService
         }
 
         user.FullName = request.FullName.Trim();
-        user.Gender = request.Gender;
-        user.BirthDate = request.BirthDate;
+        user.Gender = request.Gender!.Value;
+        user.BirthDate = request.BirthDate!.Value;
         user.Governorate = request.Governorate.Trim();
         user.City = request.City.Trim();
+        user.IsProfileComplete = true;
 
         var updateResult = await _userManager.UpdateAsync(user);
         if (!updateResult.Succeeded)

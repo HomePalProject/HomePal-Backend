@@ -1,3 +1,4 @@
+using HomePal.Api.Factories;
 using HomePal.Domain.Entities;
 using HomePal.Persistence.Context;
 using Microsoft.AspNetCore.Identity;
@@ -29,7 +30,13 @@ public static class DatabaseExtensions
             options.SignIn.RequireConfirmedEmail = false;
         })
         .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
         .AddDefaultTokenProviders();
+
+        services.Configure<DataProtectionTokenProviderOptions>(options =>
+        {
+            options.TokenLifespan = TimeSpan.FromMinutes(10);
+        });
 
         return services;
     }

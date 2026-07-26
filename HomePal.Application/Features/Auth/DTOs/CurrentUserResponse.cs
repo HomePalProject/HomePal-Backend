@@ -14,6 +14,7 @@ public class CurrentUserResponse
     public string Governorate { get; set; } = string.Empty;
     public string City { get; set; } = string.Empty;
     public bool IsActive { get; set; }
+    public bool IsProfileComplete { get; set; }
     public bool EmailConfirmed { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? LastLoginAt { get; set; }

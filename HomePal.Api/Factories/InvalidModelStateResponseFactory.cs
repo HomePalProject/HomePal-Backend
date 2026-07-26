@@ -17,7 +17,17 @@ public static class InvalidModelStateResponseFactory
 
         foreach (var state in context.ModelState.Where(x => x.Value?.Errors.Count > 0))
         {
-            var fieldName = JsonNamingPolicy.CamelCase.ConvertName(state.Key);
+            var rawKey = state.Key.TrimStart('$', '.');
+            if (rawKey.StartsWith("request.", StringComparison.OrdinalIgnoreCase))
+            {
+                rawKey = rawKey["request.".Length..];
+            }
+            if (string.Equals(rawKey, "request", StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(rawKey))
+            {
+                rawKey = "general";
+            }
+
+            var fieldName = JsonNamingPolicy.CamelCase.ConvertName(rawKey);
             var firstError = state.Value!.Errors.First();
             var errorKey = !string.IsNullOrEmpty(firstError.ErrorMessage)
                 ? firstError.ErrorMessage

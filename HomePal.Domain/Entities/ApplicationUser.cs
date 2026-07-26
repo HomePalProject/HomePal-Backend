@@ -11,6 +11,7 @@ public class ApplicationUser : IdentityUser<Guid>
     public string Governorate { get; set; } = string.Empty;
     public string City { get; set; } = string.Empty;
     public bool IsActive { get; set; } = true;
+    public bool IsProfileComplete { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? LastLoginAt { get; set; }
 

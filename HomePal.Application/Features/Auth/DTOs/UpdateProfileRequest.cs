@@ -12,10 +12,10 @@ public class UpdateProfileRequest
 
     [Required(ErrorMessage = ErrorMessages.Validation.Required)]
     [EnumDataType(typeof(Gender), ErrorMessage = ErrorMessages.Validation.InvalidValue)]
-    public Gender Gender { get; set; }
+    public Gender? Gender { get; set; }
 
     [Required(ErrorMessage = ErrorMessages.Validation.Required)]
-    public DateOnly BirthDate { get; set; }
+    public DateOnly? BirthDate { get; set; }
 
     [Required(ErrorMessage = ErrorMessages.Validation.Required)]
     [StringLength(100, ErrorMessage = ErrorMessages.Validation.InvalidValue)]

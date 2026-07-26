@@ -82,6 +82,24 @@
   <data name="Auth.ConfirmEmailFailed" xml:space="preserve"><value>فشل تأكيد البريد الإلكتروني.</value></data>
   <data name="Auth.EmailAlreadyConfirmed" xml:space="preserve"><value>عنوان البريد الإلكتروني هذا مؤكد بالفعل.</value></data>
   <data name="Auth.UpdateProfileFailed" xml:space="preserve"><value>فشل تحديث الملف الشخصي.</value></data>
+  <data name="Auth.EmailNotConfirmed" xml:space="preserve"><value>بريدك الإلكتروني غير مؤكد. يرجى التحقق من صندوق الوارد للحصول على تعليمات التأكيد.</value></data>
+
+  <!-- Identity Error Codes -->
+  <data name="Identity.DuplicateEmail" xml:space="preserve"><value>البريد الإلكتروني مستخدم بالفعل.</value></data>
+  <data name="Identity.DuplicateUserName" xml:space="preserve"><value>اسم المستخدم مستخدم بالفعل.</value></data>
+  <data name="Identity.PasswordTooShort" xml:space="preserve"><value>يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.</value></data>
+  <data name="Identity.PasswordRequiresNonAlphanumeric" xml:space="preserve"><value>يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل.</value></data>
+  <data name="Identity.PasswordRequiresDigit" xml:space="preserve"><value>يجب أن تحتوي كلمة المرور على رقم واحد على الأقل ('0'-'9').</value></data>
+  <data name="Identity.PasswordRequiresLower" xml:space="preserve"><value>يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل ('a'-'z').</value></data>
+  <data name="Identity.PasswordRequiresUpper" xml:space="preserve"><value>يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل ('A'-'Z').</value></data>
+  <data name="Identity.PasswordRequiresUniqueChars" xml:space="preserve"><value>كلمة المرور لا تستوفي شروط الأحرف الفريدة.</value></data>
+  <data name="Identity.InvalidToken" xml:space="preserve"><value>رمز غير صالح أو منتهي الصلاحية.</value></data>
+  <data name="Identity.PasswordMismatch" xml:space="preserve"><value>كلمة المرور غير صحيحة.</value></data>
+  <data name="Identity.UserAlreadyHasPassword" xml:space="preserve"><value>المستخدم لديه كلمة مرور بالفعل.</value></data>
+  <data name="Identity.UserLockoutNotEnabled" xml:space="preserve"><value>خيار الحظر غير مفعّل لهذا المستخدم.</value></data>
+  <data name="Identity.RecoveryCodeRedemptionFailed" xml:space="preserve"><value>فشل استخدام رمز الاسترداد.</value></data>
+  <data name="Identity.ConcurrencyFailure" xml:space="preserve"><value>حدث خطأ في التزامن، تم تعديل البيانات بواسطة عملية أخرى.</value></data>
+  <data name="Identity.DefaultError" xml:space="preserve"><value>حدث خطأ غير معروف في نظام الهوية.</value></data>
 
   <!-- Success Message Codes -->
   <data name="Auth.RegisterSuccess" xml:space="preserve"><value>تم تسجيل المستخدم بنجاح. يرجى التحقق من بريدك الإلكتروني للحصول على تعليمات التأكيد.</value></data>
