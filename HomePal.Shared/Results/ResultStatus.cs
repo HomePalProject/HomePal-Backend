@@ -2,13 +2,22 @@ namespace HomePal.Shared.Results;
 
 public enum ResultStatus
 {
+    // Success (2xx)
     Success,
     Created,
+    NoContent,
+
+    // Client Errors (4xx)
     BadRequest,
+    ValidationError,
     Unauthorized,
     Forbidden,
     NotFound,
     Conflict,
-    ValidationError,
-    Failure
+    UnprocessableEntity,
+    TooManyRequests,
+
+    // Server Errors (5xx)
+    Failure,
+    ServiceUnavailable
 }

@@ -42,12 +42,12 @@ public class ExceptionMiddleware
         var localizedMessage = localizer?[ErrorMessages.Server.InternalError].Value ?? "An unexpected server error occurred.";
 
         var message = _env.IsDevelopment() ? exception.Message : localizedMessage;
-        var errorsDict = new Dictionary<string, string>
+        var errorsList = new List<Error>
         {
-            { "general", message }
+            new Error(message)
         };
 
-        var response = ApiResponse.FailureResponse(message, ResultStatus.Failure.ToString(), errorsDict);
+        var response = ApiResponse.FailureResponse(message, ResultStatus.Failure.ToString(), errorsList);
         var jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
         return context.Response.WriteAsync(JsonSerializer.Serialize(response, jsonOptions));

@@ -84,7 +84,7 @@ public class AuthService : IAuthService
         }
 
         var roles = await _userManager.GetRolesAsync(user);
-        return Result<CurrentUserResponse>.Ok(user.ToCurrentUserResponse(roles), SuccessMessages.Auth.Register);
+        return Result<CurrentUserResponse>.Ok(user.ToCurrentUserResponse(roles), SuccessMessages.Auth.Register, ResultStatus.Created);
     }
 
     public async Task<Result<LoginResponse>> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)

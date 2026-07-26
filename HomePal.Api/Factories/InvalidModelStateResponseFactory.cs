@@ -13,7 +13,7 @@ public static class InvalidModelStateResponseFactory
     {
         var localizer = context.HttpContext.RequestServices.GetRequiredService<IStringLocalizer<SharedResource>>();
 
-        var errorsDict = new Dictionary<string, string>();
+        var errorsList = new List<Error>();
 
         foreach (var state in context.ModelState.Where(x => x.Value?.Errors.Count > 0))
         {
@@ -26,11 +26,11 @@ public static class InvalidModelStateResponseFactory
             var localizedString = localizer[errorKey];
             var localizedMessage = !localizedString.ResourceNotFound ? localizedString.Value : errorKey;
 
-            errorsDict[fieldName] = localizedMessage;
+            errorsList.Add(new ValidationError(fieldName, localizedMessage));
         }
 
         var messageLocalized = localizer[ErrorMessages.Validation.General].Value;
-        var response = ApiResponse.FailureResponse(messageLocalized, ResultStatus.ValidationError.ToString(), errorsDict);
+        var response = ApiResponse.FailureResponse(messageLocalized, ResultStatus.ValidationError.ToString(), errorsList);
         return new BadRequestObjectResult(response);
     }
 }

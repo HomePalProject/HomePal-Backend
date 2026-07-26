@@ -1,3 +1,5 @@
+using HomePal.Shared.Results;
+
 namespace HomePal.Shared.Responses;
 
 public class ApiResponse<T>
@@ -6,7 +8,7 @@ public class ApiResponse<T>
     public string Status { get; set; } = string.Empty;
     public string Message { get; set; } = string.Empty;
     public T? Data { get; set; }
-    public Dictionary<string, string>? Errors { get; set; }
+    public List<Error>? Errors { get; set; }
 
     public static ApiResponse<T> SuccessResponse(T? data, string message, string status = "Success")
     {
@@ -20,7 +22,7 @@ public class ApiResponse<T>
         };
     }
 
-    public static ApiResponse<T> FailureResponse(string message, string status = "BadRequest", Dictionary<string, string>? errors = null)
+    public static ApiResponse<T> FailureResponse(string message, string status = "BadRequest", List<Error>? errors = null)
     {
         return new ApiResponse<T>
         {
@@ -28,7 +30,7 @@ public class ApiResponse<T>
             Status = status,
             Message = message,
             Data = default,
-            Errors = errors ?? new Dictionary<string, string> { { "general", message } }
+            Errors = errors ?? new List<Error> { new Error(message) }
         };
     }
 }
@@ -47,7 +49,7 @@ public class ApiResponse : ApiResponse<object>
         };
     }
 
-    public static new ApiResponse FailureResponse(string message, string status = "BadRequest", Dictionary<string, string>? errors = null)
+    public static new ApiResponse FailureResponse(string message, string status = "BadRequest", List<Error>? errors = null)
     {
         return new ApiResponse
         {
@@ -55,7 +57,7 @@ public class ApiResponse : ApiResponse<object>
             Status = status,
             Message = message,
             Data = null,
-            Errors = errors ?? new Dictionary<string, string> { { "general", message } }
+            Errors = errors ?? new List<Error> { new Error(message) }
         };
     }
 }

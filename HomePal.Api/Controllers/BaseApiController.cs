@@ -42,21 +42,31 @@ public abstract class BaseApiController : ControllerBase
             ? localizedString.Value 
             : result.Message;
 
-        Dictionary<string, string>? errors = null;
+        List<Error>? errors = null;
         if (!result.Success)
         {
-            errors = new Dictionary<string, string>();
+            errors = new List<Error>();
             if (result.Errors != null && result.Errors.Count > 0)
             {
-                foreach (var (field, key) in result.Errors)
+                foreach (var err in result.Errors)
                 {
-                    var loc = Localizer[key];
-                    errors[field] = !loc.ResourceNotFound ? loc.Value : key;
+                    if (err is ValidationError valErr)
+                    {
+                        var loc = Localizer[valErr.Message];
+                        var locMsg = !loc.ResourceNotFound ? loc.Value : valErr.Message;
+                        errors.Add(new ValidationError(valErr.Field, locMsg));
+                    }
+                    else
+                    {
+                        var loc = Localizer[err.Message];
+                        var locMsg = !loc.ResourceNotFound ? loc.Value : err.Message;
+                        errors.Add(new Error(locMsg));
+                    }
                 }
             }
             else
             {
-                errors["general"] = message;
+                errors.Add(new Error(message));
             }
         }
 
@@ -71,15 +81,20 @@ public abstract class BaseApiController : ControllerBase
 
         return result.Status switch
         {
-            ResultStatus.Success     => Ok(responsePayload),
-            ResultStatus.Created     => Ok(responsePayload),
-            ResultStatus.BadRequest  => BadRequest(responsePayload),
-            ResultStatus.Unauthorized=> Unauthorized(responsePayload),
-            ResultStatus.Forbidden   => StatusCode(StatusCodes.Status403Forbidden, responsePayload),
-            ResultStatus.NotFound    => NotFound(responsePayload),
-            ResultStatus.Conflict    => Conflict(responsePayload),
-            ResultStatus.ValidationError => BadRequest(responsePayload),
-            _                        => BadRequest(responsePayload)
+            ResultStatus.Success            => Ok(responsePayload),
+            ResultStatus.Created            => StatusCode(StatusCodes.Status201Created, responsePayload),
+            ResultStatus.NoContent          => NoContent(),
+            ResultStatus.BadRequest         => BadRequest(responsePayload),
+            ResultStatus.ValidationError    => BadRequest(responsePayload),
+            ResultStatus.Unauthorized       => Unauthorized(responsePayload),
+            ResultStatus.Forbidden          => StatusCode(StatusCodes.Status403Forbidden, responsePayload),
+            ResultStatus.NotFound           => NotFound(responsePayload),
+            ResultStatus.Conflict           => Conflict(responsePayload),
+            ResultStatus.UnprocessableEntity=> StatusCode(StatusCodes.Status422UnprocessableEntity, responsePayload),
+            ResultStatus.TooManyRequests    => StatusCode(StatusCodes.Status429TooManyRequests, responsePayload),
+            ResultStatus.Failure            => StatusCode(StatusCodes.Status500InternalServerError, responsePayload),
+            ResultStatus.ServiceUnavailable => StatusCode(StatusCodes.Status503ServiceUnavailable, responsePayload),
+            _                               => BadRequest(responsePayload)
         };
     }
 }
