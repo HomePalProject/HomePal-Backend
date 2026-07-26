@@ -1,5 +1,8 @@
+using System.Text.Json.Serialization;
+
 namespace HomePal.Shared.Results;
 
+[JsonDerivedType(typeof(ValidationError))]
 public class Error
 {
     public string Message { get; set; } = string.Empty;
