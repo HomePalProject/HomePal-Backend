@@ -5,6 +5,7 @@ using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using System.Globalization;
 
 namespace HomePal.Infrastructure.Email;
 
@@ -97,20 +98,19 @@ public class MailKitEmailSender : IEmailSender
 
     private static async Task<string> GetTemplateAsync(string templateName, CancellationToken cancellationToken)
     {
-        var basePath = AppContext.BaseDirectory;
-        var templatePath = Path.Combine(basePath, "Templates", templateName);
+        var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
 
-        if (!File.Exists(templatePath))
+        if (culture != "en")
         {
-            // Fallback path search if relative to source project during dev
-            templatePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "HomePal.Infrastructure", "Templates", templateName);
+            var localizedName = templateName.Replace(".html", $".{culture}.html");
+            var localizedPath = Path.Combine(AppContext.BaseDirectory, "Templates", localizedName);
+            if (File.Exists(localizedPath))
+            {
+                return await File.ReadAllTextAsync(localizedPath, cancellationToken);
+            }
         }
 
-        if (File.Exists(templatePath))
-        {
-            return await File.ReadAllTextAsync(templatePath, cancellationToken);
-        }
-
-        return $"<p>Hello, please use the following link: {{ConfirmationLink}} {{ResetLink}} {{InvitationLink}}</p>";
+        var defaultPath = Path.Combine(AppContext.BaseDirectory, "Templates", templateName);
+        return await File.ReadAllTextAsync(defaultPath, cancellationToken);
     }
 }
