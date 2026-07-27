@@ -21,9 +21,20 @@ public class GoogleTokenValidator : IGoogleTokenValidator
         try
         {
             var settings = new GoogleJsonWebSignature.ValidationSettings();
-            if (!string.IsNullOrWhiteSpace(_options.ClientId) && !_options.ClientId.Contains("YOUR_GOOGLE_CLIENT_ID"))
+
+            var audiences = new List<string>();
+            if (!string.IsNullOrWhiteSpace(_options.ClientId))
             {
-                settings.Audience = new[] { _options.ClientId };
+                audiences.Add(_options.ClientId);
+            }
+            if (!string.IsNullOrWhiteSpace(_options.AndroidClientId))
+            {
+                audiences.Add(_options.AndroidClientId);
+            }
+
+            if (audiences.Count > 0)
+            {
+                settings.Audience = audiences;
             }
 
             var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
