@@ -114,4 +114,36 @@
   <data name="Auth.ResendConfirmationSuccess" xml:space="preserve"><value>Confirmation email resent.</value></data>
   <data name="Auth.GetCurrentUserSuccess" xml:space="preserve"><value>Current user details retrieved successfully.</value></data>
   <data name="Auth.UpdateProfileSuccess" xml:space="preserve"><value>Profile updated successfully.</value></data>
+
+  <!-- Household Error Codes -->
+  <data name="Household.AlreadyInHousehold" xml:space="preserve"><value>You are already a member of a household. You must leave your current household before creating a new one.</value></data>
+  <data name="Household.UserAlreadyInHousehold" xml:space="preserve"><value>The specified user is already a member of a household.</value></data>
+  <data name="Household.UserNotFound" xml:space="preserve"><value>User not found.</value></data>
+  <data name="Household.HouseholdNotFound" xml:space="preserve"><value>You do not belong to any household.</value></data>
+  <data name="Household.NotManager" xml:space="preserve"><value>Only the Household Manager can perform this operation.</value></data>
+  <data name="Household.MemberNotFound" xml:space="preserve"><value>Member not found in your household.</value></data>
+  <data name="Household.InvitationNotFound" xml:space="preserve"><value>Invitation not found.</value></data>
+  <data name="Household.PendingInvitationExists" xml:space="preserve"><value>A pending invitation has already been sent to this user.</value></data>
+  <data name="Household.InvitationExpiredOrInvalid" xml:space="preserve"><value>This invitation is no longer valid or has expired.</value></data>
+  <data name="Household.InvitationNotForUser" xml:space="preserve"><value>This invitation was not sent to your account.</value></data>
+  <data name="Household.OnlyPendingCanBeCancelled" xml:space="preserve"><value>Only pending invitations can be cancelled.</value></data>
+  <data name="Household.MemberRemovalUnauthorized" xml:space="preserve"><value>Only the Household Manager can remove other members.</value></data>
+  <data name="Household.CannotRemoveOnlyManager" xml:space="preserve"><value>The household manager cannot leave or be removed while there are other members in the household. Please promote another registered member to manager first.</value></data>
+  <data name="Household.ManagerCannotRemoveSelf" xml:space="preserve"><value>Household managers cannot remove themselves from the household. To disband the household, please use the Delete Household option.</value></data>
+
+  <!-- Household Success Codes -->
+  <data name="Household.CreateSuccess" xml:space="preserve"><value>Household created successfully.</value></data>
+  <data name="Household.GetSuccess" xml:space="preserve"><value>Household details retrieved successfully.</value></data>
+  <data name="Household.UpdateSuccess" xml:space="preserve"><value>Household details updated successfully.</value></data>
+  <data name="Household.DeleteSuccess" xml:space="preserve"><value>Household deleted successfully.</value></data>
+  <data name="Household.GetMembersSuccess" xml:space="preserve"><value>Household members retrieved successfully.</value></data>
+  <data name="Household.GetMemberSuccess" xml:space="preserve"><value>Household member details retrieved successfully.</value></data>
+  <data name="Household.AddMemberSuccess" xml:space="preserve"><value>Offline member added successfully.</value></data>
+  <data name="Household.UpdateMemberSuccess" xml:space="preserve"><value>Member details updated successfully.</value></data>
+  <data name="Household.RemoveMemberSuccess" xml:space="preserve"><value>Member removed successfully.</value></data>
+  <data name="Household.SendInvitationSuccess" xml:space="preserve"><value>Invitation sent successfully.</value></data>
+  <data name="Household.GetInvitationsSuccess" xml:space="preserve"><value>Invitations retrieved successfully.</value></data>
+  <data name="Household.CancelInvitationSuccess" xml:space="preserve"><value>Invitation cancelled successfully.</value></data>
+  <data name="Household.AcceptInvitationSuccess" xml:space="preserve"><value>Invitation accepted successfully. Welcome to the household!</value></data>
+  <data name="Household.DeclineInvitationSuccess" xml:space="preserve"><value>Invitation declined.</value></data>
 </root>

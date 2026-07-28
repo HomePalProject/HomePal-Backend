@@ -38,4 +38,22 @@ public static class ErrorMessages
         public const string UpdateProfileFailed = "Auth.UpdateProfileFailed";
         public const string EmailNotConfirmed = "Auth.EmailNotConfirmed";
     }
+
+    public static class Household
+    {
+        public const string AlreadyInHousehold = "Household.AlreadyInHousehold";
+        public const string UserAlreadyInHousehold = "Household.UserAlreadyInHousehold";
+        public const string UserNotFound = "Household.UserNotFound";
+        public const string HouseholdNotFound = "Household.HouseholdNotFound";
+        public const string NotManager = "Household.NotManager";
+        public const string MemberNotFound = "Household.MemberNotFound";
+        public const string InvitationNotFound = "Household.InvitationNotFound";
+        public const string PendingInvitationExists = "Household.PendingInvitationExists";
+        public const string InvitationExpiredOrInvalid = "Household.InvitationExpiredOrInvalid";
+        public const string InvitationNotForUser = "Household.InvitationNotForUser";
+        public const string OnlyPendingCanBeCancelled = "Household.OnlyPendingCanBeCancelled";
+        public const string MemberRemovalUnauthorized = "Household.MemberRemovalUnauthorized";
+        public const string CannotRemoveOnlyManager = "Household.CannotRemoveOnlyManager";
+        public const string ManagerCannotRemoveSelf = "Household.ManagerCannotRemoveSelf";
+    }
 }

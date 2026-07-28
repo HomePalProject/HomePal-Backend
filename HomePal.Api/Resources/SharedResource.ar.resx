@@ -114,4 +114,36 @@
   <data name="Auth.ResendConfirmationSuccess" xml:space="preserve"><value>تم إرسال بريد التأكيد مرة أخرى.</value></data>
   <data name="Auth.GetCurrentUserSuccess" xml:space="preserve"><value>تم استرداد بيانات المستخدم الحالي بنجاح.</value></data>
   <data name="Auth.UpdateProfileSuccess" xml:space="preserve"><value>تم تحديث الملف الشخصي بنجاح.</value></data>
+
+  <!-- Household Error Codes -->
+  <data name="Household.AlreadyInHousehold" xml:space="preserve"><value>أنت بالفعل عضو في منزل. يجب مغادرة منزلك الحالي قبل إنشاء منزل جديد.</value></data>
+  <data name="Household.UserAlreadyInHousehold" xml:space="preserve"><value>المستخدم المحدد عضو بالفعل في منزل آخر.</value></data>
+  <data name="Household.UserNotFound" xml:space="preserve"><value>المستخدم غير موجود.</value></data>
+  <data name="Household.HouseholdNotFound" xml:space="preserve"><value>أنت لا تنتمي إلى أي منزل.</value></data>
+  <data name="Household.NotManager" xml:space="preserve"><value>فقط مدير المنزل يمكنه القيام بهذه العملية.</value></data>
+  <data name="Household.MemberNotFound" xml:space="preserve"><value>العضو غير موجود في منزلك.</value></data>
+  <data name="Household.InvitationNotFound" xml:space="preserve"><value>الدعوة غير موجودة.</value></data>
+  <data name="Household.PendingInvitationExists" xml:space="preserve"><value>تم إرسال دعوة معلقة بالفعل لهذا المستخدم.</value></data>
+  <data name="Household.InvitationExpiredOrInvalid" xml:space="preserve"><value>هذه الدعوة لم تعد صالحة أو انتهت صلاحيتها.</value></data>
+  <data name="Household.InvitationNotForUser" xml:space="preserve"><value>هذه الدعوة لم تُرسل إلى حسابك.</value></data>
+  <data name="Household.OnlyPendingCanBeCancelled" xml:space="preserve"><value>يمكن إلغاء الدعوات المعلقة فقط.</value></data>
+  <data name="Household.MemberRemovalUnauthorized" xml:space="preserve"><value>فقط مدير المنزل يمكنه إزالة الأعضاء الآخرين.</value></data>
+  <data name="Household.CannotRemoveOnlyManager" xml:space="preserve"><value>لا يمكن لمدير المنزل المغادرة أو الإزالة طالما يوجد أعضاء آخرون في المنزل. يرجى ترقية عضو مسجل آخر إلى مدير أولاً.</value></data>
+  <data name="Household.ManagerCannotRemoveSelf" xml:space="preserve"><value>لا يمكن لمدير المنزل إزالة نفسه من المنزل. لحذف المنزل بالكامل، يرجى استخدام خيار حذف المنزل.</value></data>
+
+  <!-- Household Success Codes -->
+  <data name="Household.CreateSuccess" xml:space="preserve"><value>تم إنشاء المنزل بنجاح.</value></data>
+  <data name="Household.GetSuccess" xml:space="preserve"><value>تم استرداد تفاصيل المنزل بنجاح.</value></data>
+  <data name="Household.UpdateSuccess" xml:space="preserve"><value>تم تحديث تفاصيل المنزل بنجاح.</value></data>
+  <data name="Household.DeleteSuccess" xml:space="preserve"><value>تم حذف المنزل بنجاح.</value></data>
+  <data name="Household.GetMembersSuccess" xml:space="preserve"><value>تم استرداد أعضاء المنزل بنجاح.</value></data>
+  <data name="Household.GetMemberSuccess" xml:space="preserve"><value>تم استرداد تفاصيل العضو بنجاح.</value></data>
+  <data name="Household.AddMemberSuccess" xml:space="preserve"><value>تم إضافة العضو غير المسجل بنجاح.</value></data>
+  <data name="Household.UpdateMemberSuccess" xml:space="preserve"><value>تم تحديث تفاصيل العضو بنجاح.</value></data>
+  <data name="Household.RemoveMemberSuccess" xml:space="preserve"><value>تمت إزالة العضو بنجاح.</value></data>
+  <data name="Household.SendInvitationSuccess" xml:space="preserve"><value>تم إرسال الدعوة بنجاح.</value></data>
+  <data name="Household.GetInvitationsSuccess" xml:space="preserve"><value>تم استرداد الدعوات بنجاح.</value></data>
+  <data name="Household.CancelInvitationSuccess" xml:space="preserve"><value>تم إلغاء الدعوة بنجاح.</value></data>
+  <data name="Household.AcceptInvitationSuccess" xml:space="preserve"><value>تم قبول الدعوة بنجاح. مرحبًا بك في المنزل!</value></data>
+  <data name="Household.DeclineInvitationSuccess" xml:space="preserve"><value>تم رفض الدعوة.</value></data>
 </root>

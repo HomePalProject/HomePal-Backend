@@ -45,6 +45,9 @@ public static class ApplicationServicesExtensions
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IHouseholdRepository, HouseholdRepository>();
+        services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IHouseholdMemberRepository, HouseholdMemberRepository>();
+        services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IHouseholdInvitationRepository, HouseholdInvitationRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<ITokenProvider, TokenProvider>();
@@ -61,6 +64,9 @@ public static class ApplicationServicesExtensions
         });
 
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IHouseholdService, HomePal.Application.Features.HouseholdManagement.Services.HouseholdService>();
+        services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IHouseholdMemberService, HomePal.Application.Features.HouseholdManagement.Services.HouseholdMemberService>();
+        services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IHouseholdInvitationService, HomePal.Application.Features.HouseholdManagement.Services.HouseholdInvitationService>();
 
         services.AddControllers()
             .AddDataAnnotationsLocalization(options =>
