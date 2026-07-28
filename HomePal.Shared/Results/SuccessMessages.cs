@@ -19,4 +19,22 @@ public static class SuccessMessages
         public const string GetCurrentUser = "Auth.GetCurrentUserSuccess";
         public const string UpdateProfile = "Auth.UpdateProfileSuccess";
     }
+
+    public static class Household
+    {
+        public const string Create = "Household.CreateSuccess";
+        public const string Get = "Household.GetSuccess";
+        public const string Update = "Household.UpdateSuccess";
+        public const string Delete = "Household.DeleteSuccess";
+        public const string GetMembers = "Household.GetMembersSuccess";
+        public const string GetMember = "Household.GetMemberSuccess";
+        public const string AddMember = "Household.AddMemberSuccess";
+        public const string UpdateMember = "Household.UpdateMemberSuccess";
+        public const string RemoveMember = "Household.RemoveMemberSuccess";
+        public const string SendInvitation = "Household.SendInvitationSuccess";
+        public const string GetInvitations = "Household.GetInvitationsSuccess";
+        public const string CancelInvitation = "Household.CancelInvitationSuccess";
+        public const string AcceptInvitation = "Household.AcceptInvitationSuccess";
+        public const string DeclineInvitation = "Household.DeclineInvitationSuccess";
+    }
 }

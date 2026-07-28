@@ -6,5 +6,5 @@ public interface IEmailSender
     Task SendConfirmationEmailAsync(string toEmail, string fullName, string confirmationLink, CancellationToken cancellationToken = default);
     Task SendResetPasswordEmailAsync(string toEmail, string fullName, string resetLink, CancellationToken cancellationToken = default);
     Task SendWelcomeEmailAsync(string toEmail, string fullName, CancellationToken cancellationToken = default);
-    Task SendInvitationEmailAsync(string toEmail, string inviterName, string invitationLink, CancellationToken cancellationToken = default);
+    Task SendInvitationEmailAsync(string toEmail, string inviterName, CancellationToken cancellationToken = default);
 }

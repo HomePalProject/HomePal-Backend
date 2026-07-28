@@ -1,5 +1,6 @@
 using HomePal.Application.Common.Interfaces;
 using HomePal.Application.Features.Auth.Interfaces;
+using HomePal.Application.Features.HouseholdManagement.Interfaces;
 using HomePal.Persistence.Context;
 using HomePal.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -13,6 +14,9 @@ public class UnitOfWork : IUnitOfWork
 
     private IUserRepository? _users;
     private IRefreshTokenRepository? _refreshTokens;
+    private IHouseholdRepository? _households;
+    private IHouseholdMemberRepository? _householdMembers;
+    private IHouseholdInvitationRepository? _householdInvitations;
 
     public UnitOfWork(ApplicationDbContext context)
     {
@@ -21,6 +25,9 @@ public class UnitOfWork : IUnitOfWork
 
     public IUserRepository Users => _users ??= new UserRepository(_context);
     public IRefreshTokenRepository RefreshTokens => _refreshTokens ??= new RefreshTokenRepository(_context);
+    public IHouseholdRepository Households => _households ??= new HouseholdRepository(_context);
+    public IHouseholdMemberRepository HouseholdMembers => _householdMembers ??= new HouseholdMemberRepository(_context);
+    public IHouseholdInvitationRepository HouseholdInvitations => _householdInvitations ??= new HouseholdInvitationRepository(_context);
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

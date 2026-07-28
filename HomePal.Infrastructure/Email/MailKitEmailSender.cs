@@ -86,12 +86,11 @@ public class MailKitEmailSender : IEmailSender
         await SendEmailAsync(toEmail, "Welcome to HomePal!", body, cancellationToken);
     }
 
-    public async Task SendInvitationEmailAsync(string toEmail, string inviterName, string invitationLink, CancellationToken cancellationToken = default)
+    public async Task SendInvitationEmailAsync(string toEmail, string inviterName, CancellationToken cancellationToken = default)
     {
         var template = await GetTemplateAsync("Invitation.html", cancellationToken);
         var body = template
-            .Replace("{{InviterName}}", inviterName)
-            .Replace("{{InvitationLink}}", invitationLink);
+            .Replace("{{InviterName}}", inviterName);
 
         await SendEmailAsync(toEmail, "Invitation to join HomePal Household", body, cancellationToken);
     }
