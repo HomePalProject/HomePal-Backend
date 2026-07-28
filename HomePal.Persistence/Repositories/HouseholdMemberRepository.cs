@@ -27,6 +27,14 @@ public class HouseholdMemberRepository : Repository<HouseholdMember>, IHousehold
             .FirstOrDefaultAsync(m => m.Id == id && m.HouseholdId == householdId, cancellationToken);
     }
 
+    public async Task<HouseholdMember?> GetByIdWithPreferencesAsync(Guid id, Guid householdId, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet
+            .Include(m => m.User)
+            .Include(m => m.Preferences)
+            .FirstOrDefaultAsync(m => m.Id == id && m.HouseholdId == householdId, cancellationToken);
+    }
+
     public async Task<IReadOnlyList<HouseholdMember>> GetByHouseholdIdAsync(Guid householdId, CancellationToken cancellationToken = default)
     {
         return await _dbSet

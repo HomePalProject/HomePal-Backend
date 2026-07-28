@@ -36,5 +36,14 @@ public static class SuccessMessages
         public const string CancelInvitation = "Household.CancelInvitationSuccess";
         public const string AcceptInvitation = "Household.AcceptInvitationSuccess";
         public const string DeclineInvitation = "Household.DeclineInvitationSuccess";
+        public const string GetAllPreferences = "Household.GetAllPreferencesSuccess";
+        public const string SearchPreferences = "Household.SearchPreferencesSuccess";
+        public const string GetPreference = "Household.GetPreferenceSuccess";
+        public const string GetPreferences = "Household.GetPreferencesSuccess";
+        public const string SetPreferences = "Household.SetPreferencesSuccess";
+        public const string AddPreference = "Household.AddPreferenceSuccess";
+        public const string UpdatePreference = "Household.UpdatePreferenceSuccess";
+        public const string DeletePreference = "Household.DeletePreferenceSuccess";
+        public const string RemovePreference = "Household.RemovePreferenceSuccess";
     }
 }

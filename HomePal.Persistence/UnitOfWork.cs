@@ -17,6 +17,7 @@ public class UnitOfWork : IUnitOfWork
     private IHouseholdRepository? _households;
     private IHouseholdMemberRepository? _householdMembers;
     private IHouseholdInvitationRepository? _householdInvitations;
+    private IPreferenceRepository? _preferences;
 
     public UnitOfWork(ApplicationDbContext context)
     {
@@ -28,6 +29,7 @@ public class UnitOfWork : IUnitOfWork
     public IHouseholdRepository Households => _households ??= new HouseholdRepository(_context);
     public IHouseholdMemberRepository HouseholdMembers => _householdMembers ??= new HouseholdMemberRepository(_context);
     public IHouseholdInvitationRepository HouseholdInvitations => _householdInvitations ??= new HouseholdInvitationRepository(_context);
+    public IPreferenceRepository Preferences => _preferences ??= new PreferenceRepository(_context);
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
