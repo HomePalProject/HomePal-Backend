@@ -15,4 +15,5 @@ public class HouseholdMember
 
     public Household Household { get; set; } = null!;
     public ApplicationUser? User { get; set; }
+    public ICollection<Preference> Preferences { get; set; } = new List<Preference>();
 }

@@ -130,6 +130,9 @@
   <data name="Household.MemberRemovalUnauthorized" xml:space="preserve"><value>Only the Household Manager can remove other members.</value></data>
   <data name="Household.CannotRemoveOnlyManager" xml:space="preserve"><value>The household manager cannot leave or be removed while there are other members in the household. Please promote another registered member to manager first.</value></data>
   <data name="Household.ManagerCannotRemoveSelf" xml:space="preserve"><value>Household managers cannot remove themselves from the household. To disband the household, please use the Delete Household option.</value></data>
+  <data name="Household.PreferenceNotFound" xml:space="preserve"><value>The specified preference was not found.</value></data>
+  <data name="Household.PreferenceAlreadyExists" xml:space="preserve"><value>A preference with this name already exists.</value></data>
+  <data name="Household.PreferenceManagementUnauthorized" xml:space="preserve"><value>Only the member themselves or a Household Manager in the same household can manage member preferences.</value></data>
 
   <!-- Household Success Codes -->
   <data name="Household.CreateSuccess" xml:space="preserve"><value>Household created successfully.</value></data>
@@ -144,6 +147,15 @@
   <data name="Household.SendInvitationSuccess" xml:space="preserve"><value>Invitation sent successfully.</value></data>
   <data name="Household.GetInvitationsSuccess" xml:space="preserve"><value>Invitations retrieved successfully.</value></data>
   <data name="Household.CancelInvitationSuccess" xml:space="preserve"><value>Invitation cancelled successfully.</value></data>
-  <data name="Household.AcceptInvitationSuccess" xml:space="preserve"><value>Invitation accepted successfully. Welcome to the household!</value></data>
-  <data name="Household.DeclineInvitationSuccess" xml:space="preserve"><value>Invitation declined.</value></data>
+  <data name="Household.AcceptInvitationSuccess" xml:space="preserve"><value>Invitation accepted successfully.</value></data>
+  <data name="Household.DeclineInvitationSuccess" xml:space="preserve"><value>Invitation declined successfully.</value></data>
+  <data name="Household.GetAllPreferencesSuccess" xml:space="preserve"><value>System preferences retrieved successfully.</value></data>
+  <data name="Household.SearchPreferencesSuccess" xml:space="preserve"><value>Preferences matching query retrieved successfully.</value></data>
+  <data name="Household.GetPreferenceSuccess" xml:space="preserve"><value>Preference details retrieved successfully.</value></data>
+  <data name="Household.GetPreferencesSuccess" xml:space="preserve"><value>Member preferences retrieved successfully.</value></data>
+  <data name="Household.SetPreferencesSuccess" xml:space="preserve"><value>Member preferences updated successfully.</value></data>
+  <data name="Household.AddPreferenceSuccess" xml:space="preserve"><value>Preference created successfully.</value></data>
+  <data name="Household.UpdatePreferenceSuccess" xml:space="preserve"><value>Preference updated successfully.</value></data>
+  <data name="Household.DeletePreferenceSuccess" xml:space="preserve"><value>Preference deleted successfully.</value></data>
+  <data name="Household.RemovePreferenceSuccess" xml:space="preserve"><value>Preference removed from member successfully.</value></data>
 </root>
