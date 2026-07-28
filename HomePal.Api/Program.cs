@@ -22,6 +22,7 @@ public class Program
             await dbContext.Database.MigrateAsync();
         }
         await RoleSeeder.SeedRolesAsync(app.Services);
+        await AdminSeeder.SeedAdminUserAsync(app.Services, builder.Configuration);
 
         app.UseMiddleware<ExceptionMiddleware>();
 

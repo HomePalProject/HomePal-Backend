@@ -10,13 +10,13 @@ public class MailKitOptions
     public string Host { get; set; } = string.Empty;
 
     [Range(1, 65535, ErrorMessage = "MailKitOptions:Port must be between 1 and 65535.")]
-    public int Port { get; set; } = 587;
+    public int Port { get; set; }
 
     public string Username { get; set; } = string.Empty;
 
     public string Password { get; set; } = string.Empty;
 
-    public bool EnableSsl { get; set; } = true;
+    public bool EnableSsl { get; set; }
 
     [Required(ErrorMessage = "MailKitOptions:SenderName is required.")]
     public string SenderName { get; set; } = string.Empty;
