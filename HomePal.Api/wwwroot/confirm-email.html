@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Email - HomePal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2F6652;
+            --primary-dark: #1C3A2F;
+            --bg-gradient: linear-gradient(135deg, #0F231B 0%, #1C3A2F 50%, #2F6652 100%);
+            --card-bg: rgba(255, 255, 255, 0.96);
+            --text: #111827;
+            --text-muted: #4B5563;
+            --success: #10B981;
+            --danger: #EF4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text);
+        }
+
+        body.rtl { font-family: 'Cairo', system-ui, -apple-system, sans-serif; direction: rtl; }
+
+        .lang-btn {
+            position: absolute; top: 20px; right: 20px;
+            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2); color: #fff;
+            padding: 8px 16px; border-radius: 20px; cursor: pointer;
+            font-weight: 600; font-size: 14px; transition: 0.2s;
+        }
+        body.rtl .lang-btn { right: auto; left: 20px; }
+        .lang-btn:hover { background: rgba(255, 255, 255, 0.3); }
+
+        .card {
+            background: var(--card-bg); width: 100%; max-width: 440px;
+            border-radius: 24px; padding: 36px 28px; text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); backdrop-filter: blur(12px);
+        }
+
+        .brand-icon {
+            width: 64px; height: 64px; background: #E8F5F1; border-radius: 18px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px; color: var(--primary);
+        }
+        .brand-icon svg { width: 32px; height: 32px; fill: currentColor; }
+
+        .spinner {
+            width: 44px; height: 44px; margin: 10px auto 20px;
+            border: 4px solid #E8F5F1; border-top-color: var(--primary);
+            border-radius: 50%; animation: spin 0.9s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .status-icon {
+            width: 64px; height: 64px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 10px auto 20px; font-size: 28px;
+        }
+        .status-icon.success { background: #DEF7EC; color: var(--success); }
+        .status-icon.error { background: #FDE8E8; color: var(--danger); }
+
+        h1 { font-size: 22px; font-weight: 800; color: var(--primary-dark); margin-bottom: 8px; }
+        p { font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-bottom: 24px; }
+
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 100%; padding: 12px 24px; background: var(--primary);
+            color: #fff; font-weight: 700; font-size: 15px; text-decoration: none;
+            border-radius: 12px; border: none; cursor: pointer; transition: 0.2s;
+            box-shadow: 0 4px 12px rgba(47, 102, 82, 0.25);
+        }
+        .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+        .footer { margin-top: 24px; font-size: 12px; color: #9CA3AF; }
+    </style>
+</head>
+<body>
+    <button class="lang-btn" id="langBtn" onclick="toggleLang()">العربية</button>
+
+    <div class="card">
+        <div class="brand-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M10.707 2.293a1 1 0 011.414 0l8 8a1 1 0 01-1.414 1.414L18 11.086V19a2 2 0 01-2 2H8a2 2 0 01-2-2v-7.914l-1.293 1.293a1 1 0 01-1.414-1.414l8-8z"/>
+            </svg>
+        </div>
+
+        <div id="statusContainer">
+            <div class="spinner"></div>
+        </div>
+
+        <h1 id="title">Verifying Email...</h1>
+        <p id="message">Please wait while we confirm your email address.</p>
+
+        <div id="actionArea" style="display: none;">
+            <button class="btn" onclick="openApp()" id="actionBtn">Open HomePal App</button>
+        </div>
+
+        <div class="footer">&copy; 2026 HomePal. All rights reserved.</div>
+    </div>
+
+    <script>
+        const initialParams = new URLSearchParams(window.location.search);
+        const urlLang = initialParams.get('lang') || initialParams.get('culture');
+        let isAr = urlLang ? urlLang.toLowerCase().startsWith('ar') : (navigator.language || '').toLowerCase().startsWith('ar');
+
+        let currentStatus = 'loading';
+        let customErrorMsg = null;
+
+        const text = {
+            en: {
+                lang: "العربية",
+                loadingTitle: "Verifying Email...", loadingMsg: "Please wait while we confirm your email address.",
+                successTitle: "Email Confirmed!", successMsg: "Your email has been successfully verified.",
+                errorTitle: "Verification Failed", errorMsg: "The confirmation link is invalid or has expired.",
+                btnApp: "Open HomePal App", btnRetry: "Try Again"
+            },
+            ar: {
+                lang: "English",
+                loadingTitle: "جاري تأكيد البريد...", loadingMsg: "يرجى الانتظار بينما نقوم بتأكيد البريد الإلكتروني.",
+                successTitle: "تم تأكيد البريد بنجاح!", successMsg: "تم التحقق من بريدك الإلكتروني بنجاح.",
+                errorTitle: "فشل التحقق", errorMsg: "رابط التأكيد غير صالحة أو انتهت صلاحيته.",
+                btnApp: "فتح تطبيق هوم بال", btnRetry: "إعادة المحاولة"
+            }
+        };
+
+        function toggleLang() {
+            isAr = !isAr;
+            render();
+        }
+
+        function render() {
+            document.body.classList.toggle('rtl', isAr);
+            document.getElementById('langBtn').innerText = isAr ? text.ar.lang : text.en.lang;
+
+            const lang = isAr ? 'ar' : 'en';
+            const titleEl = document.getElementById('title');
+            const msgEl = document.getElementById('message');
+            const actionBtn = document.getElementById('actionBtn');
+
+            if (currentStatus === 'loading') {
+                titleEl.innerText = text[lang].loadingTitle;
+                msgEl.innerText = text[lang].loadingMsg;
+            } else if (currentStatus === 'success') {
+                titleEl.innerText = text[lang].successTitle;
+                msgEl.innerText = text[lang].successMsg;
+                actionBtn.innerText = text[lang].btnApp;
+            } else {
+                titleEl.innerText = text[lang].errorTitle;
+                msgEl.innerText = customErrorMsg || text[lang].errorMsg;
+                actionBtn.innerText = text[lang].btnRetry;
+            }
+        }
+
+        async function verify() {
+            const params = new URLSearchParams(window.location.search);
+            const userId = params.get('userId');
+            const token = params.get('token');
+
+            if (!userId || !token) {
+                showError("Missing user ID or token.");
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/auth/confirm-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept-Language': isAr ? 'ar' : 'en'
+                    },
+                    body: JSON.stringify({ userId, token })
+                });
+
+                const data = await res.json();
+                if (res.ok && (data.success || data.succeeded)) {
+                    showSuccess();
+                } else {
+                    const msg = data.message || (data.errors && data.errors[0] ? data.errors[0].message : null);
+                    showError(msg);
+                }
+            } catch (err) {
+                showError(err.message);
+            }
+        }
+
+        function showSuccess() {
+            currentStatus = 'success';
+            document.getElementById('statusContainer').innerHTML = `
+                <div class="status-icon success">✓</div>
+            `;
+            document.getElementById('actionArea').style.display = 'block';
+            render();
+        }
+
+        function showError(msg) {
+            currentStatus = 'error';
+            customErrorMsg = msg;
+            document.getElementById('statusContainer').innerHTML = `
+                <div class="status-icon error">✕</div>
+            `;
+            document.getElementById('actionArea').style.display = 'block';
+            render();
+        }
+
+        function openApp() {
+            window.location.href = 'homepal://login';
+            setTimeout(() => { window.location.href = '/'; }, 1500);
+        }
+
+        render();
+        verify();
+    </script>
+</body>
+</html>
