@@ -49,6 +49,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IHouseholdMemberRepository, HouseholdMemberRepository>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IHouseholdInvitationRepository, HouseholdInvitationRepository>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceRepository, PreferenceRepository>();
+        services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceCategoryRepository, PreferenceCategoryRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<ITokenProvider, TokenProvider>();
@@ -69,6 +70,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IHouseholdMemberService, HomePal.Application.Features.HouseholdManagement.Services.HouseholdMemberService>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IHouseholdInvitationService, HomePal.Application.Features.HouseholdManagement.Services.HouseholdInvitationService>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceService, HomePal.Application.Features.HouseholdManagement.Services.PreferenceService>();
+        services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceCategoryService, HomePal.Application.Features.HouseholdManagement.Services.PreferenceCategoryService>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IMemberPreferenceService, HomePal.Application.Features.HouseholdManagement.Services.MemberPreferenceService>();
 
         services.AddControllers()

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HomePal.Application.Features.HouseholdManagement.DTOs;
 
-public class UpdatePreferenceRequest
+public class UpdatePreferenceCategoryRequest
 {
     [Required]
     [StringLength(100, MinimumLength = 2)]
@@ -10,7 +10,4 @@ public class UpdatePreferenceRequest
 
     [StringLength(300)]
     public string? Description { get; set; }
-
-    [Required]
-    public Guid CategoryId { get; set; }
 }

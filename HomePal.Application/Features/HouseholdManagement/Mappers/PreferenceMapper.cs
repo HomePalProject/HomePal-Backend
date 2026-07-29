@@ -12,6 +12,8 @@ public static class PreferenceMapper
             Id = preference.Id,
             Name = preference.Name,
             Description = preference.Description,
+            CategoryId = preference.CategoryId,
+            CategoryName = preference.Category?.Name ?? string.Empty,
             CreatedAt = preference.CreatedAt,
             UpdatedAt = preference.UpdatedAt
         };

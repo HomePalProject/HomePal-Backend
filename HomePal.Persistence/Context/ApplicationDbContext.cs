@@ -18,6 +18,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<HouseholdMember> HouseholdMembers => Set<HouseholdMember>();
     public DbSet<HouseholdInvitation> HouseholdInvitations => Set<HouseholdInvitation>();
     public DbSet<Preference> Preferences => Set<Preference>();
+    public DbSet<PreferenceCategory> PreferenceCategories => Set<PreferenceCategory>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

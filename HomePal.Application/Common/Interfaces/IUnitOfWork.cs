@@ -12,6 +12,7 @@ public interface IUnitOfWork : IDisposable
     IHouseholdMemberRepository HouseholdMembers { get; }
     IHouseholdInvitationRepository HouseholdInvitations { get; }
     IPreferenceRepository Preferences { get; }
+    IPreferenceCategoryRepository PreferenceCategories { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     Task BeginTransactionAsync(CancellationToken cancellationToken = default);

@@ -1,16 +1,12 @@
 namespace HomePal.Domain.Entities;
 
-public class Preference
+public class PreferenceCategory
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
-
-    public Guid CategoryId { get; set; }
-    public PreferenceCategory Category { get; set; } = null!;
-
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
 
-    public ICollection<HouseholdMember> Members { get; set; } = new List<HouseholdMember>();
+    public ICollection<Preference> Preferences { get; set; } = new List<Preference>();
 }

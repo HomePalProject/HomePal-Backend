@@ -10,25 +10,31 @@ namespace HomePal.Application.Features.HouseholdManagement.Services;
 public class PreferenceService : IPreferenceService
 {
     private readonly IPreferenceRepository _preferenceRepository;
+    private readonly IPreferenceCategoryRepository _categoryRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public PreferenceService(
         IPreferenceRepository preferenceRepository,
+        IPreferenceCategoryRepository categoryRepository,
         IUnitOfWork unitOfWork)
     {
         _preferenceRepository = preferenceRepository;
+        _categoryRepository = categoryRepository;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<IReadOnlyCollection<PreferenceResponse>>> GetAllPreferencesAsync(CancellationToken cancellationToken = default)
+    public async Task<Result<IReadOnlyCollection<PreferenceResponse>>> GetAllPreferencesAsync(Guid? categoryId = null, CancellationToken cancellationToken = default)
     {
-        var preferences = await _preferenceRepository.GetAllAsync(cancellationToken);
+        var preferences = categoryId.HasValue
+            ? await _preferenceRepository.GetByCategoryIdAsync(categoryId.Value, cancellationToken)
+            : await _preferenceRepository.GetAllAsync(cancellationToken);
+
         return Result<IReadOnlyCollection<PreferenceResponse>>.Ok(preferences.ToResponseList(), SuccessMessages.Household.GetAllPreferences);
     }
 
-    public async Task<Result<IReadOnlyCollection<PreferenceResponse>>> SearchPreferencesAsync(string? query, CancellationToken cancellationToken = default)
+    public async Task<Result<IReadOnlyCollection<PreferenceResponse>>> SearchPreferencesAsync(string? query, Guid? categoryId = null, CancellationToken cancellationToken = default)
     {
-        var preferences = await _preferenceRepository.SearchAsync(query ?? string.Empty, cancellationToken);
+        var preferences = await _preferenceRepository.SearchAsync(query ?? string.Empty, categoryId, cancellationToken);
         return Result<IReadOnlyCollection<PreferenceResponse>>.Ok(preferences.ToResponseList(), SuccessMessages.Household.SearchPreferences);
     }
 
@@ -45,6 +51,12 @@ public class PreferenceService : IPreferenceService
 
     public async Task<Result<PreferenceResponse>> CreatePreferenceAsync(Guid userId, AddPreferenceRequest request, CancellationToken cancellationToken = default)
     {
+        var category = await _categoryRepository.GetByIdAsync(request.CategoryId, cancellationToken);
+        if (category == null)
+        {
+            return Result<PreferenceResponse>.Fail(ErrorMessages.Household.CategoryNotFound, ResultStatus.BadRequest);
+        }
+
         var existing = await _preferenceRepository.GetByNameAsync(request.Name, cancellationToken);
         if (existing != null)
         {
@@ -56,6 +68,8 @@ public class PreferenceService : IPreferenceService
             Id = Guid.NewGuid(),
             Name = request.Name.Trim(),
             Description = request.Description?.Trim(),
+            CategoryId = request.CategoryId,
+            Category = category,
             CreatedAt = DateTime.UtcNow
         };
 
@@ -73,6 +87,12 @@ public class PreferenceService : IPreferenceService
             return Result<PreferenceResponse>.Fail(ErrorMessages.Household.PreferenceNotFound, ResultStatus.NotFound);
         }
 
+        var category = await _categoryRepository.GetByIdAsync(request.CategoryId, cancellationToken);
+        if (category == null)
+        {
+            return Result<PreferenceResponse>.Fail(ErrorMessages.Household.CategoryNotFound, ResultStatus.BadRequest);
+        }
+
         var nameTrimmed = request.Name.Trim();
         if (!preference.Name.Equals(nameTrimmed, StringComparison.OrdinalIgnoreCase))
         {
@@ -85,6 +105,8 @@ public class PreferenceService : IPreferenceService
 
         preference.Name = nameTrimmed;
         preference.Description = request.Description?.Trim();
+        preference.CategoryId = request.CategoryId;
+        preference.Category = category;
         preference.UpdatedAt = DateTime.UtcNow;
 
         _preferenceRepository.Update(preference);

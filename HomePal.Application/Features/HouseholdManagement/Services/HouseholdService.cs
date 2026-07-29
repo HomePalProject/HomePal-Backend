@@ -122,6 +122,26 @@ public class HouseholdService : IHouseholdService
 
         var household = member.Household;
 
+        var members = await _memberRepository.GetByHouseholdIdAsync(household.Id, cancellationToken);
+        foreach (var memberItem in members)
+        {
+            if (memberItem.UserId.HasValue)
+            {
+                var user = await _userManager.FindByIdAsync(memberItem.UserId.Value.ToString());
+                if (user != null)
+                {
+                    if (await _userManager.IsInRoleAsync(user, Roles.HouseholdMember))
+                    {
+                        await _userManager.RemoveFromRoleAsync(user, Roles.HouseholdMember);
+                    }
+                    if (!await _userManager.IsInRoleAsync(user, Roles.HouseholdManager))
+                    {
+                        await _userManager.AddToRoleAsync(user, Roles.HouseholdManager);
+                    }
+                }
+            }
+        }
+
         _householdRepository.Remove(household);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

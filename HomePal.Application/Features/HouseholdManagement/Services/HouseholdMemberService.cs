@@ -174,6 +174,22 @@ public class HouseholdMemberService : IHouseholdMemberService
             }
         }
 
+        if (targetMember.UserId.HasValue)
+        {
+            var targetUser = await _userManager.FindByIdAsync(targetMember.UserId.Value.ToString());
+            if (targetUser != null)
+            {
+                if (await _userManager.IsInRoleAsync(targetUser, Roles.HouseholdMember))
+                {
+                    await _userManager.RemoveFromRoleAsync(targetUser, Roles.HouseholdMember);
+                }
+                if (!await _userManager.IsInRoleAsync(targetUser, Roles.HouseholdManager))
+                {
+                    await _userManager.AddToRoleAsync(targetUser, Roles.HouseholdManager);
+                }
+            }
+        }
+
         _memberRepository.Remove(targetMember);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

@@ -58,5 +58,8 @@ public static class ErrorMessages
         public const string PreferenceNotFound = "Household.PreferenceNotFound";
         public const string PreferenceAlreadyExists = "Household.PreferenceAlreadyExists";
         public const string PreferenceManagementUnauthorized = "Household.PreferenceManagementUnauthorized";
+        public const string CategoryNotFound = "Household.CategoryNotFound";
+        public const string CategoryAlreadyExists = "Household.CategoryAlreadyExists";
+        public const string CategoryHasPreferences = "Household.CategoryHasPreferences";
     }
 }

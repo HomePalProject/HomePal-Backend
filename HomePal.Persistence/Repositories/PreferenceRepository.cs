@@ -13,35 +13,61 @@ public class PreferenceRepository : Repository<Preference>, IPreferenceRepositor
 
     public override async Task<Preference?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+        return await _dbSet
+            .Include(p => p.Category)
+            .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
     public async Task<Preference?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower().Trim(), cancellationToken);
+        return await _dbSet
+            .Include(p => p.Category)
+            .FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower().Trim(), cancellationToken);
     }
 
     public override async Task<IReadOnlyList<Preference>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await _dbSet.AsNoTracking().OrderBy(p => p.Name).ToListAsync(cancellationToken);
+        return await _dbSet
+            .AsNoTracking()
+            .Include(p => p.Category)
+            .OrderBy(p => p.Name)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<Preference>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.Where(p => ids.Contains(p.Id)).ToListAsync(cancellationToken);
+        return await _dbSet
+            .Include(p => p.Category)
+            .Where(p => ids.Contains(p.Id))
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task<IReadOnlyList<Preference>> SearchAsync(string query, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<Preference>> GetByCategoryIdAsync(Guid categoryId, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(query))
-        {
-            return await GetAllAsync(cancellationToken);
-        }
-
-        var term = query.Trim().ToLower();
         return await _dbSet
             .AsNoTracking()
-            .Where(p => p.Name.ToLower().Contains(term) || (p.Description != null && p.Description.ToLower().Contains(term)))
+            .Include(p => p.Category)
+            .Where(p => p.CategoryId == categoryId)
+            .OrderBy(p => p.Name)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<Preference>> SearchAsync(string query, Guid? categoryId = null, CancellationToken cancellationToken = default)
+    {
+        var dbQuery = _dbSet.AsNoTracking().Include(p => p.Category).AsQueryable();
+
+        if (categoryId.HasValue)
+        {
+            dbQuery = dbQuery.Where(p => p.CategoryId == categoryId.Value);
+        }
+
+        if (!string.IsNullOrWhiteSpace(query))
+        {
+            var term = query.Trim().ToLower();
+            dbQuery = dbQuery.Where(p => p.Name.ToLower().Contains(term) || (p.Description != null && p.Description.ToLower().Contains(term)));
+        }
+
+        return await dbQuery
             .OrderBy(p => p.Name)
             .ToListAsync(cancellationToken);
     }

@@ -32,6 +32,7 @@ public class HouseholdMemberRepository : Repository<HouseholdMember>, IHousehold
         return await _dbSet
             .Include(m => m.User)
             .Include(m => m.Preferences)
+                .ThenInclude(p => p.Category)
             .FirstOrDefaultAsync(m => m.Id == id && m.HouseholdId == householdId, cancellationToken);
     }
 
