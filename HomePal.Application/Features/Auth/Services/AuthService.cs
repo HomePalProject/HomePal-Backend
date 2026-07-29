@@ -72,7 +72,7 @@ public class AuthService : IAuthService
         try
         {
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmationLink = $"{_clientOptions.BaseUrl.TrimEnd('/')}/confirm-email?userId={user.Id}&token={Uri.EscapeDataString(token)}";
+            var confirmationLink = $"{_clientOptions.BaseUrl.TrimEnd('/')}/confirm-email.html?userId={user.Id}&token={Uri.EscapeDataString(token)}";
             await _emailSender.SendConfirmationEmailAsync(user.Email!, user.FullName, confirmationLink, cancellationToken);
         }
         catch
@@ -301,7 +301,7 @@ public class AuthService : IAuthService
         }
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        var resetLink = $"{_clientOptions.BaseUrl.TrimEnd('/')}/reset-password?email={Uri.EscapeDataString(user.Email!)}&token={Uri.EscapeDataString(token)}";
+        var resetLink = $"{_clientOptions.BaseUrl.TrimEnd('/')}/reset-password.html?email={Uri.EscapeDataString(user.Email!)}&token={Uri.EscapeDataString(token)}";
 
         await _emailSender.SendResetPasswordEmailAsync(user.Email!, user.FullName, resetLink, cancellationToken);
         return Result.Ok(SuccessMessages.Auth.ForgotPassword);
@@ -393,7 +393,7 @@ public class AuthService : IAuthService
         }
 
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        var confirmationLink = $"{_clientOptions.BaseUrl.TrimEnd('/')}/confirm-email?userId={user.Id}&token={Uri.EscapeDataString(token)}";
+        var confirmationLink = $"{_clientOptions.BaseUrl.TrimEnd('/')}/confirm-email.html?userId={user.Id}&token={Uri.EscapeDataString(token)}";
 
         await _emailSender.SendConfirmationEmailAsync(user.Email!, user.FullName, confirmationLink, cancellationToken);
         return Result.Ok(SuccessMessages.Auth.ResendConfirmation);
