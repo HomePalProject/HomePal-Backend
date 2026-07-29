@@ -20,6 +20,7 @@ public class AuthService : IAuthService
     private readonly IEmailSender _emailSender;
     private readonly IGoogleTokenValidator _googleTokenValidator;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IFileStorageService _fileStorageService;
     private readonly ClientOptions _clientOptions;
 
     public AuthService(
@@ -29,6 +30,7 @@ public class AuthService : IAuthService
         IEmailSender emailSender,
         IGoogleTokenValidator googleTokenValidator,
         IUnitOfWork unitOfWork,
+        IFileStorageService fileStorageService,
         IOptions<ClientOptions> clientOptions)
     {
         _userManager = userManager;
@@ -37,6 +39,7 @@ public class AuthService : IAuthService
         _emailSender = emailSender;
         _googleTokenValidator = googleTokenValidator;
         _unitOfWork = unitOfWork;
+        _fileStorageService = fileStorageService;
         _clientOptions = clientOptions.Value;
     }
 
@@ -439,5 +442,72 @@ public class AuthService : IAuthService
 
         var roles = await _userManager.GetRolesAsync(user);
         return Result<CurrentUserResponse>.Ok(user.ToCurrentUserResponse(roles), SuccessMessages.Auth.UpdateProfile);
+    }
+
+    public async Task<Result<CurrentUserResponse>> UpdateProfileImageAsync(Guid userId, Microsoft.AspNetCore.Http.IFormFile imageFile, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user == null)
+        {
+            return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.UserNotFound, ResultStatus.NotFound);
+        }
+
+        if (!user.IsActive)
+        {
+            return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.AccountInactive, ResultStatus.Forbidden);
+        }
+
+        string newImageUrl;
+        try
+        {
+            newImageUrl = await _fileStorageService.SaveFileAsync(imageFile, "profiles", cancellationToken);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Result<CurrentUserResponse>.Fail(ex.Message, ResultStatus.BadRequest);
+        }
+        catch
+        {
+            return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.ProfileImageUploadFailed, ResultStatus.BadRequest);
+        }
+
+        if (!string.IsNullOrWhiteSpace(user.ProfileImageUrl))
+        {
+            await _fileStorageService.DeleteFileAsync(user.ProfileImageUrl);
+        }
+
+        user.ProfileImageUrl = newImageUrl;
+        var updateResult = await _userManager.UpdateAsync(user);
+        if (!updateResult.Succeeded)
+        {
+            return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.UpdateProfileFailed, ResultStatus.BadRequest);
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+        return Result<CurrentUserResponse>.Ok(user.ToCurrentUserResponse(roles), SuccessMessages.Auth.UpdateProfileImage);
+    }
+
+    public async Task<Result<CurrentUserResponse>> DeleteProfileImageAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user == null)
+        {
+            return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.UserNotFound, ResultStatus.NotFound);
+        }
+
+        if (!user.IsActive)
+        {
+            return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.AccountInactive, ResultStatus.Forbidden);
+        }
+
+        if (!string.IsNullOrWhiteSpace(user.ProfileImageUrl))
+        {
+            await _fileStorageService.DeleteFileAsync(user.ProfileImageUrl);
+            user.ProfileImageUrl = null;
+            await _userManager.UpdateAsync(user);
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+        return Result<CurrentUserResponse>.Ok(user.ToCurrentUserResponse(roles), SuccessMessages.Auth.DeleteProfileImage);
     }
 }

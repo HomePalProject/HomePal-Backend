@@ -161,4 +161,35 @@ public class AuthController : BaseApiController
         var result = await _authService.UpdateProfileAsync(CurrentUserId, request, cancellationToken);
         return HandleResult(result);
     }
+
+    /// <summary>
+    /// Upload or update profile image for logged in user
+    /// </summary>
+    [Authorize]
+    [HttpPost("profile/image")]
+    [HttpPut("profile/image")]
+    [Consumes("multipart/form-data")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateProfileImage([FromForm] UploadProfileImageRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _authService.UpdateProfileImageAsync(CurrentUserId, request.Image, cancellationToken);
+        return HandleResult(result);
+    }
+
+    /// <summary>
+    /// Delete profile image for logged in user
+    /// </summary>
+    [Authorize]
+    [HttpDelete("profile/image")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteProfileImage(CancellationToken cancellationToken)
+    {
+        var result = await _authService.DeleteProfileImageAsync(CurrentUserId, cancellationToken);
+        return HandleResult(result);
+    }
 }
