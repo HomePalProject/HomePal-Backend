@@ -38,6 +38,7 @@ public static class AuthMapper
             City = user.City,
             IsActive = user.IsActive,
             IsProfileComplete = user.IsProfileComplete,
+            ProfileImageUrl = user.ProfileImageUrl,
             EmailConfirmed = user.EmailConfirmed,
             CreatedAt = user.CreatedAt,
             LastLoginAt = user.LastLoginAt,

@@ -83,6 +83,11 @@
   <data name="Auth.EmailAlreadyConfirmed" xml:space="preserve"><value>This email address is already confirmed.</value></data>
   <data name="Auth.UpdateProfileFailed" xml:space="preserve"><value>Failed to update profile.</value></data>
   <data name="Auth.EmailNotConfirmed" xml:space="preserve"><value>Your email address is not confirmed. Please check your inbox for confirmation instructions.</value></data>
+  <data name="Auth.InvalidImageFile" xml:space="preserve"><value>Invalid image file. Allowed formats are JPG, JPEG, PNG, WEBP.</value></data>
+  <data name="Auth.ImageSizeExceeded" xml:space="preserve"><value>Image size exceeds maximum limit of 5 MB.</value></data>
+  <data name="Auth.ProfileImageUploadFailed" xml:space="preserve"><value>Failed to upload profile image.</value></data>
+  <data name="Auth.UpdateProfileImageSuccess" xml:space="preserve"><value>Profile image updated successfully.</value></data>
+  <data name="Auth.DeleteProfileImageSuccess" xml:space="preserve"><value>Profile image deleted successfully.</value></data>
 
   <!-- Identity Error Codes -->
   <data name="Identity.DuplicateEmail" xml:space="preserve"><value>Email address is already taken.</value></data>

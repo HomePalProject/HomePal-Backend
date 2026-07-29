@@ -37,6 +37,9 @@ public static class ErrorMessages
         public const string EmailAlreadyConfirmed = "Auth.EmailAlreadyConfirmed";
         public const string UpdateProfileFailed = "Auth.UpdateProfileFailed";
         public const string EmailNotConfirmed = "Auth.EmailNotConfirmed";
+        public const string InvalidImageFile = "Auth.InvalidImageFile";
+        public const string ImageSizeExceeded = "Auth.ImageSizeExceeded";
+        public const string ProfileImageUploadFailed = "Auth.ProfileImageUploadFailed";
     }
 
     public static class Household

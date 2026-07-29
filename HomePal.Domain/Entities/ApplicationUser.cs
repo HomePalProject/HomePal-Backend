@@ -12,6 +12,7 @@ public class ApplicationUser : IdentityUser<Guid>
     public string City { get; set; } = string.Empty;
     public bool IsActive { get; set; } = true;
     public bool IsProfileComplete { get; set; } = true;
+    public string? ProfileImageUrl { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? LastLoginAt { get; set; }
 

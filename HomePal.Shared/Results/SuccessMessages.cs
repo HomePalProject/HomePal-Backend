@@ -18,6 +18,8 @@ public static class SuccessMessages
         public const string ResendConfirmation = "Auth.ResendConfirmationSuccess";
         public const string GetCurrentUser = "Auth.GetCurrentUserSuccess";
         public const string UpdateProfile = "Auth.UpdateProfileSuccess";
+        public const string UpdateProfileImage = "Auth.UpdateProfileImageSuccess";
+        public const string DeleteProfileImage = "Auth.DeleteProfileImageSuccess";
     }
 
     public static class Household

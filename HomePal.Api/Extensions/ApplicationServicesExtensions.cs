@@ -55,6 +55,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<ITokenProvider, TokenProvider>();
         services.AddScoped<IEmailSender, MailKitEmailSender>();
         services.AddScoped<IGoogleTokenValidator, GoogleTokenValidator>();
+        services.AddScoped<IFileStorageService, HomePal.Infrastructure.Storage.FileStorageService>();
 
         services.AddLocalization();
         services.Configure<RequestLocalizationOptions>(options =>

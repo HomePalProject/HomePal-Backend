@@ -83,6 +83,11 @@
   <data name="Auth.EmailAlreadyConfirmed" xml:space="preserve"><value>البريد الإلكتروني مؤكد بالفعل.</value></data>
   <data name="Auth.UpdateProfileFailed" xml:space="preserve"><value>فشل في تحديث الملف الشخصي.</value></data>
   <data name="Auth.EmailNotConfirmed" xml:space="preserve"><value>لم يتم تأكيد البريد الإلكتروني. يرجى مراجعة صندوق الوارد للتأكيد.</value></data>
+  <data name="Auth.InvalidImageFile" xml:space="preserve"><value>ملف الصورة غير صالح. الصيغ المسموح بها هي JPG و JPEG و PNG و WEBP.</value></data>
+  <data name="Auth.ImageSizeExceeded" xml:space="preserve"><value>حجم الصورة يتجاوز الحد الأقصى المسموح به وهو 5 ميجابايت.</value></data>
+  <data name="Auth.ProfileImageUploadFailed" xml:space="preserve"><value>فشل في رفع صورة الملف الشخصي.</value></data>
+  <data name="Auth.UpdateProfileImageSuccess" xml:space="preserve"><value>تم تحديث صورة الملف الشخصي بنجاح.</value></data>
+  <data name="Auth.DeleteProfileImageSuccess" xml:space="preserve"><value>تم حذف صورة الملف الشخصي بنجاح.</value></data>
 
   <!-- Identity Error Codes -->
   <data name="Identity.DuplicateEmail" xml:space="preserve"><value>البريد الإلكتروني مستخدم بالفعل.</value></data>

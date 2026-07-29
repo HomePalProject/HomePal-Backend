@@ -1,6 +1,8 @@
 using HomePal.Application.Features.Auth.DTOs;
 using HomePal.Shared.Results;
 
+using Microsoft.AspNetCore.Http;
+
 namespace HomePal.Application.Features.Auth.Interfaces;
 
 public interface IAuthService
@@ -17,4 +19,6 @@ public interface IAuthService
     Task<Result> ResendConfirmationEmailAsync(ResendConfirmationEmailRequest request, CancellationToken cancellationToken = default);
     Task<Result<CurrentUserResponse>> GetCurrentUserAsync(Guid userId, CancellationToken cancellationToken = default);
     Task<Result<CurrentUserResponse>> UpdateProfileAsync(Guid userId, UpdateProfileRequest request, CancellationToken cancellationToken = default);
+    Task<Result<CurrentUserResponse>> UpdateProfileImageAsync(Guid userId, IFormFile imageFile, CancellationToken cancellationToken = default);
+    Task<Result<CurrentUserResponse>> DeleteProfileImageAsync(Guid userId, CancellationToken cancellationToken = default);
 }
