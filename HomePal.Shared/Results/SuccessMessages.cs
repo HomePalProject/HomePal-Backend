@@ -45,5 +45,11 @@ public static class SuccessMessages
         public const string UpdatePreference = "Household.UpdatePreferenceSuccess";
         public const string DeletePreference = "Household.DeletePreferenceSuccess";
         public const string RemovePreference = "Household.RemovePreferenceSuccess";
+        public const string GetAllCategories = "Household.GetAllCategoriesSuccess";
+        public const string SearchCategories = "Household.SearchCategoriesSuccess";
+        public const string GetCategory = "Household.GetCategorySuccess";
+        public const string AddCategory = "Household.AddCategorySuccess";
+        public const string UpdateCategory = "Household.UpdateCategorySuccess";
+        public const string DeleteCategory = "Household.DeleteCategorySuccess";
     }
 }

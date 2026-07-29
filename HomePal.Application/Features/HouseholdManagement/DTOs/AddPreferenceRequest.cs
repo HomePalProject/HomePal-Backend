@@ -10,4 +10,7 @@ public class AddPreferenceRequest
 
     [StringLength(300)]
     public string? Description { get; set; }
+
+    [Required]
+    public Guid CategoryId { get; set; }
 }

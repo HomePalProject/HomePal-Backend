@@ -24,9 +24,9 @@ public class PreferencesController : BaseApiController
     [HttpGet]
     [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.HouseholdMember},{Roles.Admin}")]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyCollection<PreferenceResponse>>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllPreferences(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllPreferences([FromQuery] Guid? categoryId, CancellationToken cancellationToken)
     {
-        var result = await _preferenceService.GetAllPreferencesAsync(cancellationToken);
+        var result = await _preferenceService.GetAllPreferencesAsync(categoryId, cancellationToken);
         return HandleResult(result);
     }
 
@@ -36,9 +36,9 @@ public class PreferencesController : BaseApiController
     [HttpGet("search")]
     [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.HouseholdMember},{Roles.Admin}")]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyCollection<PreferenceResponse>>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> SearchPreferences([FromQuery] string? query, CancellationToken cancellationToken)
+    public async Task<IActionResult> SearchPreferences([FromQuery] string? query, [FromQuery] Guid? categoryId, CancellationToken cancellationToken)
     {
-        var result = await _preferenceService.SearchPreferencesAsync(query, cancellationToken);
+        var result = await _preferenceService.SearchPreferencesAsync(query, categoryId, cancellationToken);
         return HandleResult(result);
     }
 
