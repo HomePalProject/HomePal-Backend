@@ -1,10 +1,11 @@
-﻿using HomePal.Domain.Entities.Recipe;
+﻿using HomePal.Application.Features.RecipeManagament.Interfaces;
+using HomePal.Domain.Entities.Recipe;
 using HomePal.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace HomePal.Persistence.Repositories;
 
-public class RecipeRepository : Repository<Recipe>
+public class RecipeRepository : Repository<Recipe> , IRecipeRepository
 {
     public RecipeRepository(ApplicationDbContext context)
         : base(context)
