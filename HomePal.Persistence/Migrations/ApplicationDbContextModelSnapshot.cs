@@ -309,6 +309,111 @@ namespace HomePal.Persistence.Migrations
                     b.ToTable("PreferenceCategories");
                 });
 
+            modelBuilder.Entity("HomePal.Domain.Entities.Recipe.Ingredient", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Category")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DefaultUnit")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Ingredients", (string)null);
+                });
+
+            modelBuilder.Entity("HomePal.Domain.Entities.Recipe.Recipe", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("Difficulty")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("Servings")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("TimeToMake")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Recipes", (string)null);
+                });
+
+            modelBuilder.Entity("HomePal.Domain.Entities.Recipe.RecipeIngredient", b =>
+                {
+                    b.Property<Guid>("RecipeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("IngredientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<int>("Unit")
+                        .HasColumnType("int");
+
+                    b.HasKey("RecipeId", "IngredientId");
+
+                    b.HasIndex("IngredientId");
+
+                    b.ToTable("RecipeIngredients", (string)null);
+                });
+
+            modelBuilder.Entity("HomePal.Domain.Entities.Recipe.RecipeStep", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<Guid>("RecipeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("StepOrder")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeId", "StepOrder")
+                        .IsUnique();
+
+                    b.ToTable("RecipeSteps", (string)null);
+                });
+
             modelBuilder.Entity("HomePal.Domain.Entities.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -540,6 +645,36 @@ namespace HomePal.Persistence.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("HomePal.Domain.Entities.Recipe.RecipeIngredient", b =>
+                {
+                    b.HasOne("HomePal.Domain.Entities.Recipe.Ingredient", "Ingredient")
+                        .WithMany("Recipes")
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HomePal.Domain.Entities.Recipe.Recipe", "Recipe")
+                        .WithMany("Ingredients")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ingredient");
+
+                    b.Navigation("Recipe");
+                });
+
+            modelBuilder.Entity("HomePal.Domain.Entities.Recipe.RecipeStep", b =>
+                {
+                    b.HasOne("HomePal.Domain.Entities.Recipe.Recipe", "Recipe")
+                        .WithMany("Steps")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipe");
+                });
+
             modelBuilder.Entity("HomePal.Domain.Entities.RefreshToken", b =>
                 {
                     b.HasOne("HomePal.Domain.Entities.ApplicationUser", "User")
@@ -632,6 +767,18 @@ namespace HomePal.Persistence.Migrations
             modelBuilder.Entity("HomePal.Domain.Entities.PreferenceCategory", b =>
                 {
                     b.Navigation("Preferences");
+                });
+
+            modelBuilder.Entity("HomePal.Domain.Entities.Recipe.Ingredient", b =>
+                {
+                    b.Navigation("Recipes");
+                });
+
+            modelBuilder.Entity("HomePal.Domain.Entities.Recipe.Recipe", b =>
+                {
+                    b.Navigation("Ingredients");
+
+                    b.Navigation("Steps");
                 });
 #pragma warning restore 612, 618
         }
