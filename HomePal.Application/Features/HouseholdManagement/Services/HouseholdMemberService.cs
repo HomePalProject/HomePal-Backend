@@ -122,6 +122,7 @@ public class HouseholdMemberService : IHouseholdMemberService
                             await _userManager.AddToRoleAsync(targetUser, Roles.HouseholdMember);
                         }
                     }
+                    await _userManager.UpdateSecurityStampAsync(targetUser);
                 }
             }
         }
@@ -184,6 +185,7 @@ public class HouseholdMemberService : IHouseholdMemberService
                 {
                     await _userManager.AddToRoleAsync(targetUser, Roles.HouseholdManager);
                 }
+                await _userManager.UpdateSecurityStampAsync(targetUser);
             }
         }
 
