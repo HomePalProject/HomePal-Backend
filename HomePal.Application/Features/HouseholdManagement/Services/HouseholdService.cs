@@ -58,6 +58,13 @@ public class HouseholdService : IHouseholdService
 
         await _memberRepository.AddAsync(creatorMember, cancellationToken);
 
+        var pantry = new Pantry
+        {
+            HouseholdId = household.Id,
+            CreatedAt = DateTime.UtcNow
+        };
+        await _unitOfWork.Pantries.AddAsync(pantry, cancellationToken);
+
         if (!await _userManager.IsInRoleAsync(user, Roles.HouseholdManager))
         {
             await _userManager.AddToRoleAsync(user, Roles.HouseholdManager);

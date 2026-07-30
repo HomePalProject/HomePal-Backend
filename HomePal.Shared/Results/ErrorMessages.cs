@@ -65,4 +65,18 @@ public static class ErrorMessages
         public const string CategoryAlreadyExists = "Household.CategoryAlreadyExists";
         public const string CategoryHasPreferences = "Household.CategoryHasPreferences";
     }
+
+    public static class Pantry
+    {
+        public const string PantryNotFound = "PantryNotFound";
+        public const string ItemNotFound = "PantryItemNotFound";
+        public const string InvalidItemData = "Pantry.InvalidItemData";
+    }
+
+    public static class Scan
+    {
+        public const string NoImageUploaded = "NoImageUploaded";
+        public const string InvalidImage = "InvalidImage";
+        public const string ScanFailed = "ScanFailed";
+    }
 }

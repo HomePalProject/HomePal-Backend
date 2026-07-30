@@ -54,4 +54,21 @@ public static class SuccessMessages
         public const string UpdateCategory = "Household.UpdateCategorySuccess";
         public const string DeleteCategory = "Household.DeleteCategorySuccess";
     }
+
+    public static class Pantry
+    {
+        public const string GetItems = "PantryItemsGet";
+        public const string GetItem = "PantryItemGet";
+        public const string CreateItem = "PantryItemCreated";
+        public const string UpdateItem = "PantryItemUpdated";
+        public const string DeleteItem = "PantryItemDeleted";
+        public const string PantryCreated = "PantryCreated";
+        public const string PantryUpdated = "PantryUpdated";
+        public const string PantryDeleted = "PantryDeleted";
+    }
+
+    public static class Scan
+    {
+        public const string ScanSuccess = "ScanSuccess";
+    }
 }

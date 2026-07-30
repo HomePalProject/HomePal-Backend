@@ -163,4 +163,32 @@
   <data name="Household.UpdatePreferenceSuccess" xml:space="preserve"><value>Preference updated successfully.</value></data>
   <data name="Household.DeletePreferenceSuccess" xml:space="preserve"><value>Preference deleted successfully.</value></data>
   <data name="Household.RemovePreferenceSuccess" xml:space="preserve"><value>Preference removed from member successfully.</value></data>
+
+  <!-- Scan & Pantry Codes -->
+  <data name="ScanSuccess" xml:space="preserve"><value>Image scanned successfully.</value></data>
+  <data name="ScanFailed" xml:space="preserve"><value>Image scanning failed.</value></data>
+  <data name="NoImageUploaded" xml:space="preserve"><value>No image was uploaded. Please upload a valid image file.</value></data>
+  <data name="InvalidImage" xml:space="preserve"><value>The uploaded file is not a valid image format.</value></data>
+  <data name="PantryCreated" xml:space="preserve"><value>Household Pantry created successfully.</value></data>
+  <data name="PantryUpdated" xml:space="preserve"><value>Household Pantry details updated successfully.</value></data>
+  <data name="PantryDeleted" xml:space="preserve"><value>Household Pantry deleted successfully.</value></data>
+  <data name="PantryNotFound" xml:space="preserve"><value>Household Pantry not found.</value></data>
+  <data name="PantryItemCreated" xml:space="preserve"><value>Pantry item created successfully.</value></data>
+  <data name="PantryItemUpdated" xml:space="preserve"><value>Pantry item updated successfully.</value></data>
+  <data name="PantryItemDeleted" xml:space="preserve"><value>Pantry item deleted successfully.</value></data>
+  <data name="PantryItemNotFound" xml:space="preserve"><value>Pantry item not found in your household pantry.</value></data>
+  <data name="PantryItemGet" xml:space="preserve"><value>Pantry item details retrieved successfully.</value></data>
+  <data name="PantryItemsGet" xml:space="preserve"><value>Pantry items retrieved successfully.</value></data>
+  <data name="OperationSucceeded" xml:space="preserve"><value>Operation completed successfully.</value></data>
+  <data name="OperationFailed" xml:space="preserve"><value>Operation failed.</value></data>
+  <data name="ValidationFailed" xml:space="preserve"><value>One or more validation errors occurred.</value></data>
+
+  <data name="Pantry.PantryNotFound" xml:space="preserve"><value>Household Pantry not found.</value></data>
+  <data name="Pantry.ItemNotFound" xml:space="preserve"><value>Pantry item not found in your household pantry.</value></data>
+  <data name="Pantry.InvalidItemData" xml:space="preserve"><value>Invalid pantry item data provided.</value></data>
+  <data name="Pantry.GetItemsSuccess" xml:space="preserve"><value>Pantry items retrieved successfully.</value></data>
+  <data name="Pantry.GetItemSuccess" xml:space="preserve"><value>Pantry item details retrieved successfully.</value></data>
+  <data name="Pantry.CreateItemSuccess" xml:space="preserve"><value>Pantry item created successfully.</value></data>
+  <data name="Pantry.UpdateItemSuccess" xml:space="preserve"><value>Pantry item updated successfully.</value></data>
+  <data name="Pantry.DeleteItemSuccess" xml:space="preserve"><value>Pantry item deleted successfully.</value></data>
 </root>

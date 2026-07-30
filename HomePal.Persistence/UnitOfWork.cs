@@ -1,6 +1,7 @@
 using HomePal.Application.Common.Interfaces;
 using HomePal.Application.Features.Auth.Interfaces;
 using HomePal.Application.Features.HouseholdManagement.Interfaces;
+using HomePal.Application.Features.PantryManagement.Interfaces;
 using HomePal.Persistence.Context;
 using HomePal.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -19,6 +20,8 @@ public class UnitOfWork : IUnitOfWork
     private IHouseholdInvitationRepository? _householdInvitations;
     private IPreferenceRepository? _preferences;
     private IPreferenceCategoryRepository? _preferenceCategories;
+    private IPantryRepository? _pantries;
+    private IPantryItemRepository? _pantryItems;
 
     public UnitOfWork(ApplicationDbContext context)
     {
@@ -32,6 +35,8 @@ public class UnitOfWork : IUnitOfWork
     public IHouseholdInvitationRepository HouseholdInvitations => _householdInvitations ??= new HouseholdInvitationRepository(_context);
     public IPreferenceRepository Preferences => _preferences ??= new PreferenceRepository(_context);
     public IPreferenceCategoryRepository PreferenceCategories => _preferenceCategories ??= new PreferenceCategoryRepository(_context);
+    public IPantryRepository Pantries => _pantries ??= new PantryRepository(_context);
+    public IPantryItemRepository PantryItems => _pantryItems ??= new PantryItemRepository(_context);
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

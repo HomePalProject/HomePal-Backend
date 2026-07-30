@@ -32,5 +32,10 @@ public class HouseholdConfiguration : IEntityTypeConfiguration<Household>
             .WithOne(i => i.Household)
             .HasForeignKey(i => i.HouseholdId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(h => h.Pantry)
+            .WithOne(p => p.Household)
+            .HasForeignKey<Pantry>(p => p.HouseholdId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
