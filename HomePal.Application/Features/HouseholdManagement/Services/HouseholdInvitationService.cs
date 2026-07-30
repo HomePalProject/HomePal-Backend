@@ -225,6 +225,8 @@ public class HouseholdInvitationService : IHouseholdInvitationService
             await _userManager.AddToRoleAsync(user, Roles.HouseholdMember);
         }
 
+        await _userManager.UpdateSecurityStampAsync(user);
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Ok(SuccessMessages.Household.AcceptInvitation);

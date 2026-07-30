@@ -132,6 +132,7 @@ public class HouseholdService : IHouseholdService
                     {
                         await _userManager.AddToRoleAsync(user, Roles.HouseholdManager);
                     }
+                    await _userManager.UpdateSecurityStampAsync(user);
                 }
             }
         }
