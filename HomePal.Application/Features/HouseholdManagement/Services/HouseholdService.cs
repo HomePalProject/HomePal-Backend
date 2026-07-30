@@ -11,26 +11,20 @@ namespace HomePal.Application.Features.HouseholdManagement.Services;
 
 public class HouseholdService : IHouseholdService
 {
-    private readonly IHouseholdRepository _householdRepository;
-    private readonly IHouseholdMemberRepository _memberRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUnitOfWork _unitOfWork;
 
     public HouseholdService(
-        IHouseholdRepository householdRepository,
-        IHouseholdMemberRepository memberRepository,
         UserManager<ApplicationUser> userManager,
         IUnitOfWork unitOfWork)
     {
-        _householdRepository = householdRepository;
-        _memberRepository = memberRepository;
         _userManager = userManager;
         _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<HouseholdResponse>> CreateHouseholdAsync(Guid userId, CreateHouseholdRequest request, CancellationToken cancellationToken = default)
     {
-        var existingMembership = await _memberRepository.IsUserInAnyHouseholdAsync(userId, cancellationToken);
+        var existingMembership = await _unitOfWork.HouseholdMembers.IsUserInAnyHouseholdAsync(userId, cancellationToken);
         if (existingMembership)
         {
             return Result<HouseholdResponse>.Fail(ErrorMessages.Household.AlreadyInHousehold, ResultStatus.BadRequest);
@@ -43,7 +37,7 @@ public class HouseholdService : IHouseholdService
         }
 
         var household = request.ToEntity();
-        await _householdRepository.AddAsync(household, cancellationToken);
+        await _unitOfWork.Households.AddAsync(household, cancellationToken);
 
         var creatorMember = new HouseholdMember
         {
@@ -56,7 +50,7 @@ public class HouseholdService : IHouseholdService
             JoinedAt = DateTime.UtcNow
         };
 
-        await _memberRepository.AddAsync(creatorMember, cancellationToken);
+        await _unitOfWork.HouseholdMembers.AddAsync(creatorMember, cancellationToken);
 
         if (!await _userManager.IsInRoleAsync(user, Roles.HouseholdManager))
         {
@@ -70,7 +64,7 @@ public class HouseholdService : IHouseholdService
 
     public async Task<Result<HouseholdResponse>> GetMyHouseholdAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        var household = await _householdRepository.GetByMemberUserIdAsync(userId, cancellationToken);
+        var household = await _unitOfWork.Households.GetByMemberUserIdAsync(userId, cancellationToken);
         if (household == null)
         {
             return Result<HouseholdResponse>.Fail(ErrorMessages.Household.HouseholdNotFound, ResultStatus.NotFound);
@@ -82,7 +76,7 @@ public class HouseholdService : IHouseholdService
 
     public async Task<Result<HouseholdResponse>> UpdateHouseholdAsync(Guid userId, UpdateHouseholdRequest request, CancellationToken cancellationToken = default)
     {
-        var member = await _memberRepository.GetByUserIdAsync(userId, cancellationToken);
+        var member = await _unitOfWork.HouseholdMembers.GetByUserIdAsync(userId, cancellationToken);
         if (member == null || member.Household == null)
         {
             return Result<HouseholdResponse>.Fail(ErrorMessages.Household.HouseholdNotFound, ResultStatus.NotFound);
@@ -100,7 +94,7 @@ public class HouseholdService : IHouseholdService
         household.City = request.City?.Trim();
         household.UpdatedAt = DateTime.UtcNow;
 
-        _householdRepository.Update(household);
+        _unitOfWork.Households.Update(household);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         var response = household.ToResponse(household.Members?.Count ?? 0);
@@ -109,7 +103,7 @@ public class HouseholdService : IHouseholdService
 
     public async Task<Result> DeleteHouseholdAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        var member = await _memberRepository.GetByUserIdAsync(userId, cancellationToken);
+        var member = await _unitOfWork.HouseholdMembers.GetByUserIdAsync(userId, cancellationToken);
         if (member == null || member.Household == null)
         {
             return Result.Fail(ErrorMessages.Household.HouseholdNotFound, ResultStatus.NotFound);
@@ -122,7 +116,7 @@ public class HouseholdService : IHouseholdService
 
         var household = member.Household;
 
-        var members = await _memberRepository.GetByHouseholdIdAsync(household.Id, cancellationToken);
+        var members = await _unitOfWork.HouseholdMembers.GetByHouseholdIdAsync(household.Id, cancellationToken);
         foreach (var memberItem in members)
         {
             if (memberItem.UserId.HasValue)
@@ -142,7 +136,7 @@ public class HouseholdService : IHouseholdService
             }
         }
 
-        _householdRepository.Remove(household);
+        _unitOfWork.Households.Remove(household);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Ok(SuccessMessages.Household.Delete);

@@ -9,38 +9,31 @@ namespace HomePal.Application.Features.HouseholdManagement.Services;
 
 public class PreferenceService : IPreferenceService
 {
-    private readonly IPreferenceRepository _preferenceRepository;
-    private readonly IPreferenceCategoryRepository _categoryRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public PreferenceService(
-        IPreferenceRepository preferenceRepository,
-        IPreferenceCategoryRepository categoryRepository,
-        IUnitOfWork unitOfWork)
+    public PreferenceService(IUnitOfWork unitOfWork)
     {
-        _preferenceRepository = preferenceRepository;
-        _categoryRepository = categoryRepository;
         _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<IReadOnlyCollection<PreferenceResponse>>> GetAllPreferencesAsync(Guid? categoryId = null, CancellationToken cancellationToken = default)
     {
         var preferences = categoryId.HasValue
-            ? await _preferenceRepository.GetByCategoryIdAsync(categoryId.Value, cancellationToken)
-            : await _preferenceRepository.GetAllAsync(cancellationToken);
+            ? await _unitOfWork.Preferences.GetByCategoryIdAsync(categoryId.Value, cancellationToken)
+            : await _unitOfWork.Preferences.GetAllAsync(cancellationToken);
 
         return Result<IReadOnlyCollection<PreferenceResponse>>.Ok(preferences.ToResponseList(), SuccessMessages.Household.GetAllPreferences);
     }
 
     public async Task<Result<IReadOnlyCollection<PreferenceResponse>>> SearchPreferencesAsync(string? query, Guid? categoryId = null, CancellationToken cancellationToken = default)
     {
-        var preferences = await _preferenceRepository.SearchAsync(query ?? string.Empty, categoryId, cancellationToken);
+        var preferences = await _unitOfWork.Preferences.SearchAsync(query ?? string.Empty, categoryId, cancellationToken);
         return Result<IReadOnlyCollection<PreferenceResponse>>.Ok(preferences.ToResponseList(), SuccessMessages.Household.SearchPreferences);
     }
 
     public async Task<Result<PreferenceResponse>> GetPreferenceByIdAsync(Guid preferenceId, CancellationToken cancellationToken = default)
     {
-        var preference = await _preferenceRepository.GetByIdAsync(preferenceId, cancellationToken);
+        var preference = await _unitOfWork.Preferences.GetByIdAsync(preferenceId, cancellationToken);
         if (preference == null)
         {
             return Result<PreferenceResponse>.Fail(ErrorMessages.Household.PreferenceNotFound, ResultStatus.NotFound);
@@ -51,13 +44,13 @@ public class PreferenceService : IPreferenceService
 
     public async Task<Result<PreferenceResponse>> CreatePreferenceAsync(Guid userId, AddPreferenceRequest request, CancellationToken cancellationToken = default)
     {
-        var category = await _categoryRepository.GetByIdAsync(request.CategoryId, cancellationToken);
+        var category = await _unitOfWork.PreferenceCategories.GetByIdAsync(request.CategoryId, cancellationToken);
         if (category == null)
         {
             return Result<PreferenceResponse>.Fail(ErrorMessages.Household.CategoryNotFound, ResultStatus.BadRequest);
         }
 
-        var existing = await _preferenceRepository.GetByNameAsync(request.Name, cancellationToken);
+        var existing = await _unitOfWork.Preferences.GetByNameAsync(request.Name, cancellationToken);
         if (existing != null)
         {
             return Result<PreferenceResponse>.Fail(ErrorMessages.Household.PreferenceAlreadyExists, ResultStatus.BadRequest);
@@ -73,7 +66,7 @@ public class PreferenceService : IPreferenceService
             CreatedAt = DateTime.UtcNow
         };
 
-        await _preferenceRepository.AddAsync(preference, cancellationToken);
+        await _unitOfWork.Preferences.AddAsync(preference, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result<PreferenceResponse>.Ok(preference.ToResponse(), SuccessMessages.Household.AddPreference, ResultStatus.Created);
@@ -81,13 +74,13 @@ public class PreferenceService : IPreferenceService
 
     public async Task<Result<PreferenceResponse>> UpdatePreferenceAsync(Guid userId, Guid preferenceId, UpdatePreferenceRequest request, CancellationToken cancellationToken = default)
     {
-        var preference = await _preferenceRepository.GetByIdAsync(preferenceId, cancellationToken);
+        var preference = await _unitOfWork.Preferences.GetByIdAsync(preferenceId, cancellationToken);
         if (preference == null)
         {
             return Result<PreferenceResponse>.Fail(ErrorMessages.Household.PreferenceNotFound, ResultStatus.NotFound);
         }
 
-        var category = await _categoryRepository.GetByIdAsync(request.CategoryId, cancellationToken);
+        var category = await _unitOfWork.PreferenceCategories.GetByIdAsync(request.CategoryId, cancellationToken);
         if (category == null)
         {
             return Result<PreferenceResponse>.Fail(ErrorMessages.Household.CategoryNotFound, ResultStatus.BadRequest);
@@ -96,7 +89,7 @@ public class PreferenceService : IPreferenceService
         var nameTrimmed = request.Name.Trim();
         if (!preference.Name.Equals(nameTrimmed, StringComparison.OrdinalIgnoreCase))
         {
-            var existing = await _preferenceRepository.GetByNameAsync(nameTrimmed, cancellationToken);
+            var existing = await _unitOfWork.Preferences.GetByNameAsync(nameTrimmed, cancellationToken);
             if (existing != null && existing.Id != preferenceId)
             {
                 return Result<PreferenceResponse>.Fail(ErrorMessages.Household.PreferenceAlreadyExists, ResultStatus.BadRequest);
@@ -109,7 +102,7 @@ public class PreferenceService : IPreferenceService
         preference.Category = category;
         preference.UpdatedAt = DateTime.UtcNow;
 
-        _preferenceRepository.Update(preference);
+        _unitOfWork.Preferences.Update(preference);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result<PreferenceResponse>.Ok(preference.ToResponse(), SuccessMessages.Household.UpdatePreference);
@@ -117,13 +110,13 @@ public class PreferenceService : IPreferenceService
 
     public async Task<Result> DeletePreferenceAsync(Guid userId, Guid preferenceId, CancellationToken cancellationToken = default)
     {
-        var preference = await _preferenceRepository.GetByIdAsync(preferenceId, cancellationToken);
+        var preference = await _unitOfWork.Preferences.GetByIdAsync(preferenceId, cancellationToken);
         if (preference == null)
         {
             return Result.Fail(ErrorMessages.Household.PreferenceNotFound, ResultStatus.NotFound);
         }
 
-        _preferenceRepository.Remove(preference);
+        _unitOfWork.Preferences.Remove(preference);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Ok(SuccessMessages.Household.DeletePreference);
