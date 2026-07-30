@@ -1,8 +1,9 @@
-using System.Reflection;
 using HomePal.Domain.Entities;
+using HomePal.Domain.Entities.Recipe;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace HomePal.Persistence.Context;
 
@@ -20,6 +21,15 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<Preference> Preferences => Set<Preference>();
     public DbSet<PreferenceCategory> PreferenceCategories => Set<PreferenceCategory>();
 
+    #region Recipes sets
+    public DbSet<Recipe> Recipes => Set<Recipe>();
+
+    public DbSet<Ingredient> Ingredients => Set<Ingredient>();
+
+    public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
+
+    public DbSet<RecipeStep> RecipeSteps => Set<RecipeStep>(); 
+    #endregion
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
