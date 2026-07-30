@@ -159,7 +159,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Households");
+                    b.ToTable("Households", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.HouseholdInvitation", b =>
@@ -204,7 +204,7 @@ namespace HomePal.Persistence.Migrations
                     b.HasIndex("Token")
                         .IsUnique();
 
-                    b.ToTable("HouseholdInvitations");
+                    b.ToTable("HouseholdInvitations", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.HouseholdMember", b =>
@@ -246,7 +246,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("HouseholdMembers");
+                    b.ToTable("HouseholdMembers", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.Preference", b =>
@@ -277,7 +277,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Preferences");
+                    b.ToTable("Preferences", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.PreferenceCategory", b =>
@@ -306,7 +306,7 @@ namespace HomePal.Persistence.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("PreferenceCategories");
+                    b.ToTable("PreferenceCategories", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.Recipe.Ingredient", b =>
@@ -448,7 +448,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("HouseholdMemberPreference", b =>
