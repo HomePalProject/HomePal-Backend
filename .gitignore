@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+user-secrets.ps1
+HomePal.Api/appsettings.json
+HomePal.Api/appsettings.json
+HomePal.Api/Properties/launchSettings.json
