@@ -5,12 +5,14 @@ using HomePal.Application.Features.Auth.Interfaces;
 using HomePal.Application.Features.Auth.Options;
 using HomePal.Application.Features.Auth.Services;
 using HomePal.Application.Features.RecipeManagament.Interfaces;
+using HomePal.Application.Features.RecipeManagament.Services;
 using HomePal.Infrastructure.Authentication;
 using HomePal.Infrastructure.Email;
 using HomePal.Infrastructure.Google;
 using HomePal.Persistence;
 using HomePal.Persistence.Repositories;
 using System.Text.Json.Serialization;
+
 
 namespace HomePal.Api.Extensions;
 
@@ -53,6 +55,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceCategoryRepository, PreferenceCategoryRepository>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IIngredientRepository, IngredientRepository>();
+
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<ITokenProvider, TokenProvider>();
@@ -76,6 +79,8 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceService, HomePal.Application.Features.HouseholdManagement.Services.PreferenceService>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceCategoryService, HomePal.Application.Features.HouseholdManagement.Services.PreferenceCategoryService>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IMemberPreferenceService, HomePal.Application.Features.HouseholdManagement.Services.MemberPreferenceService>();
+        services.AddScoped<IRecipeService, RecipeService>();
+        services.AddScoped<IIngredientService, IngredientService>();
 
         services.AddControllers()
             .AddDataAnnotationsLocalization(options =>
