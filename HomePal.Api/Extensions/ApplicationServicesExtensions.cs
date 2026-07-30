@@ -1,15 +1,16 @@
-using System.Text.Json.Serialization;
 using HomePal.Api.Factories;
 using HomePal.Api.Resources;
 using HomePal.Application.Common.Interfaces;
 using HomePal.Application.Features.Auth.Interfaces;
 using HomePal.Application.Features.Auth.Options;
 using HomePal.Application.Features.Auth.Services;
+using HomePal.Application.Features.RecipeManagament.Interfaces;
 using HomePal.Infrastructure.Authentication;
 using HomePal.Infrastructure.Email;
 using HomePal.Infrastructure.Google;
 using HomePal.Persistence;
 using HomePal.Persistence.Repositories;
+using System.Text.Json.Serialization;
 
 namespace HomePal.Api.Extensions;
 
@@ -50,6 +51,8 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IHouseholdInvitationRepository, HouseholdInvitationRepository>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceRepository, PreferenceRepository>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceCategoryRepository, PreferenceCategoryRepository>();
+        services.AddScoped<IRecipeRepository, RecipeRepository>();
+        services.AddScoped<IIngredientRepository, IngredientRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<ITokenProvider, TokenProvider>();
