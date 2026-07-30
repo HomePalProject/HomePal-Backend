@@ -11,42 +11,39 @@ namespace HomePal.Application.Features.HouseholdManagement.Services;
 
 public class HouseholdMemberService : IHouseholdMemberService
 {
-    private readonly IHouseholdMemberRepository _memberRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUnitOfWork _unitOfWork;
 
     public HouseholdMemberService(
-        IHouseholdMemberRepository memberRepository,
         UserManager<ApplicationUser> userManager,
         IUnitOfWork unitOfWork)
     {
-        _memberRepository = memberRepository;
         _userManager = userManager;
         _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<IReadOnlyCollection<HouseholdMemberResponse>>> GetHouseholdMembersAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        var currentMember = await _memberRepository.GetByUserIdAsync(userId, cancellationToken);
+        var currentMember = await _unitOfWork.HouseholdMembers.GetByUserIdAsync(userId, cancellationToken);
         if (currentMember == null)
         {
             return Result<IReadOnlyCollection<HouseholdMemberResponse>>.Fail(ErrorMessages.Household.HouseholdNotFound, ResultStatus.NotFound);
         }
 
-        var members = await _memberRepository.GetByHouseholdIdAsync(currentMember.HouseholdId, cancellationToken);
+        var members = await _unitOfWork.HouseholdMembers.GetByHouseholdIdAsync(currentMember.HouseholdId, cancellationToken);
 
         return Result<IReadOnlyCollection<HouseholdMemberResponse>>.Ok(members.ToResponseList(), SuccessMessages.Household.GetMembers);
     }
 
     public async Task<Result<HouseholdMemberResponse>> GetMemberByIdAsync(Guid currentUserId, Guid memberId, CancellationToken cancellationToken = default)
     {
-        var currentMember = await _memberRepository.GetByUserIdAsync(currentUserId, cancellationToken);
+        var currentMember = await _unitOfWork.HouseholdMembers.GetByUserIdAsync(currentUserId, cancellationToken);
         if (currentMember == null)
         {
             return Result<HouseholdMemberResponse>.Fail(ErrorMessages.Household.HouseholdNotFound, ResultStatus.NotFound);
         }
 
-        var targetMember = await _memberRepository.GetByIdAndHouseholdIdAsync(memberId, currentMember.HouseholdId, cancellationToken);
+        var targetMember = await _unitOfWork.HouseholdMembers.GetByIdAndHouseholdIdAsync(memberId, currentMember.HouseholdId, cancellationToken);
         if (targetMember == null)
         {
             return Result<HouseholdMemberResponse>.Fail(ErrorMessages.Household.MemberNotFound, ResultStatus.NotFound);
@@ -57,7 +54,7 @@ public class HouseholdMemberService : IHouseholdMemberService
 
     public async Task<Result<HouseholdMemberResponse>> AddOfflineMemberAsync(Guid managerUserId, AddOfflineMemberRequest request, CancellationToken cancellationToken = default)
     {
-        var managerMember = await _memberRepository.GetByUserIdAsync(managerUserId, cancellationToken);
+        var managerMember = await _unitOfWork.HouseholdMembers.GetByUserIdAsync(managerUserId, cancellationToken);
         if (managerMember == null)
         {
             return Result<HouseholdMemberResponse>.Fail(ErrorMessages.Household.HouseholdNotFound, ResultStatus.NotFound);
@@ -70,7 +67,7 @@ public class HouseholdMemberService : IHouseholdMemberService
 
         var offlineMember = request.ToOfflineMemberEntity(managerMember.HouseholdId);
 
-        await _memberRepository.AddAsync(offlineMember, cancellationToken);
+        await _unitOfWork.HouseholdMembers.AddAsync(offlineMember, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result<HouseholdMemberResponse>.Ok(offlineMember.ToResponse(), SuccessMessages.Household.AddMember, ResultStatus.Created);
@@ -78,7 +75,7 @@ public class HouseholdMemberService : IHouseholdMemberService
 
     public async Task<Result<HouseholdMemberResponse>> UpdateMemberAsync(Guid managerUserId, Guid memberId, UpdateMemberRequest request, CancellationToken cancellationToken = default)
     {
-        var managerMember = await _memberRepository.GetByUserIdAsync(managerUserId, cancellationToken);
+        var managerMember = await _unitOfWork.HouseholdMembers.GetByUserIdAsync(managerUserId, cancellationToken);
         if (managerMember == null)
         {
             return Result<HouseholdMemberResponse>.Fail(ErrorMessages.Household.HouseholdNotFound, ResultStatus.NotFound);
@@ -89,7 +86,7 @@ public class HouseholdMemberService : IHouseholdMemberService
             return Result<HouseholdMemberResponse>.Fail(ErrorMessages.Household.NotManager, ResultStatus.Forbidden);
         }
 
-        var targetMember = await _memberRepository.GetByIdAndHouseholdIdAsync(memberId, managerMember.HouseholdId, cancellationToken);
+        var targetMember = await _unitOfWork.HouseholdMembers.GetByIdAndHouseholdIdAsync(memberId, managerMember.HouseholdId, cancellationToken);
         if (targetMember == null)
         {
             return Result<HouseholdMemberResponse>.Fail(ErrorMessages.Household.MemberNotFound, ResultStatus.NotFound);
@@ -129,7 +126,7 @@ public class HouseholdMemberService : IHouseholdMemberService
             }
         }
 
-        _memberRepository.Update(targetMember);
+        _unitOfWork.HouseholdMembers.Update(targetMember);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result<HouseholdMemberResponse>.Ok(targetMember.ToResponse(), SuccessMessages.Household.UpdateMember);
@@ -137,13 +134,13 @@ public class HouseholdMemberService : IHouseholdMemberService
 
     public async Task<Result> RemoveMemberAsync(Guid currentUserId, Guid memberId, CancellationToken cancellationToken = default)
     {
-        var currentMember = await _memberRepository.GetByUserIdAsync(currentUserId, cancellationToken);
+        var currentMember = await _unitOfWork.HouseholdMembers.GetByUserIdAsync(currentUserId, cancellationToken);
         if (currentMember == null)
         {
             return Result.Fail(ErrorMessages.Household.HouseholdNotFound, ResultStatus.NotFound);
         }
 
-        var targetMember = await _memberRepository.GetByIdAndHouseholdIdAsync(memberId, currentMember.HouseholdId, cancellationToken);
+        var targetMember = await _unitOfWork.HouseholdMembers.GetByIdAndHouseholdIdAsync(memberId, currentMember.HouseholdId, cancellationToken);
         if (targetMember == null)
         {
             return Result.Fail(ErrorMessages.Household.MemberNotFound, ResultStatus.NotFound);
@@ -167,7 +164,7 @@ public class HouseholdMemberService : IHouseholdMemberService
                 return Result.Fail(ErrorMessages.Household.ManagerCannotRemoveSelf, ResultStatus.BadRequest);
             }
 
-            int managerCount = await _memberRepository.GetManagerCountAsync(currentMember.HouseholdId, cancellationToken);
+            int managerCount = await _unitOfWork.HouseholdMembers.GetManagerCountAsync(currentMember.HouseholdId, cancellationToken);
             if (managerCount <= 1)
             {
                 return Result.Fail(ErrorMessages.Household.CannotRemoveOnlyManager, ResultStatus.BadRequest);
@@ -190,7 +187,7 @@ public class HouseholdMemberService : IHouseholdMemberService
             }
         }
 
-        _memberRepository.Remove(targetMember);
+        _unitOfWork.HouseholdMembers.Remove(targetMember);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Ok(SuccessMessages.Household.RemoveMember);

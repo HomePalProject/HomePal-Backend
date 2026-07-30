@@ -12,21 +12,15 @@ namespace HomePal.Application.Features.HouseholdManagement.Services;
 
 public class HouseholdInvitationService : IHouseholdInvitationService
 {
-    private readonly IHouseholdInvitationRepository _invitationRepository;
-    private readonly IHouseholdMemberRepository _memberRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IEmailSender _emailSender;
     private readonly IUnitOfWork _unitOfWork;
 
     public HouseholdInvitationService(
-        IHouseholdInvitationRepository invitationRepository,
-        IHouseholdMemberRepository memberRepository,
         UserManager<ApplicationUser> userManager,
         IEmailSender emailSender,
         IUnitOfWork unitOfWork)
     {
-        _invitationRepository = invitationRepository;
-        _memberRepository = memberRepository;
         _userManager = userManager;
         _emailSender = emailSender;
         _unitOfWork = unitOfWork;
@@ -34,7 +28,7 @@ public class HouseholdInvitationService : IHouseholdInvitationService
 
     public async Task<Result<HouseholdInvitationResponse>> SendInvitationAsync(Guid managerUserId, SendInvitationRequest request, CancellationToken cancellationToken = default)
     {
-        var managerMember = await _memberRepository.GetByUserIdAsync(managerUserId, cancellationToken);
+        var managerMember = await _unitOfWork.HouseholdMembers.GetByUserIdAsync(managerUserId, cancellationToken);
         if (managerMember == null || managerMember.Household == null)
         {
             return Result<HouseholdInvitationResponse>.Fail(ErrorMessages.Household.HouseholdNotFound, ResultStatus.NotFound);
@@ -51,14 +45,14 @@ public class HouseholdInvitationService : IHouseholdInvitationService
 
         if (targetUser != null)
         {
-            var isAlreadyInHousehold = await _memberRepository.IsUserInAnyHouseholdAsync(targetUser.Id, cancellationToken);
+            var isAlreadyInHousehold = await _unitOfWork.HouseholdMembers.IsUserInAnyHouseholdAsync(targetUser.Id, cancellationToken);
             if (isAlreadyInHousehold)
             {
                 return Result<HouseholdInvitationResponse>.Fail(ErrorMessages.Household.UserAlreadyInHousehold, ResultStatus.BadRequest);
             }
         }
 
-        var existingPendingInvite = await _invitationRepository.HasPendingInvitationAsync(managerMember.HouseholdId, input, cancellationToken);
+        var existingPendingInvite = await _unitOfWork.HouseholdInvitations.HasPendingInvitationAsync(managerMember.HouseholdId, input, cancellationToken);
         if (existingPendingInvite)
         {
             return Result<HouseholdInvitationResponse>.Fail(ErrorMessages.Household.PendingInvitationExists, ResultStatus.BadRequest);
@@ -78,7 +72,7 @@ public class HouseholdInvitationService : IHouseholdInvitationService
             CreatedAt = DateTime.UtcNow
         };
 
-        await _invitationRepository.AddAsync(invitation, cancellationToken);
+        await _unitOfWork.HouseholdInvitations.AddAsync(invitation, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(recipientEmail))
@@ -110,14 +104,14 @@ public class HouseholdInvitationService : IHouseholdInvitationService
             return Result<IReadOnlyCollection<HouseholdInvitationResponse>>.Fail(ErrorMessages.Household.UserNotFound, ResultStatus.NotFound);
         }
 
-        var invitations = await _invitationRepository.GetPendingByEmailOrUsernameAsync(user.Email, user.UserName, cancellationToken);
+        var invitations = await _unitOfWork.HouseholdInvitations.GetPendingByEmailOrUsernameAsync(user.Email, user.UserName, cancellationToken);
 
         return Result<IReadOnlyCollection<HouseholdInvitationResponse>>.Ok(invitations.ToResponseList(), SuccessMessages.Household.GetInvitations);
     }
 
     public async Task<Result<IReadOnlyCollection<HouseholdInvitationResponse>>> GetHouseholdInvitationsAsync(Guid managerUserId, CancellationToken cancellationToken = default)
     {
-        var managerMember = await _memberRepository.GetByUserIdAsync(managerUserId, cancellationToken);
+        var managerMember = await _unitOfWork.HouseholdMembers.GetByUserIdAsync(managerUserId, cancellationToken);
         if (managerMember == null)
         {
             return Result<IReadOnlyCollection<HouseholdInvitationResponse>>.Fail(ErrorMessages.Household.HouseholdNotFound, ResultStatus.NotFound);
@@ -128,14 +122,14 @@ public class HouseholdInvitationService : IHouseholdInvitationService
             return Result<IReadOnlyCollection<HouseholdInvitationResponse>>.Fail(ErrorMessages.Household.NotManager, ResultStatus.Forbidden);
         }
 
-        var invitations = await _invitationRepository.GetByHouseholdIdAsync(managerMember.HouseholdId, cancellationToken);
+        var invitations = await _unitOfWork.HouseholdInvitations.GetByHouseholdIdAsync(managerMember.HouseholdId, cancellationToken);
 
         return Result<IReadOnlyCollection<HouseholdInvitationResponse>>.Ok(invitations.ToResponseList(), SuccessMessages.Household.GetInvitations);
     }
 
     public async Task<Result> CancelInvitationAsync(Guid managerUserId, Guid invitationId, CancellationToken cancellationToken = default)
     {
-        var managerMember = await _memberRepository.GetByUserIdAsync(managerUserId, cancellationToken);
+        var managerMember = await _unitOfWork.HouseholdMembers.GetByUserIdAsync(managerUserId, cancellationToken);
         if (managerMember == null)
         {
             return Result.Fail(ErrorMessages.Household.HouseholdNotFound, ResultStatus.NotFound);
@@ -146,7 +140,7 @@ public class HouseholdInvitationService : IHouseholdInvitationService
             return Result.Fail(ErrorMessages.Household.NotManager, ResultStatus.Forbidden);
         }
 
-        var invitation = await _invitationRepository.GetByIdAndHouseholdIdAsync(invitationId, managerMember.HouseholdId, cancellationToken);
+        var invitation = await _unitOfWork.HouseholdInvitations.GetByIdAndHouseholdIdAsync(invitationId, managerMember.HouseholdId, cancellationToken);
         if (invitation == null)
         {
             return Result.Fail(ErrorMessages.Household.InvitationNotFound, ResultStatus.NotFound);
@@ -158,7 +152,7 @@ public class HouseholdInvitationService : IHouseholdInvitationService
         }
 
         invitation.Status = InvitationStatus.Cancelled;
-        _invitationRepository.Update(invitation);
+        _unitOfWork.HouseholdInvitations.Update(invitation);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Ok(SuccessMessages.Household.CancelInvitation);
@@ -166,7 +160,7 @@ public class HouseholdInvitationService : IHouseholdInvitationService
 
     public async Task<Result> AcceptInvitationAsync(Guid userId, Guid invitationId, CancellationToken cancellationToken = default)
     {
-        var isAlreadyInHousehold = await _memberRepository.IsUserInAnyHouseholdAsync(userId, cancellationToken);
+        var isAlreadyInHousehold = await _unitOfWork.HouseholdMembers.IsUserInAnyHouseholdAsync(userId, cancellationToken);
         if (isAlreadyInHousehold)
         {
             return Result.Fail(ErrorMessages.Household.AlreadyInHousehold, ResultStatus.BadRequest);
@@ -178,7 +172,7 @@ public class HouseholdInvitationService : IHouseholdInvitationService
             return Result.Fail(ErrorMessages.Household.UserNotFound, ResultStatus.NotFound);
         }
 
-        var invitation = await _invitationRepository.GetByIdAsync(invitationId, cancellationToken);
+        var invitation = await _unitOfWork.HouseholdInvitations.GetByIdAsync(invitationId, cancellationToken);
         if (invitation == null)
         {
             return Result.Fail(ErrorMessages.Household.InvitationNotFound, ResultStatus.NotFound);
@@ -198,14 +192,14 @@ public class HouseholdInvitationService : IHouseholdInvitationService
         }
 
         invitation.Status = InvitationStatus.Accepted;
-        _invitationRepository.Update(invitation);
+        _unitOfWork.HouseholdInvitations.Update(invitation);
 
-        var unlinkedMember = await _memberRepository.FindUnlinkedMemberAsync(invitation.HouseholdId, user.FullName, cancellationToken);
+        var unlinkedMember = await _unitOfWork.HouseholdMembers.FindUnlinkedMemberAsync(invitation.HouseholdId, user.FullName, cancellationToken);
         if (unlinkedMember != null)
         {
             unlinkedMember.UserId = userId;
             unlinkedMember.Role = Roles.HouseholdMember;
-            _memberRepository.Update(unlinkedMember);
+            _unitOfWork.HouseholdMembers.Update(unlinkedMember);
         }
         else
         {
@@ -219,7 +213,7 @@ public class HouseholdInvitationService : IHouseholdInvitationService
                 Role = Roles.HouseholdMember,
                 JoinedAt = DateTime.UtcNow
             };
-            await _memberRepository.AddAsync(newMember, cancellationToken);
+            await _unitOfWork.HouseholdMembers.AddAsync(newMember, cancellationToken);
         }
 
         if (await _userManager.IsInRoleAsync(user, Roles.HouseholdManager))
@@ -244,7 +238,7 @@ public class HouseholdInvitationService : IHouseholdInvitationService
             return Result.Fail(ErrorMessages.Household.UserNotFound, ResultStatus.NotFound);
         }
 
-        var invitation = await _invitationRepository.GetByIdAsync(invitationId, cancellationToken);
+        var invitation = await _unitOfWork.HouseholdInvitations.GetByIdAsync(invitationId, cancellationToken);
         if (invitation == null)
         {
             return Result.Fail(ErrorMessages.Household.InvitationNotFound, ResultStatus.NotFound);
@@ -264,7 +258,7 @@ public class HouseholdInvitationService : IHouseholdInvitationService
         }
 
         invitation.Status = InvitationStatus.Declined;
-        _invitationRepository.Update(invitation);
+        _unitOfWork.HouseholdInvitations.Update(invitation);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Ok(SuccessMessages.Household.DeclineInvitation);
