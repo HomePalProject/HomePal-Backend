@@ -12,7 +12,7 @@ namespace HomePal.Domain.Entities.Recipe
 
         public Recipe Recipe { get; set; } = null!;
 
-        public int Order { get; set; }
+        public int StepOrder { get; set; }
 
         public string Description { get; set; } = null!;
     }
