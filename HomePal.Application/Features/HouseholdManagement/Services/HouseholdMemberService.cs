@@ -99,6 +99,12 @@ public class HouseholdMemberService : IHouseholdMemberService
         if (!string.IsNullOrWhiteSpace(request.Role))
         {
             var newRole = request.Role.Trim();
+
+            if (!targetMember.UserId.HasValue && newRole == Roles.HouseholdManager)
+            {
+                return Result<HouseholdMemberResponse>.Fail(ErrorMessages.Household.CannotPromoteOfflineMember, ResultStatus.BadRequest);
+            }
+
             targetMember.Role = newRole;
 
             if (targetMember.UserId.HasValue)
@@ -156,19 +162,27 @@ public class HouseholdMemberService : IHouseholdMemberService
         }
 
         // Household Manager Protection Rules:
-        // 1. A Household Manager cannot remove themselves from the household (must use DELETE /api/households to disband).
-        // 2. A Household Manager cannot remove another manager if they are the only manager remaining.
+        // 1. A Household Manager can leave if another manager exists.
+        // 2. If the manager is the ONLY manager and ONLY member left, leaving disbands the household.
+        // 3. If the manager is the ONLY manager but other members exist, require promoting another member first.
         if (targetMember.Role == Roles.HouseholdManager)
         {
-            if (isSelf)
-            {
-                return Result.Fail(ErrorMessages.Household.ManagerCannotRemoveSelf, ResultStatus.BadRequest);
-            }
-
             int managerCount = await _unitOfWork.HouseholdMembers.GetManagerCountAsync(currentMember.HouseholdId, cancellationToken);
             if (managerCount <= 1)
             {
-                return Result.Fail(ErrorMessages.Household.CannotRemoveOnlyManager, ResultStatus.BadRequest);
+                int totalMemberCount = await _unitOfWork.HouseholdMembers.GetMemberCountAsync(currentMember.HouseholdId, cancellationToken);
+                if (isSelf && totalMemberCount <= 1)
+                {
+                    var household = await _unitOfWork.Households.GetByIdAsync(currentMember.HouseholdId, cancellationToken);
+                    if (household != null)
+                    {
+                        _unitOfWork.Households.Remove(household);
+                    }
+                }
+                else
+                {
+                    return Result.Fail(ErrorMessages.Household.CannotRemoveOnlyManager, ResultStatus.BadRequest);
+                }
             }
         }
 

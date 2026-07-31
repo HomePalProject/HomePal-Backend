@@ -48,7 +48,7 @@ public class HouseholdMemberRepository : Repository<HouseholdMember>, IHousehold
 
     public async Task<int> GetManagerCountAsync(Guid householdId, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.CountAsync(m => m.HouseholdId == householdId && m.Role == Roles.HouseholdManager, cancellationToken);
+        return await _dbSet.CountAsync(m => m.HouseholdId == householdId && m.UserId != null && m.Role == Roles.HouseholdManager, cancellationToken);
     }
 
     public async Task<int> GetMemberCountAsync(Guid householdId, CancellationToken cancellationToken = default)
