@@ -134,6 +134,7 @@
   <data name="Household.OnlyPendingCanBeCancelled" xml:space="preserve"><value>يمكن إلغاء الدعوات المعلقة فقط.</value></data>
   <data name="Household.MemberRemovalUnauthorized" xml:space="preserve"><value>فقط مدير المنزل يمكنه إزالة الأعضاء الآخرين.</value></data>
   <data name="Household.CannotRemoveOnlyManager" xml:space="preserve"><value>لا يمكن لمدير المنزل المغادرة أو الإزالة طالما يوجد أعضاء آخرون في المنزل. يرجى ترقية عضو مسجل آخر إلى مدير أولاً.</value></data>
+  <data name="Household.CannotPromoteOfflineMember" xml:space="preserve"><value>يمكن تعيين المستخدمين المسجلين فقط بحسابات فعلية كمدير للأسرة.</value></data>
   <data name="Household.ManagerCannotRemoveSelf" xml:space="preserve"><value>لا يمكن لمدير المنزل إزالة نفسه من المنزل. لحذف المنزل بالكامل، يرجى استخدام خيار حذف المنزل.</value></data>
   <data name="Household.PreferenceNotFound" xml:space="preserve"><value>التفضيل المحدد غير موجود.</value></data>
   <data name="Household.PreferenceAlreadyExists" xml:space="preserve"><value>يوجد تفضيل بهذا الاسم بالفعل.</value></data>

@@ -134,6 +134,7 @@
   <data name="Household.OnlyPendingCanBeCancelled" xml:space="preserve"><value>Only pending invitations can be cancelled.</value></data>
   <data name="Household.MemberRemovalUnauthorized" xml:space="preserve"><value>Only the Household Manager can remove other members.</value></data>
   <data name="Household.CannotRemoveOnlyManager" xml:space="preserve"><value>The household manager cannot leave or be removed while there are other members in the household. Please promote another registered member to manager first.</value></data>
+  <data name="Household.CannotPromoteOfflineMember" xml:space="preserve"><value>Only registered users with active accounts can be assigned as Household Manager.</value></data>
   <data name="Household.ManagerCannotRemoveSelf" xml:space="preserve"><value>Household managers cannot remove themselves from the household. To disband the household, please use the Delete Household option.</value></data>
   <data name="Household.PreferenceNotFound" xml:space="preserve"><value>The specified preference was not found.</value></data>
   <data name="Household.PreferenceAlreadyExists" xml:space="preserve"><value>A preference with this name already exists.</value></data>
