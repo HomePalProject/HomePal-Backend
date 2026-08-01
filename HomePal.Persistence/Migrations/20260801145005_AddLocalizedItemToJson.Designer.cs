@@ -4,6 +4,7 @@ using HomePal.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomePal.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260801145005_AddLocalizedItemToJson")]
+    partial class AddLocalizedItemToJson
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -526,7 +529,7 @@ namespace HomePal.Persistence.Migrations
                             b1.Property<string>("Culture")
                                 .IsRequired();
 
-                            b1.Property<string>("Value")
+                            b1.Property<string>("Data")
                                 .IsRequired();
 
                             b1.HasKey("PreferenceId", "__synthesizedOrdinal");
@@ -551,7 +554,7 @@ namespace HomePal.Persistence.Migrations
                             b1.Property<string>("Culture")
                                 .IsRequired();
 
-                            b1.Property<string>("Value")
+                            b1.Property<string>("Data")
                                 .IsRequired();
 
                             b1.HasKey("PreferenceId", "__synthesizedOrdinal");
@@ -585,7 +588,7 @@ namespace HomePal.Persistence.Migrations
                             b1.Property<string>("Culture")
                                 .IsRequired();
 
-                            b1.Property<string>("Value")
+                            b1.Property<string>("Data")
                                 .IsRequired();
 
                             b1.HasKey("PreferenceCategoryId", "__synthesizedOrdinal");
@@ -610,7 +613,7 @@ namespace HomePal.Persistence.Migrations
                             b1.Property<string>("Culture")
                                 .IsRequired();
 
-                            b1.Property<string>("Value")
+                            b1.Property<string>("Data")
                                 .IsRequired();
 
                             b1.HasKey("PreferenceCategoryId", "__synthesizedOrdinal");

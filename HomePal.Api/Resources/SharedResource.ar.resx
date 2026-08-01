@@ -139,6 +139,9 @@
   <data name="Household.PreferenceNotFound" xml:space="preserve"><value>التفضيل المحدد غير موجود.</value></data>
   <data name="Household.PreferenceAlreadyExists" xml:space="preserve"><value>يوجد تفضيل بهذا الاسم بالفعل.</value></data>
   <data name="Household.PreferenceManagementUnauthorized" xml:space="preserve"><value>فقط العضو نفسه أو مدير في نفس المنزل يمكنهما إدارة تفضيلات العضو.</value></data>
+  <data name="Household.CategoryNotFound" xml:space="preserve"><value>الفئة المحددة غير موجودة.</value></data>
+  <data name="Household.CategoryAlreadyExists" xml:space="preserve"><value>توجد فئة بهذا الاسم بالفعل.</value></data>
+  <data name="Household.CategoryHasPreferences" xml:space="preserve"><value>لا يمكن حذف فئة تحتوي على تفضيلات مرتبطة.</value></data>
 
   <!-- Household Success Codes -->
   <data name="Household.CreateSuccess" xml:space="preserve"><value>تم إنشاء المنزل بنجاح.</value></data>
@@ -164,4 +167,11 @@
   <data name="Household.UpdatePreferenceSuccess" xml:space="preserve"><value>تم تحديث التفضيل بنجاح.</value></data>
   <data name="Household.DeletePreferenceSuccess" xml:space="preserve"><value>تم حذف التفضيل بنجاح.</value></data>
   <data name="Household.RemovePreferenceSuccess" xml:space="preserve"><value>تم إزالة التفضيل من العضو بنجاح.</value></data>
+  <data name="Household.GetAllCategoriesSuccess" xml:space="preserve"><value>تم استرداد فئات التفضيلات بنجاح.</value></data>
+  <data name="Household.SearchCategoriesSuccess" xml:space="preserve"><value>تم استرداد الفئات المطابقة للبحث بنجاح.</value></data>
+  <data name="Household.GetCategorySuccess" xml:space="preserve"><value>تم استرداد تفاصيل الفئة بنجاح.</value></data>
+  <data name="Household.AddCategorySuccess" xml:space="preserve"><value>تم إنشاء الفئة بنجاح.</value></data>
+  <data name="Household.UpdateCategorySuccess" xml:space="preserve"><value>تم تحديث الفئة بنجاح.</value></data>
+  <data name="Household.DeleteCategorySuccess" xml:space="preserve"><value>تم حذف الفئة بنجاح.</value></data>
 </root>
+

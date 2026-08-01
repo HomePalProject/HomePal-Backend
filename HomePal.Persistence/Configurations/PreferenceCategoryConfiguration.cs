@@ -10,15 +10,8 @@ public class PreferenceCategoryConfiguration : IEntityTypeConfiguration<Preferen
     {
         builder.HasKey(c => c.Id);
 
-        builder.Property(c => c.Name)
-            .IsRequired()
-            .HasMaxLength(100);
-
-        builder.HasIndex(c => c.Name)
-            .IsUnique();
-
-        builder.Property(c => c.Description)
-            .HasMaxLength(300);
+        builder.OwnsMany(c => c.Name, n => n.ToJson());
+        builder.OwnsMany(c => c.Description, d => d.ToJson());
 
         builder.HasMany(c => c.Preferences)
             .WithOne(p => p.Category)
@@ -26,3 +19,5 @@ public class PreferenceCategoryConfiguration : IEntityTypeConfiguration<Preferen
             .OnDelete(DeleteBehavior.Restrict);
     }
 }
+
+

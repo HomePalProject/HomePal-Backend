@@ -10,15 +10,13 @@ public class PreferenceConfiguration : IEntityTypeConfiguration<Preference>
     {
         builder.HasKey(p => p.Id);
 
-        builder.Property(p => p.Name)
-            .IsRequired()
-            .HasMaxLength(100);
-
-        builder.Property(p => p.Description)
-            .HasMaxLength(300);
+        builder.OwnsMany(p => p.Name, n => n.ToJson());
+        builder.OwnsMany(p => p.Description, d => d.ToJson());
 
         builder.HasMany(p => p.Members)
             .WithMany(m => m.Preferences)
             .UsingEntity(j => j.ToTable("HouseholdMemberPreferences"));
     }
 }
+
+

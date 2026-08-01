@@ -1,16 +1,17 @@
 using System.ComponentModel.DataAnnotations;
+using HomePal.Domain.Common;
 
 namespace HomePal.Application.Features.HouseholdManagement.DTOs;
 
 public class UpdatePreferenceRequest
 {
     [Required]
-    [StringLength(100, MinimumLength = 2)]
-    public string Name { get; set; } = string.Empty;
+    public List<LocalizedItem> Name { get; set; } = new();
 
-    [StringLength(300)]
-    public string? Description { get; set; }
+    public List<LocalizedItem>? Description { get; set; }
 
     [Required]
     public Guid CategoryId { get; set; }
 }
+
+

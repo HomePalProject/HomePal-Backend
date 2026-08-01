@@ -20,9 +20,10 @@ public class PreferenceRepository : Repository<Preference>, IPreferenceRepositor
 
     public async Task<Preference?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
     {
+        var trimmed = name.Trim();
         return await _dbSet
             .Include(p => p.Category)
-            .FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower().Trim(), cancellationToken);
+            .FirstOrDefaultAsync(p => p.Name.Any(x => x.Value.Contains(trimmed)), cancellationToken);
     }
 
     public override async Task<IReadOnlyList<Preference>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -30,7 +31,6 @@ public class PreferenceRepository : Repository<Preference>, IPreferenceRepositor
         return await _dbSet
             .AsNoTracking()
             .Include(p => p.Category)
-            .OrderBy(p => p.Name)
             .ToListAsync(cancellationToken);
     }
 
@@ -48,7 +48,6 @@ public class PreferenceRepository : Repository<Preference>, IPreferenceRepositor
             .AsNoTracking()
             .Include(p => p.Category)
             .Where(p => p.CategoryId == categoryId)
-            .OrderBy(p => p.Name)
             .ToListAsync(cancellationToken);
     }
 
@@ -63,12 +62,16 @@ public class PreferenceRepository : Repository<Preference>, IPreferenceRepositor
 
         if (!string.IsNullOrWhiteSpace(query))
         {
-            var term = query.Trim().ToLower();
-            dbQuery = dbQuery.Where(p => p.Name.ToLower().Contains(term) || (p.Description != null && p.Description.ToLower().Contains(term)));
+            var term = query.Trim();
+            dbQuery = dbQuery.Where(p => p.Name.Any(x => x.Value.Contains(term)) ||
+                                        (p.Description != null && p.Description.Any(x => x.Value.Contains(term))));
         }
 
-        return await dbQuery
-            .OrderBy(p => p.Name)
-            .ToListAsync(cancellationToken);
+        return await dbQuery.ToListAsync(cancellationToken);
     }
 }
+
+
+
+
+
