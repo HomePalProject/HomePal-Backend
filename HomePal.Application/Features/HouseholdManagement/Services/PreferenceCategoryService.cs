@@ -2,8 +2,10 @@ using HomePal.Application.Common.Interfaces;
 using HomePal.Application.Features.HouseholdManagement.DTOs;
 using HomePal.Application.Features.HouseholdManagement.Interfaces;
 using HomePal.Application.Features.HouseholdManagement.Mappers;
+using HomePal.Domain.Common;
 using HomePal.Domain.Entities;
 using HomePal.Shared.Results;
+
 
 namespace HomePal.Application.Features.HouseholdManagement.Services;
 
@@ -41,7 +43,8 @@ public class PreferenceCategoryService : IPreferenceCategoryService
 
     public async Task<Result<PreferenceCategoryResponse>> CreateCategoryAsync(Guid userId, CreatePreferenceCategoryRequest request, CancellationToken cancellationToken = default)
     {
-        var existingCategory = await _unitOfWork.PreferenceCategories.GetByNameAsync(request.Name, cancellationToken);
+        var primaryName = request.Name.Get();
+        var existingCategory = await _unitOfWork.PreferenceCategories.GetByNameAsync(primaryName, cancellationToken);
         if (existingCategory != null)
         {
             return Result<PreferenceCategoryResponse>.Fail(ErrorMessages.Household.CategoryAlreadyExists, ResultStatus.BadRequest);
@@ -62,14 +65,15 @@ public class PreferenceCategoryService : IPreferenceCategoryService
             return Result<PreferenceCategoryResponse>.Fail(ErrorMessages.Household.CategoryNotFound, ResultStatus.NotFound);
         }
 
-        var existingWithName = await _unitOfWork.PreferenceCategories.GetByNameAsync(request.Name, cancellationToken);
+        var primaryName = request.Name.Get();
+        var existingWithName = await _unitOfWork.PreferenceCategories.GetByNameAsync(primaryName, cancellationToken);
         if (existingWithName != null && existingWithName.Id != categoryId)
         {
             return Result<PreferenceCategoryResponse>.Fail(ErrorMessages.Household.CategoryAlreadyExists, ResultStatus.BadRequest);
         }
 
-        category.Name = request.Name.Trim();
-        category.Description = request.Description?.Trim();
+        category.Name = request.Name;
+        category.Description = request.Description;
         category.UpdatedAt = DateTime.UtcNow;
 
         _unitOfWork.PreferenceCategories.Update(category);
@@ -77,6 +81,7 @@ public class PreferenceCategoryService : IPreferenceCategoryService
 
         return Result<PreferenceCategoryResponse>.Ok(category.ToResponse(), SuccessMessages.Household.UpdateCategory);
     }
+
 
     public async Task<Result> DeleteCategoryAsync(Guid userId, Guid categoryId, CancellationToken cancellationToken = default)
     {

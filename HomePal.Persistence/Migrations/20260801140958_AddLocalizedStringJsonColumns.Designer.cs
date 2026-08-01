@@ -4,6 +4,7 @@ using HomePal.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomePal.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260801140958_AddLocalizedStringJsonColumns")]
+    partial class AddLocalizedStringJsonColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -261,6 +264,13 @@ namespace HomePal.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -279,6 +289,13 @@ namespace HomePal.Persistence.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -516,118 +533,7 @@ namespace HomePal.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.OwnsMany("HomePal.Domain.Common.LocalizedItem", "Description", b1 =>
-                        {
-                            b1.Property<Guid>("PreferenceId");
-
-                            b1.Property<int>("__synthesizedOrdinal")
-                                .ValueGeneratedOnAddOrUpdate();
-
-                            b1.Property<string>("Culture")
-                                .IsRequired();
-
-                            b1.Property<string>("Value")
-                                .IsRequired();
-
-                            b1.HasKey("PreferenceId", "__synthesizedOrdinal");
-
-                            b1.ToTable("Preferences");
-
-                            b1
-                                .ToJson("Description")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PreferenceId");
-                        });
-
-                    b.OwnsMany("HomePal.Domain.Common.LocalizedItem", "Name", b1 =>
-                        {
-                            b1.Property<Guid>("PreferenceId");
-
-                            b1.Property<int>("__synthesizedOrdinal")
-                                .ValueGeneratedOnAddOrUpdate();
-
-                            b1.Property<string>("Culture")
-                                .IsRequired();
-
-                            b1.Property<string>("Value")
-                                .IsRequired();
-
-                            b1.HasKey("PreferenceId", "__synthesizedOrdinal");
-
-                            b1.ToTable("Preferences");
-
-                            b1
-                                .ToJson("Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PreferenceId");
-                        });
-
                     b.Navigation("Category");
-
-                    b.Navigation("Description");
-
-                    b.Navigation("Name");
-                });
-
-            modelBuilder.Entity("HomePal.Domain.Entities.PreferenceCategory", b =>
-                {
-                    b.OwnsMany("HomePal.Domain.Common.LocalizedItem", "Description", b1 =>
-                        {
-                            b1.Property<Guid>("PreferenceCategoryId");
-
-                            b1.Property<int>("__synthesizedOrdinal")
-                                .ValueGeneratedOnAddOrUpdate();
-
-                            b1.Property<string>("Culture")
-                                .IsRequired();
-
-                            b1.Property<string>("Value")
-                                .IsRequired();
-
-                            b1.HasKey("PreferenceCategoryId", "__synthesizedOrdinal");
-
-                            b1.ToTable("PreferenceCategories");
-
-                            b1
-                                .ToJson("Description")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PreferenceCategoryId");
-                        });
-
-                    b.OwnsMany("HomePal.Domain.Common.LocalizedItem", "Name", b1 =>
-                        {
-                            b1.Property<Guid>("PreferenceCategoryId");
-
-                            b1.Property<int>("__synthesizedOrdinal")
-                                .ValueGeneratedOnAddOrUpdate();
-
-                            b1.Property<string>("Culture")
-                                .IsRequired();
-
-                            b1.Property<string>("Value")
-                                .IsRequired();
-
-                            b1.HasKey("PreferenceCategoryId", "__synthesizedOrdinal");
-
-                            b1.ToTable("PreferenceCategories");
-
-                            b1
-                                .ToJson("Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PreferenceCategoryId");
-                        });
-
-                    b.Navigation("Description");
-
-                    b.Navigation("Name");
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.RefreshToken", b =>

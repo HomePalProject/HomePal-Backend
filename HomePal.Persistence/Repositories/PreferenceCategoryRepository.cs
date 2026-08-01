@@ -20,8 +20,9 @@ public class PreferenceCategoryRepository : Repository<PreferenceCategory>, IPre
 
     public async Task<PreferenceCategory?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
     {
+        var trimmed = name.Trim();
         return await _dbSet
-            .FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower().Trim(), cancellationToken);
+            .FirstOrDefaultAsync(c => c.Name.Any(x => x.Value.Contains(trimmed)), cancellationToken);
     }
 
     public async Task<PreferenceCategory?> GetByIdWithPreferencesAsync(Guid id, CancellationToken cancellationToken = default)
@@ -36,7 +37,6 @@ public class PreferenceCategoryRepository : Repository<PreferenceCategory>, IPre
         return await _dbSet
             .AsNoTracking()
             .Include(c => c.Preferences)
-            .OrderBy(c => c.Name)
             .ToListAsync(cancellationToken);
     }
 
@@ -47,12 +47,17 @@ public class PreferenceCategoryRepository : Repository<PreferenceCategory>, IPre
             return await GetAllAsync(cancellationToken);
         }
 
-        var term = query.Trim().ToLower();
+        var term = query.Trim();
         return await _dbSet
             .AsNoTracking()
             .Include(c => c.Preferences)
-            .Where(c => c.Name.ToLower().Contains(term) || (c.Description != null && c.Description.ToLower().Contains(term)))
-            .OrderBy(c => c.Name)
+            .Where(c => c.Name.Any(x => x.Value.Contains(term)) ||
+                        (c.Description != null && c.Description.Any(x => x.Value.Contains(term))))
             .ToListAsync(cancellationToken);
     }
 }
+
+
+
+
+

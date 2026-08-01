@@ -139,6 +139,9 @@
   <data name="Household.PreferenceNotFound" xml:space="preserve"><value>The specified preference was not found.</value></data>
   <data name="Household.PreferenceAlreadyExists" xml:space="preserve"><value>A preference with this name already exists.</value></data>
   <data name="Household.PreferenceManagementUnauthorized" xml:space="preserve"><value>Only the member themselves or a Household Manager in the same household can manage member preferences.</value></data>
+  <data name="Household.CategoryNotFound" xml:space="preserve"><value>The specified category was not found.</value></data>
+  <data name="Household.CategoryAlreadyExists" xml:space="preserve"><value>A category with this name already exists.</value></data>
+  <data name="Household.CategoryHasPreferences" xml:space="preserve"><value>Cannot delete a category that contains active preferences.</value></data>
 
   <!-- Household Success Codes -->
   <data name="Household.CreateSuccess" xml:space="preserve"><value>Household created successfully.</value></data>
@@ -164,4 +167,11 @@
   <data name="Household.UpdatePreferenceSuccess" xml:space="preserve"><value>Preference updated successfully.</value></data>
   <data name="Household.DeletePreferenceSuccess" xml:space="preserve"><value>Preference deleted successfully.</value></data>
   <data name="Household.RemovePreferenceSuccess" xml:space="preserve"><value>Preference removed from member successfully.</value></data>
+  <data name="Household.GetAllCategoriesSuccess" xml:space="preserve"><value>Categories retrieved successfully.</value></data>
+  <data name="Household.SearchCategoriesSuccess" xml:space="preserve"><value>Categories matching query retrieved successfully.</value></data>
+  <data name="Household.GetCategorySuccess" xml:space="preserve"><value>Category details retrieved successfully.</value></data>
+  <data name="Household.AddCategorySuccess" xml:space="preserve"><value>Category created successfully.</value></data>
+  <data name="Household.UpdateCategorySuccess" xml:space="preserve"><value>Category updated successfully.</value></data>
+  <data name="Household.DeleteCategorySuccess" xml:space="preserve"><value>Category deleted successfully.</value></data>
 </root>
+

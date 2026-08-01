@@ -2,8 +2,10 @@ using HomePal.Application.Common.Interfaces;
 using HomePal.Application.Features.HouseholdManagement.DTOs;
 using HomePal.Application.Features.HouseholdManagement.Interfaces;
 using HomePal.Application.Features.HouseholdManagement.Mappers;
+using HomePal.Domain.Common;
 using HomePal.Domain.Entities;
 using HomePal.Shared.Results;
+
 
 namespace HomePal.Application.Features.HouseholdManagement.Services;
 
@@ -50,7 +52,8 @@ public class PreferenceService : IPreferenceService
             return Result<PreferenceResponse>.Fail(ErrorMessages.Household.CategoryNotFound, ResultStatus.BadRequest);
         }
 
-        var existing = await _unitOfWork.Preferences.GetByNameAsync(request.Name, cancellationToken);
+        var primaryName = request.Name.Get();
+        var existing = await _unitOfWork.Preferences.GetByNameAsync(primaryName, cancellationToken);
         if (existing != null)
         {
             return Result<PreferenceResponse>.Fail(ErrorMessages.Household.PreferenceAlreadyExists, ResultStatus.BadRequest);
@@ -59,8 +62,8 @@ public class PreferenceService : IPreferenceService
         var preference = new Preference
         {
             Id = Guid.NewGuid(),
-            Name = request.Name.Trim(),
-            Description = request.Description?.Trim(),
+            Name = request.Name,
+            Description = request.Description,
             CategoryId = request.CategoryId,
             Category = category,
             CreatedAt = DateTime.UtcNow
@@ -86,18 +89,15 @@ public class PreferenceService : IPreferenceService
             return Result<PreferenceResponse>.Fail(ErrorMessages.Household.CategoryNotFound, ResultStatus.BadRequest);
         }
 
-        var nameTrimmed = request.Name.Trim();
-        if (!preference.Name.Equals(nameTrimmed, StringComparison.OrdinalIgnoreCase))
+        var primaryName = request.Name.Get();
+        var existing = await _unitOfWork.Preferences.GetByNameAsync(primaryName, cancellationToken);
+        if (existing != null && existing.Id != preferenceId)
         {
-            var existing = await _unitOfWork.Preferences.GetByNameAsync(nameTrimmed, cancellationToken);
-            if (existing != null && existing.Id != preferenceId)
-            {
-                return Result<PreferenceResponse>.Fail(ErrorMessages.Household.PreferenceAlreadyExists, ResultStatus.BadRequest);
-            }
+            return Result<PreferenceResponse>.Fail(ErrorMessages.Household.PreferenceAlreadyExists, ResultStatus.BadRequest);
         }
 
-        preference.Name = nameTrimmed;
-        preference.Description = request.Description?.Trim();
+        preference.Name = request.Name;
+        preference.Description = request.Description;
         preference.CategoryId = request.CategoryId;
         preference.Category = category;
         preference.UpdatedAt = DateTime.UtcNow;
@@ -107,6 +107,7 @@ public class PreferenceService : IPreferenceService
 
         return Result<PreferenceResponse>.Ok(preference.ToResponse(), SuccessMessages.Household.UpdatePreference);
     }
+
 
     public async Task<Result> DeletePreferenceAsync(Guid userId, Guid preferenceId, CancellationToken cancellationToken = default)
     {
