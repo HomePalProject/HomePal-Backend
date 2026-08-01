@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace HomePal.Api.Controllers;
 
 [Authorize]
+[Route("api/households")]
 public class HouseholdsController : BaseApiController
+
 {
     private readonly IHouseholdService _householdService;
 

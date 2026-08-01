@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HomePal.Api.Controllers;
 
+[Route("api/auth")]
 public class AuthController : BaseApiController
+
 {
     private readonly IAuthService _authService;
 

@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace HomePal.Api.Controllers;
 
 [Authorize]
-[Route("api/preference-categories")]
+[Route("api/preferences/categories")]
 public class PreferenceCategoriesController : BaseApiController
+
+
 {
     private readonly IPreferenceCategoryService _categoryService;
 
