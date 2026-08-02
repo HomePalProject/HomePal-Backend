@@ -173,5 +173,35 @@
   <data name="Household.AddCategorySuccess" xml:space="preserve"><value>تم إنشاء الفئة بنجاح.</value></data>
   <data name="Household.UpdateCategorySuccess" xml:space="preserve"><value>تم تحديث الفئة بنجاح.</value></data>
   <data name="Household.DeleteCategorySuccess" xml:space="preserve"><value>تم حذف الفئة بنجاح.</value></data>
+  <data name="Ingredient.NotFound" xml:space="preserve"><value>المكون غير موجود.</value></data>
+  <data name="Ingredient.NameRequired" xml:space="preserve"><value>اسم المكون مطلوب.</value></data>
+  <data name="Ingredient.AlreadyExists" xml:space="preserve"><value>يوجد مكون بهذا الاسم بالفعل.</value></data>
+  <data name="Ingredient.InUse" xml:space="preserve"><value>لا يمكن حذف المكون لأنه مستخدم في وصفة واحدة أو أكثر.</value></data>
+  <data name="Ingredient.GetSuccess" xml:space="preserve"><value>تم استرداد تفاصيل المكون بنجاح.</value></data>
+  <data name="Ingredient.GetAllSuccess" xml:space="preserve"><value>تم استرداد قائمة المكونات بنجاح.</value></data>
+  <data name="Ingredient.CreateSuccess" xml:space="preserve"><value>تم إنشاء المكون بنجاح.</value></data>
+  <data name="Ingredient.UpdateSuccess" xml:space="preserve"><value>تم تحديث المكون بنجاح.</value></data>
+  <data name="Ingredient.DeleteSuccess" xml:space="preserve"><value>تم حذف المكون بنجاح.</value></data>
+  <data name="MeasurementUnit.NotFound" xml:space="preserve"><value>وحدة القياس غير موجودة.</value></data>
+  <data name="MeasurementUnit.NameRequired" xml:space="preserve"><value>اسم وحدة القياس مطلوب.</value></data>
+  <data name="MeasurementUnit.AlreadyExists" xml:space="preserve"><value>توجد وحدة قياس بهذا الاسم بالفعل.</value></data>
+  <data name="MeasurementUnit.InUse" xml:space="preserve"><value>لا يمكن حذف وحدة القياس لأنها مستخدمة في وصفة واحدة أو أكثر.</value></data>
+  <data name="MeasurementUnit.GetSuccess" xml:space="preserve"><value>تم استرداد تفاصيل وحدة القياس بنجاح.</value></data>
+  <data name="MeasurementUnit.GetAllSuccess" xml:space="preserve"><value>تم استرداد قائمة وحدات القياس بنجاح.</value></data>
+  <data name="MeasurementUnit.CreateSuccess" xml:space="preserve"><value>تم إنشاء وحدة القياس بنجاح.</value></data>
+  <data name="MeasurementUnit.UpdateSuccess" xml:space="preserve"><value>تم تحديث وحدة القياس بنجاح.</value></data>
+  <data name="MeasurementUnit.DeleteSuccess" xml:space="preserve"><value>تم حذف وحدة القياس بنجاح.</value></data>
+  <data name="Recipe.NotFound" xml:space="preserve"><value>الوصفة غير موجودة.</value></data>
+  <data name="Recipe.NameRequired" xml:space="preserve"><value>اسم الوصفة مطلوب.</value></data>
+  <data name="Recipe.StepsRequired" xml:space="preserve"><value>خطوات التحضير مطلوبة.</value></data>
+  <data name="Recipe.InvalidIngredients" xml:space="preserve"><value>واحد أو أكثر من المكونات المحددة غير موجود.</value></data>
+  <data name="Recipe.InvalidPreferences" xml:space="preserve"><value>واحدة أو أكثر من التفضيلات المحددة غير موجودة.</value></data>
+  <data name="Recipe.ServingNumInvalid" xml:space="preserve"><value>عدد الحصص يجب أن يكون أكبر من الصفر.</value></data>
+  <data name="Recipe.InvalidMeasurementUnit" xml:space="preserve"><value>واحدة أو أكثر من وحدات القياس المحددة غير موجودة.</value></data>
+  <data name="Recipe.GetSuccess" xml:space="preserve"><value>تم استرداد تفاصيل الوصفة بنجاح.</value></data>
+  <data name="Recipe.GetAllSuccess" xml:space="preserve"><value>تم استرداد قائمة الوصفات بنجاح.</value></data>
+  <data name="Recipe.CreateSuccess" xml:space="preserve"><value>تم إنشاء الوصفة بنجاح.</value></data>
+  <data name="Recipe.UpdateSuccess" xml:space="preserve"><value>تم تحديث الوصفة بنجاح.</value></data>
+  <data name="Recipe.DeleteSuccess" xml:space="preserve"><value>تم حذف الوصفة بنجاح.</value></data>
 </root>
 

@@ -1,6 +1,7 @@
 using HomePal.Application.Common.Interfaces;
 using HomePal.Application.Features.Auth.Interfaces;
 using HomePal.Application.Features.HouseholdManagement.Interfaces;
+using HomePal.Application.Features.RecipeManagement.Interfaces;
 
 namespace HomePal.Application.Common.Interfaces;
 
@@ -13,6 +14,9 @@ public interface IUnitOfWork : IDisposable
     IHouseholdInvitationRepository HouseholdInvitations { get; }
     IPreferenceRepository Preferences { get; }
     IPreferenceCategoryRepository PreferenceCategories { get; }
+    IIngredientRepository Ingredients { get; }
+    IMeasurementUnitRepository MeasurementUnits { get; }
+    IRecipeRepository Recipes { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     Task BeginTransactionAsync(CancellationToken cancellationToken = default);

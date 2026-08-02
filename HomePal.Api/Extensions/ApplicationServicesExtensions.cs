@@ -50,6 +50,9 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IHouseholdInvitationRepository, HouseholdInvitationRepository>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceRepository, PreferenceRepository>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceCategoryRepository, PreferenceCategoryRepository>();
+        services.AddScoped<HomePal.Application.Features.RecipeManagement.Interfaces.IIngredientRepository, IngredientRepository>();
+        services.AddScoped<HomePal.Application.Features.RecipeManagement.Interfaces.IMeasurementUnitRepository, MeasurementUnitRepository>();
+        services.AddScoped<HomePal.Application.Features.RecipeManagement.Interfaces.IRecipeRepository, RecipeRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<ITokenProvider, TokenProvider>();
@@ -73,6 +76,9 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceService, HomePal.Application.Features.HouseholdManagement.Services.PreferenceService>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceCategoryService, HomePal.Application.Features.HouseholdManagement.Services.PreferenceCategoryService>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IMemberPreferenceService, HomePal.Application.Features.HouseholdManagement.Services.MemberPreferenceService>();
+        services.AddScoped<HomePal.Application.Features.RecipeManagement.Interfaces.IIngredientService, HomePal.Application.Features.RecipeManagement.Services.IngredientService>();
+        services.AddScoped<HomePal.Application.Features.RecipeManagement.Interfaces.IMeasurementUnitService, HomePal.Application.Features.RecipeManagement.Services.MeasurementUnitService>();
+        services.AddScoped<HomePal.Application.Features.RecipeManagement.Interfaces.IRecipeService, HomePal.Application.Features.RecipeManagement.Services.RecipeService>();
 
         services.AddControllers()
             .AddDataAnnotationsLocalization(options =>

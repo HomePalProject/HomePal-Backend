@@ -173,5 +173,35 @@
   <data name="Household.AddCategorySuccess" xml:space="preserve"><value>Category created successfully.</value></data>
   <data name="Household.UpdateCategorySuccess" xml:space="preserve"><value>Category updated successfully.</value></data>
   <data name="Household.DeleteCategorySuccess" xml:space="preserve"><value>Category deleted successfully.</value></data>
+  <data name="Ingredient.NotFound" xml:space="preserve"><value>Ingredient not found.</value></data>
+  <data name="Ingredient.NameRequired" xml:space="preserve"><value>Ingredient name is required.</value></data>
+  <data name="Ingredient.AlreadyExists" xml:space="preserve"><value>An ingredient with this name already exists.</value></data>
+  <data name="Ingredient.InUse" xml:space="preserve"><value>Cannot delete ingredient because it is used in one or more recipes.</value></data>
+  <data name="Ingredient.GetSuccess" xml:space="preserve"><value>Ingredient details retrieved successfully.</value></data>
+  <data name="Ingredient.GetAllSuccess" xml:space="preserve"><value>Ingredients list retrieved successfully.</value></data>
+  <data name="Ingredient.CreateSuccess" xml:space="preserve"><value>Ingredient created successfully.</value></data>
+  <data name="Ingredient.UpdateSuccess" xml:space="preserve"><value>Ingredient updated successfully.</value></data>
+  <data name="Ingredient.DeleteSuccess" xml:space="preserve"><value>Ingredient deleted successfully.</value></data>
+  <data name="MeasurementUnit.NotFound" xml:space="preserve"><value>Measurement unit not found.</value></data>
+  <data name="MeasurementUnit.NameRequired" xml:space="preserve"><value>Measurement unit name is required.</value></data>
+  <data name="MeasurementUnit.AlreadyExists" xml:space="preserve"><value>A measurement unit with this name already exists.</value></data>
+  <data name="MeasurementUnit.InUse" xml:space="preserve"><value>Cannot delete measurement unit because it is used in one or more recipes.</value></data>
+  <data name="MeasurementUnit.GetSuccess" xml:space="preserve"><value>Measurement unit details retrieved successfully.</value></data>
+  <data name="MeasurementUnit.GetAllSuccess" xml:space="preserve"><value>Measurement units list retrieved successfully.</value></data>
+  <data name="MeasurementUnit.CreateSuccess" xml:space="preserve"><value>Measurement unit created successfully.</value></data>
+  <data name="MeasurementUnit.UpdateSuccess" xml:space="preserve"><value>Measurement unit updated successfully.</value></data>
+  <data name="MeasurementUnit.DeleteSuccess" xml:space="preserve"><value>Measurement unit deleted successfully.</value></data>
+  <data name="Recipe.NotFound" xml:space="preserve"><value>Recipe not found.</value></data>
+  <data name="Recipe.NameRequired" xml:space="preserve"><value>Recipe name is required.</value></data>
+  <data name="Recipe.StepsRequired" xml:space="preserve"><value>Recipe steps are required.</value></data>
+  <data name="Recipe.InvalidIngredients" xml:space="preserve"><value>One or more specified ingredients do not exist.</value></data>
+  <data name="Recipe.InvalidPreferences" xml:space="preserve"><value>One or more specified preferences do not exist.</value></data>
+  <data name="Recipe.ServingNumInvalid" xml:space="preserve"><value>Serving number must be greater than zero.</value></data>
+  <data name="Recipe.InvalidMeasurementUnit" xml:space="preserve"><value>One or more specified measurement units do not exist.</value></data>
+  <data name="Recipe.GetSuccess" xml:space="preserve"><value>Recipe details retrieved successfully.</value></data>
+  <data name="Recipe.GetAllSuccess" xml:space="preserve"><value>Recipes list retrieved successfully.</value></data>
+  <data name="Recipe.CreateSuccess" xml:space="preserve"><value>Recipe created successfully.</value></data>
+  <data name="Recipe.UpdateSuccess" xml:space="preserve"><value>Recipe updated successfully.</value></data>
+  <data name="Recipe.DeleteSuccess" xml:space="preserve"><value>Recipe deleted successfully.</value></data>
 </root>
 

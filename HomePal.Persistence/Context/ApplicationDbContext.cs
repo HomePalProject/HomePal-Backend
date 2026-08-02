@@ -19,6 +19,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<HouseholdInvitation> HouseholdInvitations => Set<HouseholdInvitation>();
     public DbSet<Preference> Preferences => Set<Preference>();
     public DbSet<PreferenceCategory> PreferenceCategories => Set<PreferenceCategory>();
+    public DbSet<Recipe> Recipes => Set<Recipe>();
+    public DbSet<Ingredient> Ingredients => Set<Ingredient>();
+    public DbSet<MeasurementUnit> MeasurementUnits => Set<MeasurementUnit>();
+    public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

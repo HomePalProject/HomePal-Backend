@@ -66,4 +66,31 @@ public static class ErrorMessages
         public const string CategoryAlreadyExists = "Household.CategoryAlreadyExists";
         public const string CategoryHasPreferences = "Household.CategoryHasPreferences";
     }
+
+    public static class Ingredient
+    {
+        public const string NotFound = "Ingredient.NotFound";
+        public const string NameRequired = "Ingredient.NameRequired";
+        public const string AlreadyExists = "Ingredient.AlreadyExists";
+        public const string InUse = "Ingredient.InUse";
+    }
+
+    public static class MeasurementUnit
+    {
+        public const string NotFound = "MeasurementUnit.NotFound";
+        public const string NameRequired = "MeasurementUnit.NameRequired";
+        public const string AlreadyExists = "MeasurementUnit.AlreadyExists";
+        public const string InUse = "MeasurementUnit.InUse";
+    }
+
+    public static class Recipe
+    {
+        public const string NotFound = "Recipe.NotFound";
+        public const string NameRequired = "Recipe.NameRequired";
+        public const string StepsRequired = "Recipe.StepsRequired";
+        public const string InvalidIngredients = "Recipe.InvalidIngredients";
+        public const string InvalidPreferences = "Recipe.InvalidPreferences";
+        public const string ServingNumInvalid = "Recipe.ServingNumInvalid";
+        public const string InvalidMeasurementUnit = "Recipe.InvalidMeasurementUnit";
+    }
 }

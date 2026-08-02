@@ -54,4 +54,31 @@ public static class SuccessMessages
         public const string UpdateCategory = "Household.UpdateCategorySuccess";
         public const string DeleteCategory = "Household.DeleteCategorySuccess";
     }
+
+    public static class Ingredient
+    {
+        public const string Get = "Ingredient.GetSuccess";
+        public const string GetAll = "Ingredient.GetAllSuccess";
+        public const string Create = "Ingredient.CreateSuccess";
+        public const string Update = "Ingredient.UpdateSuccess";
+        public const string Delete = "Ingredient.DeleteSuccess";
+    }
+
+    public static class MeasurementUnit
+    {
+        public const string Get = "MeasurementUnit.GetSuccess";
+        public const string GetAll = "MeasurementUnit.GetAllSuccess";
+        public const string Create = "MeasurementUnit.CreateSuccess";
+        public const string Update = "MeasurementUnit.UpdateSuccess";
+        public const string Delete = "MeasurementUnit.DeleteSuccess";
+    }
+
+    public static class Recipe
+    {
+        public const string Get = "Recipe.GetSuccess";
+        public const string GetAll = "Recipe.GetAllSuccess";
+        public const string Create = "Recipe.CreateSuccess";
+        public const string Update = "Recipe.UpdateSuccess";
+        public const string Delete = "Recipe.DeleteSuccess";
+    }
 }
