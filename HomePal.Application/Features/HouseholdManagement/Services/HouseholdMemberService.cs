@@ -105,6 +105,17 @@ public class HouseholdMemberService : IHouseholdMemberService
                 return Result<HouseholdMemberResponse>.Fail(ErrorMessages.Household.CannotPromoteOfflineMember, ResultStatus.BadRequest);
             }
 
+            // Prevent the sole manager from demoting themselves
+            bool isSelf = targetMember.UserId == managerUserId;
+            if (isSelf && newRole == Roles.HouseholdMember && managerMember.Role == Roles.HouseholdManager)
+            {
+                int managerCount = await _unitOfWork.HouseholdMembers.GetManagerCountAsync(managerMember.HouseholdId, cancellationToken);
+                if (managerCount <= 1)
+                {
+                    return Result<HouseholdMemberResponse>.Fail(ErrorMessages.Household.CannotDemoteSelfAsOnlyManager, ResultStatus.BadRequest);
+                }
+            }
+
             targetMember.Role = newRole;
 
             if (targetMember.UserId.HasValue)

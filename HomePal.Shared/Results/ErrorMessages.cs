@@ -58,6 +58,7 @@ public static class ErrorMessages
         public const string MemberRemovalUnauthorized = "Household.MemberRemovalUnauthorized";
         public const string CannotRemoveOnlyManager = "Household.CannotRemoveOnlyManager";
         public const string CannotPromoteOfflineMember = "Household.CannotPromoteOfflineMember";
+        public const string CannotDemoteSelfAsOnlyManager = "Household.CannotDemoteSelfAsOnlyManager";
         public const string ManagerCannotRemoveSelf = "Household.ManagerCannotRemoveSelf";
         public const string PreferenceNotFound = "Household.PreferenceNotFound";
         public const string PreferenceAlreadyExists = "Household.PreferenceAlreadyExists";
