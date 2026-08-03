@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using HomePal.Domain.Constants;
 using HomePal.Domain.Enums;
 using HomePal.Shared.Results;
 
@@ -16,6 +17,6 @@ public class UpdateMemberRequest
 
     public DateOnly? DateOfBirth { get; set; }
 
-    [StringLength(50, ErrorMessage = ErrorMessages.Validation.InvalidValue)]
+    [AllowedValues(Roles.HouseholdManager, Roles.HouseholdMember, ErrorMessage = ErrorMessages.Validation.InvalidValue)]
     public string? Role { get; set; }
 }
