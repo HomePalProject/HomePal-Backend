@@ -114,21 +114,24 @@ public class HouseholdMemberService : IHouseholdMemberService
                 {
                     if (newRole == Roles.HouseholdManager)
                     {
-                        await _userManager.RemoveFromRoleAsync(targetUser, Roles.HouseholdMember);
+
                         if (!await _userManager.IsInRoleAsync(targetUser, Roles.HouseholdManager))
                         {
+                            await _userManager.RemoveFromRoleAsync(targetUser, Roles.HouseholdMember);
                             await _userManager.AddToRoleAsync(targetUser, Roles.HouseholdManager);
+                            await _userManager.UpdateSecurityStampAsync(targetUser);
                         }
                     }
                     else if (newRole == Roles.HouseholdMember)
                     {
-                        await _userManager.RemoveFromRoleAsync(targetUser, Roles.HouseholdManager);
+                        
                         if (!await _userManager.IsInRoleAsync(targetUser, Roles.HouseholdMember))
                         {
+                            await _userManager.RemoveFromRoleAsync(targetUser, Roles.HouseholdManager);
                             await _userManager.AddToRoleAsync(targetUser, Roles.HouseholdMember);
+                            await _userManager.UpdateSecurityStampAsync(targetUser);
                         }
                     }
-                    await _userManager.UpdateSecurityStampAsync(targetUser);
                 }
             }
         }
