@@ -54,4 +54,47 @@ public static class SuccessMessages
         public const string UpdateCategory = "Household.UpdateCategorySuccess";
         public const string DeleteCategory = "Household.DeleteCategorySuccess";
     }
+
+    public static class Catalog
+    {
+        public const string GetAllProductCategories = "Catalog.GetAllProductCategoriesSuccess";
+        public const string GetProductCategory = "Catalog.GetProductCategorySuccess";
+        public const string CreateProductCategory = "Catalog.CreateProductCategorySuccess";
+        public const string UpdateProductCategory = "Catalog.UpdateProductCategorySuccess";
+        public const string DeleteProductCategory = "Catalog.DeleteProductCategorySuccess";
+
+        public const string GetAllMeasuringUnits = "Catalog.GetAllMeasuringUnitsSuccess";
+        public const string GetMeasuringUnit = "Catalog.GetMeasuringUnitSuccess";
+        public const string CreateMeasuringUnit = "Catalog.CreateMeasuringUnitSuccess";
+        public const string UpdateMeasuringUnit = "Catalog.UpdateMeasuringUnitSuccess";
+        public const string DeleteMeasuringUnit = "Catalog.DeleteMeasuringUnitSuccess";
+
+        public const string GetAllSupermarkets = "Catalog.GetAllSupermarketsSuccess";
+        public const string GetSupermarket = "Catalog.GetSupermarketSuccess";
+        public const string CreateSupermarket = "Catalog.CreateSupermarketSuccess";
+        public const string UpdateSupermarket = "Catalog.UpdateSupermarketSuccess";
+        public const string DeleteSupermarket = "Catalog.DeleteSupermarketSuccess";
+
+        public const string GetCanonicalProducts = "Catalog.GetCanonicalProductsSuccess";
+        public const string GetCanonicalProduct = "Catalog.GetCanonicalProductSuccess";
+        public const string CreateCanonicalProduct = "Catalog.CreateCanonicalProductSuccess";
+        public const string UpdateCanonicalProduct = "Catalog.UpdateCanonicalProductSuccess";
+        public const string DeleteCanonicalProduct = "Catalog.DeleteCanonicalProductSuccess";
+
+        public const string GetOffers = "Catalog.GetOffersSuccess";
+        public const string GetOffer = "Catalog.GetOfferSuccess";
+        public const string CreateOffer = "Catalog.CreateOfferSuccess";
+        public const string UpdateOffer = "Catalog.UpdateOfferSuccess";
+        public const string DeleteOffer = "Catalog.DeleteOfferSuccess";
+
+        public const string UploadSupermarketLogo = "Catalog.UploadSupermarketLogoSuccess";
+        public const string UploadCanonicalProductImage = "Catalog.UploadCanonicalProductImageSuccess";
+        public const string UploadOfferImage = "Catalog.UploadOfferImageSuccess";
+        public const string UploadProductCategoryImage = "Catalog.UploadProductCategoryImageSuccess";
+
+        public const string DeleteSupermarketLogo = "Catalog.DeleteSupermarketLogoSuccess";
+        public const string DeleteCanonicalProductImage = "Catalog.DeleteCanonicalProductImageSuccess";
+        public const string DeleteOfferImage = "Catalog.DeleteOfferImageSuccess";
+        public const string DeleteProductCategoryImage = "Catalog.DeleteProductCategoryImageSuccess";
+    }
 }
