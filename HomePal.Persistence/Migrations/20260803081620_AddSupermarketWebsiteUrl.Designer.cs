@@ -5,6 +5,7 @@ using Microsoft.Data.SqlTypes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,9 +13,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomePal.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260803081620_AddSupermarketWebsiteUrl")]
+    partial class AddSupermarketWebsiteUrl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -286,6 +289,10 @@ namespace HomePal.Persistence.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Symbol")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -755,34 +762,7 @@ namespace HomePal.Persistence.Migrations
                                 .HasForeignKey("MeasuringUnitId");
                         });
 
-                    b.OwnsMany("HomePal.Domain.Common.LocalizedItem", "Symbol", b1 =>
-                        {
-                            b1.Property<Guid>("MeasuringUnitId");
-
-                            b1.Property<int>("__synthesizedOrdinal")
-                                .ValueGeneratedOnAddOrUpdate();
-
-                            b1.Property<string>("Culture")
-                                .IsRequired();
-
-                            b1.Property<string>("Value")
-                                .IsRequired();
-
-                            b1.HasKey("MeasuringUnitId", "__synthesizedOrdinal");
-
-                            b1.ToTable("MeasuringUnits");
-
-                            b1
-                                .ToJson("Symbol")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MeasuringUnitId");
-                        });
-
                     b.Navigation("Name");
-
-                    b.Navigation("Symbol");
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.Offer", b =>

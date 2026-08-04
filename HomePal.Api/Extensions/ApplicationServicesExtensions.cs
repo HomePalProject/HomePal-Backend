@@ -50,6 +50,11 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IHouseholdInvitationRepository, HouseholdInvitationRepository>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceRepository, PreferenceRepository>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceCategoryRepository, PreferenceCategoryRepository>();
+        services.AddScoped<HomePal.Application.Features.Catalog.Interfaces.IProductCategoryRepository, ProductCategoryRepository>();
+        services.AddScoped<HomePal.Application.Features.Catalog.Interfaces.IMeasuringUnitRepository, MeasuringUnitRepository>();
+        services.AddScoped<HomePal.Application.Features.Catalog.Interfaces.ISupermarketRepository, SupermarketRepository>();
+        services.AddScoped<HomePal.Application.Features.Catalog.Interfaces.ICanonicalProductRepository, CanonicalProductRepository>();
+        services.AddScoped<HomePal.Application.Features.Catalog.Interfaces.IOfferRepository, OfferRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<ITokenProvider, TokenProvider>();
@@ -73,6 +78,11 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceService, HomePal.Application.Features.HouseholdManagement.Services.PreferenceService>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IPreferenceCategoryService, HomePal.Application.Features.HouseholdManagement.Services.PreferenceCategoryService>();
         services.AddScoped<HomePal.Application.Features.HouseholdManagement.Interfaces.IMemberPreferenceService, HomePal.Application.Features.HouseholdManagement.Services.MemberPreferenceService>();
+        services.AddScoped<HomePal.Application.Features.Catalog.Interfaces.IProductCategoryService, HomePal.Application.Features.Catalog.Services.ProductCategoryService>();
+        services.AddScoped<HomePal.Application.Features.Catalog.Interfaces.IMeasuringUnitService, HomePal.Application.Features.Catalog.Services.MeasuringUnitService>();
+        services.AddScoped<HomePal.Application.Features.Catalog.Interfaces.ISupermarketService, HomePal.Application.Features.Catalog.Services.SupermarketService>();
+        services.AddScoped<HomePal.Application.Features.Catalog.Interfaces.ICanonicalProductService, HomePal.Application.Features.Catalog.Services.CanonicalProductService>();
+        services.AddScoped<HomePal.Application.Features.Catalog.Interfaces.IOfferService, HomePal.Application.Features.Catalog.Services.OfferService>();
 
         services.AddControllers()
             .AddDataAnnotationsLocalization(options =>

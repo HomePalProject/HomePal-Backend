@@ -173,5 +173,52 @@
   <data name="Household.AddCategorySuccess" xml:space="preserve"><value>تم إنشاء الفئة بنجاح.</value></data>
   <data name="Household.UpdateCategorySuccess" xml:space="preserve"><value>تم تحديث الفئة بنجاح.</value></data>
   <data name="Household.DeleteCategorySuccess" xml:space="preserve"><value>تم حذف الفئة بنجاح.</value></data>
+
+  <!-- Catalog Messages -->
+  <data name="Catalog.GetAllProductCategoriesSuccess" xml:space="preserve"><value>تم استرداد فئات المنتجات بنجاح.</value></data>
+  <data name="Catalog.GetProductCategorySuccess" xml:space="preserve"><value>تم استرداد فئة المنتج بنجاح.</value></data>
+  <data name="Catalog.CreateProductCategorySuccess" xml:space="preserve"><value>تم إنشاء فئة المنتج بنجاح.</value></data>
+  <data name="Catalog.UpdateProductCategorySuccess" xml:space="preserve"><value>تم تحديث فئة المنتج بنجاح.</value></data>
+  <data name="Catalog.DeleteProductCategorySuccess" xml:space="preserve"><value>تم حذف فئة المنتج بنجاح.</value></data>
+
+  <data name="Catalog.GetAllMeasuringUnitsSuccess" xml:space="preserve"><value>تم استرداد وحدات القياس بنجاح.</value></data>
+  <data name="Catalog.GetMeasuringUnitSuccess" xml:space="preserve"><value>تم استرداد وحدة القياس بنجاح.</value></data>
+  <data name="Catalog.CreateMeasuringUnitSuccess" xml:space="preserve"><value>تم إنشاء وحدة القياس بنجاح.</value></data>
+  <data name="Catalog.UpdateMeasuringUnitSuccess" xml:space="preserve"><value>تم تحديث وحدة القياس بنجاح.</value></data>
+  <data name="Catalog.DeleteMeasuringUnitSuccess" xml:space="preserve"><value>تم حذف وحدة القياس بنجاح.</value></data>
+
+  <data name="Catalog.GetAllSupermarketsSuccess" xml:space="preserve"><value>تم استرداد المتاجر بنجاح.</value></data>
+  <data name="Catalog.GetSupermarketSuccess" xml:space="preserve"><value>تم استرداد المتجر بنجاح.</value></data>
+  <data name="Catalog.CreateSupermarketSuccess" xml:space="preserve"><value>تم إنشاء المتجر بنجاح.</value></data>
+  <data name="Catalog.UpdateSupermarketSuccess" xml:space="preserve"><value>تم تحديث المتجر بنجاح.</value></data>
+  <data name="Catalog.DeleteSupermarketSuccess" xml:space="preserve"><value>تم حذف المتجر بنجاح.</value></data>
+
+  <data name="Catalog.GetCanonicalProductsSuccess" xml:space="preserve"><value>تم استرداد المنتجات الرئيسية بنجاح.</value></data>
+  <data name="Catalog.GetCanonicalProductSuccess" xml:space="preserve"><value>تم استرداد المنتج الرئيسي بنجاح.</value></data>
+  <data name="Catalog.CreateCanonicalProductSuccess" xml:space="preserve"><value>تم إنشاء المنتج الرئيسي بنجاح.</value></data>
+  <data name="Catalog.UpdateCanonicalProductSuccess" xml:space="preserve"><value>تم تحديث المنتج الرئيسي بنجاح.</value></data>
+  <data name="Catalog.DeleteCanonicalProductSuccess" xml:space="preserve"><value>تم حذف المنتج الرئيسي بنجاح.</value></data>
+
+  <data name="Catalog.GetOffersSuccess" xml:space="preserve"><value>تم استرداد العروض بنجاح.</value></data>
+  <data name="Catalog.GetOfferSuccess" xml:space="preserve"><value>تم استرداد العرض بنجاح.</value></data>
+  <data name="Catalog.CreateOfferSuccess" xml:space="preserve"><value>تم إنشاء العرض بنجاح.</value></data>
+  <data name="Catalog.UpdateOfferSuccess" xml:space="preserve"><value>تم تحديث العرض بنجاح.</value></data>
+  <data name="Catalog.DeleteOfferSuccess" xml:space="preserve"><value>تم حذف العرض بنجاح.</value></data>
+
+  <data name="Catalog.ProductCategoryNotFound" xml:space="preserve"><value>فئة المنتج غير موجودة.</value></data>
+  <data name="Catalog.MeasuringUnitNotFound" xml:space="preserve"><value>وحدة القياس غير موجودة.</value></data>
+  <data name="Catalog.SupermarketNotFound" xml:space="preserve"><value>المتجر غير موجود.</value></data>
+  <data name="Catalog.CanonicalProductNotFound" xml:space="preserve"><value>المنتج الرئيسي غير موجود.</value></data>
+  <data name="Catalog.OfferNotFound" xml:space="preserve"><value>العرض غير موجود.</value></data>
+
+  <data name="Catalog.UploadSupermarketLogoSuccess" xml:space="preserve"><value>تم تحميل شعار المتجر بنجاح.</value></data>
+  <data name="Catalog.UploadCanonicalProductImageSuccess" xml:space="preserve"><value>تم تحميل صورة المنتج بنجاح.</value></data>
+  <data name="Catalog.UploadOfferImageSuccess" xml:space="preserve"><value>تم تحميل صورة العرض بنجاح.</value></data>
+  <data name="Catalog.UploadProductCategoryImageSuccess" xml:space="preserve"><value>تم تحميل صورة فئة المنتج بنجاح.</value></data>
+  <data name="Catalog.DeleteSupermarketLogoSuccess" xml:space="preserve"><value>تم حذف شعار المتجر بنجاح.</value></data>
+  <data name="Catalog.DeleteCanonicalProductImageSuccess" xml:space="preserve"><value>تم حذف صورة المنتج بنجاح.</value></data>
+  <data name="Catalog.DeleteOfferImageSuccess" xml:space="preserve"><value>تم حذف صورة العرض بنجاح.</value></data>
+  <data name="Catalog.DeleteProductCategoryImageSuccess" xml:space="preserve"><value>تم حذف صورة فئة المنتج بنجاح.</value></data>
+  <data name="Catalog.ImageUploadFailed" xml:space="preserve"><value>فشل في تحميل الصورة.</value></data>
 </root>
 
