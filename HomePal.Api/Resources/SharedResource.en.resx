@@ -173,5 +173,52 @@
   <data name="Household.AddCategorySuccess" xml:space="preserve"><value>Category created successfully.</value></data>
   <data name="Household.UpdateCategorySuccess" xml:space="preserve"><value>Category updated successfully.</value></data>
   <data name="Household.DeleteCategorySuccess" xml:space="preserve"><value>Category deleted successfully.</value></data>
+
+  <!-- Catalog Messages -->
+  <data name="Catalog.GetAllProductCategoriesSuccess" xml:space="preserve"><value>Product categories retrieved successfully.</value></data>
+  <data name="Catalog.GetProductCategorySuccess" xml:space="preserve"><value>Product category retrieved successfully.</value></data>
+  <data name="Catalog.CreateProductCategorySuccess" xml:space="preserve"><value>Product category created successfully.</value></data>
+  <data name="Catalog.UpdateProductCategorySuccess" xml:space="preserve"><value>Product category updated successfully.</value></data>
+  <data name="Catalog.DeleteProductCategorySuccess" xml:space="preserve"><value>Product category deleted successfully.</value></data>
+
+  <data name="Catalog.GetAllMeasuringUnitsSuccess" xml:space="preserve"><value>Measuring units retrieved successfully.</value></data>
+  <data name="Catalog.GetMeasuringUnitSuccess" xml:space="preserve"><value>Measuring unit retrieved successfully.</value></data>
+  <data name="Catalog.CreateMeasuringUnitSuccess" xml:space="preserve"><value>Measuring unit created successfully.</value></data>
+  <data name="Catalog.UpdateMeasuringUnitSuccess" xml:space="preserve"><value>Measuring unit updated successfully.</value></data>
+  <data name="Catalog.DeleteMeasuringUnitSuccess" xml:space="preserve"><value>Measuring unit deleted successfully.</value></data>
+
+  <data name="Catalog.GetAllSupermarketsSuccess" xml:space="preserve"><value>Supermarkets retrieved successfully.</value></data>
+  <data name="Catalog.GetSupermarketSuccess" xml:space="preserve"><value>Supermarket retrieved successfully.</value></data>
+  <data name="Catalog.CreateSupermarketSuccess" xml:space="preserve"><value>Supermarket created successfully.</value></data>
+  <data name="Catalog.UpdateSupermarketSuccess" xml:space="preserve"><value>Supermarket updated successfully.</value></data>
+  <data name="Catalog.DeleteSupermarketSuccess" xml:space="preserve"><value>Supermarket deleted successfully.</value></data>
+
+  <data name="Catalog.GetCanonicalProductsSuccess" xml:space="preserve"><value>Canonical products retrieved successfully.</value></data>
+  <data name="Catalog.GetCanonicalProductSuccess" xml:space="preserve"><value>Canonical product retrieved successfully.</value></data>
+  <data name="Catalog.CreateCanonicalProductSuccess" xml:space="preserve"><value>Canonical product created successfully.</value></data>
+  <data name="Catalog.UpdateCanonicalProductSuccess" xml:space="preserve"><value>Canonical product updated successfully.</value></data>
+  <data name="Catalog.DeleteCanonicalProductSuccess" xml:space="preserve"><value>Canonical product deleted successfully.</value></data>
+
+  <data name="Catalog.GetOffersSuccess" xml:space="preserve"><value>Offers retrieved successfully.</value></data>
+  <data name="Catalog.GetOfferSuccess" xml:space="preserve"><value>Offer retrieved successfully.</value></data>
+  <data name="Catalog.CreateOfferSuccess" xml:space="preserve"><value>Offer created successfully.</value></data>
+  <data name="Catalog.UpdateOfferSuccess" xml:space="preserve"><value>Offer updated successfully.</value></data>
+  <data name="Catalog.DeleteOfferSuccess" xml:space="preserve"><value>Offer deleted successfully.</value></data>
+
+  <data name="Catalog.ProductCategoryNotFound" xml:space="preserve"><value>Product category not found.</value></data>
+  <data name="Catalog.MeasuringUnitNotFound" xml:space="preserve"><value>Measuring unit not found.</value></data>
+  <data name="Catalog.SupermarketNotFound" xml:space="preserve"><value>Supermarket not found.</value></data>
+  <data name="Catalog.CanonicalProductNotFound" xml:space="preserve"><value>Canonical product not found.</value></data>
+  <data name="Catalog.OfferNotFound" xml:space="preserve"><value>Offer not found.</value></data>
+
+  <data name="Catalog.UploadSupermarketLogoSuccess" xml:space="preserve"><value>Supermarket logo uploaded successfully.</value></data>
+  <data name="Catalog.UploadCanonicalProductImageSuccess" xml:space="preserve"><value>Product image uploaded successfully.</value></data>
+  <data name="Catalog.UploadOfferImageSuccess" xml:space="preserve"><value>Offer image uploaded successfully.</value></data>
+  <data name="Catalog.UploadProductCategoryImageSuccess" xml:space="preserve"><value>Product category image uploaded successfully.</value></data>
+  <data name="Catalog.DeleteSupermarketLogoSuccess" xml:space="preserve"><value>Supermarket logo deleted successfully.</value></data>
+  <data name="Catalog.DeleteCanonicalProductImageSuccess" xml:space="preserve"><value>Product image deleted successfully.</value></data>
+  <data name="Catalog.DeleteOfferImageSuccess" xml:space="preserve"><value>Offer image deleted successfully.</value></data>
+  <data name="Catalog.DeleteProductCategoryImageSuccess" xml:space="preserve"><value>Product category image deleted successfully.</value></data>
+  <data name="Catalog.ImageUploadFailed" xml:space="preserve"><value>Failed to upload image.</value></data>
 </root>
 

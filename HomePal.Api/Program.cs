@@ -23,6 +23,7 @@ public class Program
         }
         await RoleSeeder.SeedRolesAsync(app.Services);
         await AdminSeeder.SeedAdminUserAsync(app.Services, builder.Configuration);
+        await CatalogSeeder.SeedCatalogDataAsync(app.Services);
 
         app.UseMiddleware<ExceptionMiddleware>();
 

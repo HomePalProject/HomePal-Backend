@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Static uploaded files
+**/wwwroot/uploads/*
+!**/wwwroot/uploads/.gitkeep
