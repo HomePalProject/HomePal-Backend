@@ -67,4 +67,15 @@ public static class ErrorMessages
         public const string CategoryAlreadyExists = "Household.CategoryAlreadyExists";
         public const string CategoryHasPreferences = "Household.CategoryHasPreferences";
     }
+
+    public static class Catalog
+    {
+        public const string ProductCategoryNotFound = "Catalog.ProductCategoryNotFound";
+        public const string MeasuringUnitNotFound = "Catalog.MeasuringUnitNotFound";
+        public const string SupermarketNotFound = "Catalog.SupermarketNotFound";
+        public const string CanonicalProductNotFound = "Catalog.CanonicalProductNotFound";
+        public const string OfferNotFound = "Catalog.OfferNotFound";
+
+        public const string ImageUploadFailed = "Catalog.ImageUploadFailed";
+    }
 }
