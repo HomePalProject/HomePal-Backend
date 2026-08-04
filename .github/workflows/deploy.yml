@@ -8,27 +8,27 @@ on:
 jobs:
   build_and_deploy:
     runs-on: windows-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Setup .NET 10
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0
-          
+
       - name: Install dependencies
         run: dotnet restore
-        
+
       - name: Build
         run: dotnet build --configuration Release --no-restore
 
-      - name: Test with .NET
-        run: dotnet test
+      - name: Test
+        run: dotnet test --no-build
 
       - name: Publish
-        run: dotnet publish --configuration Release --output ./publish --runtime win-x86 
-        
-
+        run: dotnet publish --configuration Release --output ./publish --runtime win-x86
 
       - name: Deploy to MonsterASP.NET via WebDeploy
         uses: rasmusbuchholdt/simply-web-deploy@2.1.0
@@ -37,3 +37,23 @@ jobs:
           server-computer-name: ${{ secrets.SERVER_COMPUTER_NAME }}
           server-username: ${{ secrets.SERVER_USERNAME }}
           server-password: ${{ secrets.SERVER_PASSWORD }}
+
+      - name: Celebrate with SpongeBob
+        if: success()
+        shell: bash
+        run: |
+          curl -X POST "${{ secrets.DISCORD_WEBHOOK }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "username":"SpongeBob SquarePants",
+              "avatar_url":"https://wallpapersok.com/images/high/funny-face-dreamy-spongebob-fi60js11qenieumv.webp",
+              "content":"## Deployment Successful!\nSpongeBob approves this deployment!",
+              "embeds":[
+                {
+                  "color":16776960,
+                  "image":{
+                    "url":"https://i.pinimg.com/originals/44/77/b4/4477b4c6978864389ddc702552b7cf2b.gif"
+                  }
+                }
+              ]
+            }'
