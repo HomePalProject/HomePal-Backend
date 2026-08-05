@@ -7,7 +7,7 @@ public class CanonicalProductResponse
     public string? Description { get; set; }
     public Guid? CategoryId { get; set; }
     public string? CategoryName { get; set; }
-    public string? CroppedImagePath { get; set; }
+    public string? ImagePath { get; set; }
     public int OffersCount { get; set; }
     public DateTime CreatedAt { get; set; }
 }

@@ -166,7 +166,7 @@ public static class CatalogSeeder
             Name = [new LocalizedItem("en", "Fresh Full Cream Milk 1L"), new LocalizedItem("ar", "حليب كامل الدسم طازج 1 لتر")],
             Description = [new LocalizedItem("en", "Pasteurized full cream fresh milk"), new LocalizedItem("ar", "حليب طازج مبستر كامل الدسم")],
             CategoryId = catDairy.Id,
-            CroppedImagePath = await DownloadDummyImageAsync("products", "Milk"),
+            ImagePath = await DownloadDummyImageAsync("products", "Milk"),
             Embedding = null,
             CreatedAt = DateTime.UtcNow
         };
@@ -176,7 +176,7 @@ public static class CatalogSeeder
             Name = [new LocalizedItem("en", "Farm Fresh White Eggs 30 Pack"), new LocalizedItem("ar", "بيض أبيض طازج كرتونة 30 بيضة")],
             Description = [new LocalizedItem("en", "Grade A fresh white eggs 30 pieces"), new LocalizedItem("ar", "بيض أبيض طازج فئة أ 30 قطعة")],
             CategoryId = catDairy.Id,
-            CroppedImagePath = await DownloadDummyImageAsync("products", "Eggs"),
+            ImagePath = await DownloadDummyImageAsync("products", "Eggs"),
             Embedding = null,
             CreatedAt = DateTime.UtcNow
         };
@@ -186,7 +186,7 @@ public static class CatalogSeeder
             Name = [new LocalizedItem("en", "Fresh Yellow Bananas 1kg"), new LocalizedItem("ar", "موز أصفر طازج 1 كيلو")],
             Description = [new LocalizedItem("en", "Sweet premium yellow bananas"), new LocalizedItem("ar", "موز أصفر ممتاز عالي الجودة")],
             CategoryId = catProduce.Id,
-            CroppedImagePath = await DownloadDummyImageAsync("products", "Bananas"),
+            ImagePath = await DownloadDummyImageAsync("products", "Bananas"),
             Embedding = null,
             CreatedAt = DateTime.UtcNow
         };
@@ -196,7 +196,7 @@ public static class CatalogSeeder
             Name = [new LocalizedItem("en", "Natural Orange Juice 1L"), new LocalizedItem("ar", "عصير برتقال طبيعي 1 لتر")],
             Description = [new LocalizedItem("en", "100% natural pure orange juice"), new LocalizedItem("ar", "عصير برتقال طبيعي نقي 100%")],
             CategoryId = catBeverages.Id,
-            CroppedImagePath = await DownloadDummyImageAsync("products", "OrangeJuice"),
+            ImagePath = await DownloadDummyImageAsync("products", "OrangeJuice"),
             Embedding = null,
             CreatedAt = DateTime.UtcNow
         };
@@ -206,7 +206,7 @@ public static class CatalogSeeder
             Name = [new LocalizedItem("en", "White Toast Bread 500g"), new LocalizedItem("ar", "خبز توست أبيض 500 جرام")],
             Description = [new LocalizedItem("en", "Soft sliced white toast bread"), new LocalizedItem("ar", "خبز توست أبيض شرائح طري")],
             CategoryId = catBakery.Id,
-            CroppedImagePath = await DownloadDummyImageAsync("products", "ToastBread"),
+            ImagePath = await DownloadDummyImageAsync("products", "ToastBread"),
             Embedding = null,
             CreatedAt = DateTime.UtcNow
         };
@@ -216,7 +216,7 @@ public static class CatalogSeeder
             Name = [new LocalizedItem("en", "Fresh Chicken Breast Fillet 1kg"), new LocalizedItem("ar", "صدور دجاج مخلية طازجة 1 كيلو")],
             Description = [new LocalizedItem("en", "Boneless skinless fresh chicken breast"), new LocalizedItem("ar", "صدور دجاج طازجة بدون عظم أو جلد")],
             CategoryId = catMeat.Id,
-            CroppedImagePath = await DownloadDummyImageAsync("products", "ChickenBreast"),
+            ImagePath = await DownloadDummyImageAsync("products", "ChickenBreast"),
             Embedding = null,
             CreatedAt = DateTime.UtcNow
         };
