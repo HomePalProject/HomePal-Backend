@@ -14,7 +14,7 @@ public class CanonicalProduct
     public ProductCategory? Category { get; set; }
 
     public SqlVector<float>? Embedding { get; set; }
-    public string? CroppedImagePath { get; set; }
+    public string? ImagePath { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }

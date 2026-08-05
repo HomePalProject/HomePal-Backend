@@ -11,5 +11,5 @@ public class CreateCanonicalProductRequest
 
     public List<LocalizedItem>? Description { get; set; }
     public Guid? CategoryId { get; set; }
-    public string? CroppedImagePath { get; set; }
+    public string? ImagePath { get; set; }
 }
