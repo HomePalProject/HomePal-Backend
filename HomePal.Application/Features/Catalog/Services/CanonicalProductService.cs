@@ -116,12 +116,12 @@ public class CanonicalProductService : ICanonicalProductService
             return Result<CanonicalProductResponse>.Fail(ErrorMessages.Catalog.ImageUploadFailed, ResultStatus.BadRequest);
         }
 
-        if (!string.IsNullOrWhiteSpace(product.CroppedImagePath))
+        if (!string.IsNullOrWhiteSpace(product.ImagePath))
         {
-            await _fileStorageService.DeleteFileAsync(product.CroppedImagePath);
+            await _fileStorageService.DeleteFileAsync(product.ImagePath);
         }
 
-        product.CroppedImagePath = newImagePath;
+        product.ImagePath = newImagePath;
         product.UpdatedAt = DateTime.UtcNow;
 
         _unitOfWork.CanonicalProducts.Update(product);
@@ -139,10 +139,10 @@ public class CanonicalProductService : ICanonicalProductService
             return Result<CanonicalProductResponse>.Fail(ErrorMessages.Catalog.CanonicalProductNotFound, ResultStatus.NotFound);
         }
 
-        if (!string.IsNullOrWhiteSpace(product.CroppedImagePath))
+        if (!string.IsNullOrWhiteSpace(product.ImagePath))
         {
-            await _fileStorageService.DeleteFileAsync(product.CroppedImagePath);
-            product.CroppedImagePath = null;
+            await _fileStorageService.DeleteFileAsync(product.ImagePath);
+            product.ImagePath = null;
             product.UpdatedAt = DateTime.UtcNow;
 
             _unitOfWork.CanonicalProducts.Update(product);
@@ -161,9 +161,9 @@ public class CanonicalProductService : ICanonicalProductService
             return Result.Fail(ErrorMessages.Catalog.CanonicalProductNotFound, ResultStatus.NotFound);
         }
 
-        if (!string.IsNullOrWhiteSpace(product.CroppedImagePath))
+        if (!string.IsNullOrWhiteSpace(product.ImagePath))
         {
-            await _fileStorageService.DeleteFileAsync(product.CroppedImagePath);
+            await _fileStorageService.DeleteFileAsync(product.ImagePath);
         }
 
         _unitOfWork.CanonicalProducts.Remove(product);

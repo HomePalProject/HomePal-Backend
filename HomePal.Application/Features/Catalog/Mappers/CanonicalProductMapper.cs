@@ -15,7 +15,7 @@ public static class CanonicalProductMapper
             Description = product.Description?.Get(culture),
             CategoryId = product.CategoryId,
             CategoryName = product.Category?.Name.Get(culture),
-            CroppedImagePath = product.CroppedImagePath,
+            ImagePath = product.ImagePath,
             OffersCount = product.Offers?.Count ?? 0,
             CreatedAt = product.CreatedAt
         };
@@ -29,7 +29,7 @@ public static class CanonicalProductMapper
             Name = request.Name,
             Description = request.Description,
             CategoryId = request.CategoryId,
-            CroppedImagePath = request.CroppedImagePath,
+            ImagePath = request.ImagePath,
             CreatedAt = DateTime.UtcNow
         };
     }
@@ -39,7 +39,7 @@ public static class CanonicalProductMapper
         product.Name = request.Name;
         product.Description = request.Description;
         product.CategoryId = request.CategoryId;
-        product.CroppedImagePath = request.CroppedImagePath;
+        product.ImagePath = request.ImagePath;
         product.UpdatedAt = DateTime.UtcNow;
     }
 }
