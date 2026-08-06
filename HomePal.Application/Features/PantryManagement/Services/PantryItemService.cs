@@ -2,6 +2,7 @@ using HomePal.Application.Common.Interfaces;
 using HomePal.Application.Features.PantryManagement.DTOs;
 using HomePal.Application.Features.PantryManagement.Interfaces;
 using HomePal.Application.Features.PantryManagement.Mappers;
+using HomePal.Domain.Common;
 using HomePal.Domain.Constants;
 using HomePal.Domain.Entities;
 using HomePal.Shared.Results;
@@ -246,9 +247,9 @@ public class PantryItemService : IPantryItemService
                 Name = "Fresh Milk 1L",
                 Quantity = 2,
                 MeasuringUnitId = defaultUnit?.Id ?? Guid.NewGuid(),
-                MeasuringUnitName = defaultUnit?.Name,
+                MeasuringUnitName = defaultUnit?.Name.Get(),
                 CategoryId = defaultCategory?.Id ?? Guid.NewGuid(),
-                CategoryName = defaultCategory?.Name,
+                CategoryName = defaultCategory?.Name.Get(),
                 SuggestedExpireDate = DateTime.UtcNow.AddDays(7)
             },
             new PantryScanItemDto
@@ -256,9 +257,9 @@ public class PantryItemService : IPantryItemService
                 Name = "Greek Yogurt 500g",
                 Quantity = 1,
                 MeasuringUnitId = defaultUnit?.Id ?? Guid.NewGuid(),
-                MeasuringUnitName = defaultUnit?.Name,
+                MeasuringUnitName = defaultUnit?.Name.Get(),
                 CategoryId = defaultCategory?.Id ?? Guid.NewGuid(),
-                CategoryName = defaultCategory?.Name,
+                CategoryName = defaultCategory?.Name.Get(),
                 SuggestedExpireDate = DateTime.UtcNow.AddDays(14)
             },
             new PantryScanItemDto
@@ -266,9 +267,9 @@ public class PantryItemService : IPantryItemService
                 Name = "Cheddar Cheese 200g",
                 Quantity = 3,
                 MeasuringUnitId = defaultUnit?.Id ?? Guid.NewGuid(),
-                MeasuringUnitName = defaultUnit?.Name,
+                MeasuringUnitName = defaultUnit?.Name.Get(),
                 CategoryId = defaultCategory?.Id ?? Guid.NewGuid(),
-                CategoryName = defaultCategory?.Name,
+                CategoryName = defaultCategory?.Name.Get(),
                 SuggestedExpireDate = DateTime.UtcNow.AddDays(30)
             }
         };
