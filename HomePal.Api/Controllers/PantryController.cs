@@ -45,12 +45,13 @@ public class PantryController : BaseApiController
     }
 
     /// <summary>
-    /// Create a new pantry item
+    /// Create a new pantry item (Household Manager only)
     /// </summary>
     [HttpPost("items")]
-    [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.HouseholdMember},{Roles.Admin}")]
+    [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.Admin}")]
     [ProducesResponseType(typeof(ApiResponse<PantryItemResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> CreatePantryItem([FromBody] CreatePantryItemRequest request, CancellationToken cancellationToken)
     {
@@ -59,12 +60,13 @@ public class PantryController : BaseApiController
     }
 
     /// <summary>
-    /// Update an existing pantry item
+    /// Update an existing pantry item (Household Manager only)
     /// </summary>
     [HttpPut("items/{id:guid}")]
-    [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.HouseholdMember},{Roles.Admin}")]
+    [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.Admin}")]
     [ProducesResponseType(typeof(ApiResponse<PantryItemResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdatePantryItem([FromRoute] Guid id, [FromBody] UpdatePantryItemRequest request, CancellationToken cancellationToken)
     {
@@ -73,12 +75,13 @@ public class PantryController : BaseApiController
     }
 
     /// <summary>
-    /// Update/replace entire pantry items list for household
+    /// Update/replace entire pantry items list for household (Household Manager only)
     /// </summary>
     [HttpPut("items")]
-    [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.HouseholdMember},{Roles.Admin}")]
+    [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.Admin}")]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<PantryItemResponse>>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateEntirePantryItems([FromBody] UpdateEntirePantryItemsRequest request, CancellationToken cancellationToken)
     {
@@ -87,11 +90,12 @@ public class PantryController : BaseApiController
     }
 
     /// <summary>
-    /// Delete a pantry item
+    /// Delete a pantry item (Household Manager only)
     /// </summary>
     [HttpDelete("items/{id:guid}")]
-    [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.HouseholdMember},{Roles.Admin}")]
+    [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.Admin}")]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeletePantryItem([FromRoute] Guid id, CancellationToken cancellationToken)
     {
@@ -113,12 +117,13 @@ public class PantryController : BaseApiController
     }
 
     /// <summary>
-    /// Pantry bulk add endpoint (saves provided items)
+    /// Pantry bulk add endpoint (Household Manager only)
     /// </summary>
     [HttpPost("bulk-add")]
-    [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.HouseholdMember},{Roles.Admin}")]
+    [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.Admin}")]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<PantryItemResponse>>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> BulkAddPantryItems([FromBody] BulkAddPantryItemsRequest request, CancellationToken cancellationToken)
     {

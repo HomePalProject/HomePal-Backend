@@ -2,6 +2,7 @@ using HomePal.Application.Common.Interfaces;
 using HomePal.Application.Features.PantryManagement.DTOs;
 using HomePal.Application.Features.PantryManagement.Interfaces;
 using HomePal.Application.Features.PantryManagement.Mappers;
+using HomePal.Domain.Constants;
 using HomePal.Domain.Entities;
 using HomePal.Shared.Results;
 
@@ -49,10 +50,21 @@ public class PantryItemService : IPantryItemService
 
     public async Task<Result<PantryItemResponse>> CreatePantryItemAsync(Guid userId, CreatePantryItemRequest request, CancellationToken cancellationToken = default)
     {
-        var pantry = await _unitOfWork.Pantries.GetByUserIdAsync(userId, cancellationToken);
-        if (pantry == null)
+        var member = await _unitOfWork.HouseholdMembers.GetByUserIdAsync(userId, cancellationToken);
+        if (member == null)
         {
             return Result<PantryItemResponse>.Fail(ErrorMessages.Pantry.NoHousehold, ResultStatus.NotFound);
+        }
+
+        if (member.Role != Roles.HouseholdManager)
+        {
+            return Result<PantryItemResponse>.Fail(ErrorMessages.Household.NotManager, ResultStatus.Forbidden);
+        }
+
+        var pantry = await _unitOfWork.Pantries.GetByHouseholdIdAsync(member.HouseholdId, cancellationToken);
+        if (pantry == null)
+        {
+            return Result<PantryItemResponse>.Fail(ErrorMessages.Pantry.PantryNotFound, ResultStatus.NotFound);
         }
 
         var measuringUnit = await _unitOfWork.MeasuringUnits.GetByIdAsync(request.MeasuringUnitId, cancellationToken);
@@ -77,10 +89,21 @@ public class PantryItemService : IPantryItemService
 
     public async Task<Result<PantryItemResponse>> UpdatePantryItemAsync(Guid userId, Guid itemId, UpdatePantryItemRequest request, CancellationToken cancellationToken = default)
     {
-        var pantry = await _unitOfWork.Pantries.GetByUserIdAsync(userId, cancellationToken);
-        if (pantry == null)
+        var member = await _unitOfWork.HouseholdMembers.GetByUserIdAsync(userId, cancellationToken);
+        if (member == null)
         {
             return Result<PantryItemResponse>.Fail(ErrorMessages.Pantry.NoHousehold, ResultStatus.NotFound);
+        }
+
+        if (member.Role != Roles.HouseholdManager)
+        {
+            return Result<PantryItemResponse>.Fail(ErrorMessages.Household.NotManager, ResultStatus.Forbidden);
+        }
+
+        var pantry = await _unitOfWork.Pantries.GetByHouseholdIdAsync(member.HouseholdId, cancellationToken);
+        if (pantry == null)
+        {
+            return Result<PantryItemResponse>.Fail(ErrorMessages.Pantry.PantryNotFound, ResultStatus.NotFound);
         }
 
         var item = await _unitOfWork.PantryItems.GetByIdAndPantryIdAsync(itemId, pantry.Id, cancellationToken);
@@ -117,10 +140,21 @@ public class PantryItemService : IPantryItemService
 
     public async Task<Result<IReadOnlyList<PantryItemResponse>>> UpdateEntirePantryItemsAsync(Guid userId, UpdateEntirePantryItemsRequest request, CancellationToken cancellationToken = default)
     {
-        var pantry = await _unitOfWork.Pantries.GetByUserIdAsync(userId, cancellationToken);
-        if (pantry == null)
+        var member = await _unitOfWork.HouseholdMembers.GetByUserIdAsync(userId, cancellationToken);
+        if (member == null)
         {
             return Result<IReadOnlyList<PantryItemResponse>>.Fail(ErrorMessages.Pantry.NoHousehold, ResultStatus.NotFound);
+        }
+
+        if (member.Role != Roles.HouseholdManager)
+        {
+            return Result<IReadOnlyList<PantryItemResponse>>.Fail(ErrorMessages.Household.NotManager, ResultStatus.Forbidden);
+        }
+
+        var pantry = await _unitOfWork.Pantries.GetByHouseholdIdAsync(member.HouseholdId, cancellationToken);
+        if (pantry == null)
+        {
+            return Result<IReadOnlyList<PantryItemResponse>>.Fail(ErrorMessages.Pantry.PantryNotFound, ResultStatus.NotFound);
         }
 
         var existingItems = await _unitOfWork.PantryItems.GetByPantryIdAsync(pantry.Id, cancellationToken);
@@ -162,10 +196,21 @@ public class PantryItemService : IPantryItemService
 
     public async Task<Result> DeletePantryItemAsync(Guid userId, Guid itemId, CancellationToken cancellationToken = default)
     {
-        var pantry = await _unitOfWork.Pantries.GetByUserIdAsync(userId, cancellationToken);
-        if (pantry == null)
+        var member = await _unitOfWork.HouseholdMembers.GetByUserIdAsync(userId, cancellationToken);
+        if (member == null)
         {
             return Result.Fail(ErrorMessages.Pantry.NoHousehold, ResultStatus.NotFound);
+        }
+
+        if (member.Role != Roles.HouseholdManager)
+        {
+            return Result.Fail(ErrorMessages.Household.NotManager, ResultStatus.Forbidden);
+        }
+
+        var pantry = await _unitOfWork.Pantries.GetByHouseholdIdAsync(member.HouseholdId, cancellationToken);
+        if (pantry == null)
+        {
+            return Result.Fail(ErrorMessages.Pantry.PantryNotFound, ResultStatus.NotFound);
         }
 
         var item = await _unitOfWork.PantryItems.GetByIdAndPantryIdAsync(itemId, pantry.Id, cancellationToken);
@@ -234,10 +279,21 @@ public class PantryItemService : IPantryItemService
 
     public async Task<Result<IReadOnlyList<PantryItemResponse>>> BulkAddPantryItemsAsync(Guid userId, BulkAddPantryItemsRequest request, CancellationToken cancellationToken = default)
     {
-        var pantry = await _unitOfWork.Pantries.GetByUserIdAsync(userId, cancellationToken);
-        if (pantry == null)
+        var member = await _unitOfWork.HouseholdMembers.GetByUserIdAsync(userId, cancellationToken);
+        if (member == null)
         {
             return Result<IReadOnlyList<PantryItemResponse>>.Fail(ErrorMessages.Pantry.NoHousehold, ResultStatus.NotFound);
+        }
+
+        if (member.Role != Roles.HouseholdManager)
+        {
+            return Result<IReadOnlyList<PantryItemResponse>>.Fail(ErrorMessages.Household.NotManager, ResultStatus.Forbidden);
+        }
+
+        var pantry = await _unitOfWork.Pantries.GetByHouseholdIdAsync(member.HouseholdId, cancellationToken);
+        if (pantry == null)
+        {
+            return Result<IReadOnlyList<PantryItemResponse>>.Fail(ErrorMessages.Pantry.PantryNotFound, ResultStatus.NotFound);
         }
 
         var newItems = new List<PantryItem>();
