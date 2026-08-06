@@ -39,6 +39,13 @@ public class HouseholdService : IHouseholdService
         var household = request.ToEntity();
         await _unitOfWork.Households.AddAsync(household, cancellationToken);
 
+        var pantry = new Pantry
+        {
+            HouseholdId = household.Id,
+            CreatedAt = DateTime.UtcNow
+        };
+        await _unitOfWork.Pantries.AddAsync(pantry, cancellationToken);
+
         var creatorMember = new HouseholdMember
         {
             HouseholdId = household.Id,
