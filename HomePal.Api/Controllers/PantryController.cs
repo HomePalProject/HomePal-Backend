@@ -104,15 +104,17 @@ public class PantryController : BaseApiController
     }
 
     /// <summary>
-    /// Pantry camera scan (returns dummy scanned items without saving)
+    /// Pantry camera scan (accepts an image file and returns scanned items without saving)
     /// </summary>
     [HttpPost("scan")]
+    [Consumes("multipart/form-data")]
     [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.HouseholdMember},{Roles.Admin}")]
     [ProducesResponseType(typeof(ApiResponse<PantryScanResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> ScanPantryCamera(CancellationToken cancellationToken)
+    public async Task<IActionResult> ScanPantryCamera([FromForm] ScanPantryRequest request, CancellationToken cancellationToken)
     {
-        var result = await _pantryItemService.ScanPantryCameraAsync(CurrentUserId, cancellationToken);
+        var result = await _pantryItemService.ScanPantryCameraAsync(CurrentUserId, request.Image, cancellationToken);
         return HandleResult(result);
     }
 
