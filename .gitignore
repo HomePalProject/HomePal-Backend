@@ -365,3 +365,6 @@ FodyWeavers.xsd
 # Static uploaded files
 **/wwwroot/uploads/*
 !**/wwwroot/uploads/.gitkeep
+
+# Spec document
+spec.md
