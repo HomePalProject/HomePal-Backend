@@ -220,5 +220,19 @@
   <data name="Catalog.DeleteOfferImageSuccess" xml:space="preserve"><value>تم حذف صورة العرض بنجاح.</value></data>
   <data name="Catalog.DeleteProductCategoryImageSuccess" xml:space="preserve"><value>تم حذف صورة فئة المنتج بنجاح.</value></data>
   <data name="Catalog.ImageUploadFailed" xml:space="preserve"><value>فشل في تحميل الصورة.</value></data>
+
+  <!-- Pantry -->
+  <data name="Pantry.GetItemsSuccess" xml:space="preserve"><value>تم استرداد عناصر المطبخ بنجاح.</value></data>
+  <data name="Pantry.GetItemSuccess" xml:space="preserve"><value>تم استرداد عنصر المطبخ بنجاح.</value></data>
+  <data name="Pantry.CreateItemSuccess" xml:space="preserve"><value>تم إضافة عنصر المطبخ بنجاح.</value></data>
+  <data name="Pantry.UpdateItemSuccess" xml:space="preserve"><value>تم تحديث عنصر المطبخ بنجاح.</value></data>
+  <data name="Pantry.UpdateEntireItemsSuccess" xml:space="preserve"><value>تم تحديث قائمة عناصر المطبخ بالكامل بنجاح.</value></data>
+  <data name="Pantry.DeleteItemSuccess" xml:space="preserve"><value>تم حذف عنصر المطبخ بنجاح.</value></data>
+  <data name="Pantry.ScanSuccess" xml:space="preserve"><value>تمت معالجة المسح بنجاح.</value></data>
+  <data name="Pantry.BulkAddSuccess" xml:space="preserve"><value>تمت إضافة عناصر المطبخ دفعة واحدة بنجاح.</value></data>
+  <data name="Pantry.PantryNotFound" xml:space="preserve"><value>المطبخ غير موجود.</value></data>
+  <data name="Pantry.PantryItemNotFound" xml:space="preserve"><value>عنصر المطبخ غير موجود.</value></data>
+  <data name="Pantry.InvalidQuantity" xml:space="preserve"><value>يجب أن تكون الكمية أكبر من صفر.</value></data>
+  <data name="Pantry.NoHousehold" xml:space="preserve"><value>المستخدم لا ينتمي إلى أي منزل.</value></data>
 </root>
 

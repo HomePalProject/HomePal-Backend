@@ -97,4 +97,16 @@ public static class SuccessMessages
         public const string DeleteOfferImage = "Catalog.DeleteOfferImageSuccess";
         public const string DeleteProductCategoryImage = "Catalog.DeleteProductCategoryImageSuccess";
     }
+
+    public static class Pantry
+    {
+        public const string GetItems = "Pantry.GetItemsSuccess";
+        public const string GetItem = "Pantry.GetItemSuccess";
+        public const string CreateItem = "Pantry.CreateItemSuccess";
+        public const string UpdateItem = "Pantry.UpdateItemSuccess";
+        public const string UpdateEntireItems = "Pantry.UpdateEntireItemsSuccess";
+        public const string DeleteItem = "Pantry.DeleteItemSuccess";
+        public const string Scan = "Pantry.ScanSuccess";
+        public const string BulkAdd = "Pantry.BulkAddSuccess";
+    }
 }

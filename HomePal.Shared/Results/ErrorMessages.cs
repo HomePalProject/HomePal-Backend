@@ -78,4 +78,12 @@ public static class ErrorMessages
 
         public const string ImageUploadFailed = "Catalog.ImageUploadFailed";
     }
+
+    public static class Pantry
+    {
+        public const string PantryNotFound = "Pantry.PantryNotFound";
+        public const string PantryItemNotFound = "Pantry.PantryItemNotFound";
+        public const string InvalidQuantity = "Pantry.InvalidQuantity";
+        public const string NoHousehold = "Pantry.NoHousehold";
+    }
 }
