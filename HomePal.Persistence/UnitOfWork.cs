@@ -2,6 +2,7 @@ using HomePal.Application.Common.Interfaces;
 using HomePal.Application.Features.Auth.Interfaces;
 using HomePal.Application.Features.Catalog.Interfaces;
 using HomePal.Application.Features.HouseholdManagement.Interfaces;
+using HomePal.Application.Features.PantryManagement.Interfaces;
 using HomePal.Persistence.Context;
 using HomePal.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -25,6 +26,8 @@ public class UnitOfWork : IUnitOfWork
     private ISupermarketRepository? _supermarkets;
     private ICanonicalProductRepository? _canonicalProducts;
     private IOfferRepository? _offers;
+    private IPantryRepository? _pantries;
+    private IPantryItemRepository? _pantryItems;
 
     public UnitOfWork(ApplicationDbContext context)
     {
@@ -43,6 +46,8 @@ public class UnitOfWork : IUnitOfWork
     public ISupermarketRepository Supermarkets => _supermarkets ??= new SupermarketRepository(_context);
     public ICanonicalProductRepository CanonicalProducts => _canonicalProducts ??= new CanonicalProductRepository(_context);
     public IOfferRepository Offers => _offers ??= new OfferRepository(_context);
+    public IPantryRepository Pantries => _pantries ??= new PantryRepository(_context);
+    public IPantryItemRepository PantryItems => _pantryItems ??= new PantryItemRepository(_context);
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
