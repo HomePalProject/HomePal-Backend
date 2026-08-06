@@ -220,5 +220,19 @@
   <data name="Catalog.DeleteOfferImageSuccess" xml:space="preserve"><value>Offer image deleted successfully.</value></data>
   <data name="Catalog.DeleteProductCategoryImageSuccess" xml:space="preserve"><value>Product category image deleted successfully.</value></data>
   <data name="Catalog.ImageUploadFailed" xml:space="preserve"><value>Failed to upload image.</value></data>
+
+  <!-- Pantry -->
+  <data name="Pantry.GetItemsSuccess" xml:space="preserve"><value>Pantry items retrieved successfully.</value></data>
+  <data name="Pantry.GetItemSuccess" xml:space="preserve"><value>Pantry item retrieved successfully.</value></data>
+  <data name="Pantry.CreateItemSuccess" xml:space="preserve"><value>Pantry item created successfully.</value></data>
+  <data name="Pantry.UpdateItemSuccess" xml:space="preserve"><value>Pantry item updated successfully.</value></data>
+  <data name="Pantry.UpdateEntireItemsSuccess" xml:space="preserve"><value>Pantry items list updated successfully.</value></data>
+  <data name="Pantry.DeleteItemSuccess" xml:space="preserve"><value>Pantry item deleted successfully.</value></data>
+  <data name="Pantry.ScanSuccess" xml:space="preserve"><value>Camera scan processed successfully.</value></data>
+  <data name="Pantry.BulkAddSuccess" xml:space="preserve"><value>Pantry items bulk added successfully.</value></data>
+  <data name="Pantry.PantryNotFound" xml:space="preserve"><value>Pantry not found.</value></data>
+  <data name="Pantry.PantryItemNotFound" xml:space="preserve"><value>Pantry item not found.</value></data>
+  <data name="Pantry.InvalidQuantity" xml:space="preserve"><value>Quantity must be greater than zero.</value></data>
+  <data name="Pantry.NoHousehold" xml:space="preserve"><value>User does not belong to a household.</value></data>
 </root>
 
