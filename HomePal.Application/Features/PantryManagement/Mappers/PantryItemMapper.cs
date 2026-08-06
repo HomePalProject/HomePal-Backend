@@ -1,11 +1,12 @@
 using HomePal.Application.Features.PantryManagement.DTOs;
+using HomePal.Domain.Common;
 using HomePal.Domain.Entities;
 
 namespace HomePal.Application.Features.PantryManagement.Mappers;
 
 public static class PantryItemMapper
 {
-    public static PantryItemResponse ToResponse(this PantryItem item)
+    public static PantryItemResponse ToResponse(this PantryItem item, string? culture = null)
     {
         return new PantryItemResponse
         {
@@ -15,10 +16,10 @@ public static class PantryItemMapper
             ExpireDate = item.ExpireDate,
             Quantity = item.Quantity,
             MeasuringUnitId = item.MeasuringUnitId,
-            MeasuringUnitName = item.MeasuringUnit?.Name,
-            MeasuringUnitSymbol = item.MeasuringUnit?.Symbol,
+            MeasuringUnitName = item.MeasuringUnit?.Name.Get(culture),
+            MeasuringUnitSymbol = item.MeasuringUnit?.Symbol.Get(culture),
             CategoryId = item.CategoryId,
-            CategoryName = item.Category?.Name,
+            CategoryName = item.Category?.Name.Get(culture),
             CategoryImagePath = item.Category?.ImagePath,
             CreatedAt = item.CreatedAt,
             UpdatedAt = item.UpdatedAt
