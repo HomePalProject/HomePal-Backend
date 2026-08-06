@@ -6,6 +6,7 @@ using HomePal.Domain.Common;
 using HomePal.Domain.Constants;
 using HomePal.Domain.Entities;
 using HomePal.Shared.Results;
+using Microsoft.AspNetCore.Http;
 
 namespace HomePal.Application.Features.PantryManagement.Services;
 
@@ -226,8 +227,13 @@ public class PantryItemService : IPantryItemService
         return Result.Ok(SuccessMessages.Pantry.DeleteItem);
     }
 
-    public async Task<Result<PantryScanResponse>> ScanPantryCameraAsync(Guid userId, CancellationToken cancellationToken = default)
+    public async Task<Result<PantryScanResponse>> ScanPantryCameraAsync(Guid userId, IFormFile imageFile, CancellationToken cancellationToken = default)
     {
+        if (imageFile == null || imageFile.Length == 0)
+        {
+            return Result<PantryScanResponse>.Fail(ErrorMessages.Auth.InvalidImageFile, ResultStatus.BadRequest);
+        }
+
         var (member, pantry, errorMsg, status) = await GetOrCreatePantryForUserAsync(userId, cancellationToken);
         if (errorMsg != null || pantry == null)
         {
