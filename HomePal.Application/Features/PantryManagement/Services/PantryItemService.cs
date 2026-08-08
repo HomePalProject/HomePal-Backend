@@ -13,10 +13,12 @@ namespace HomePal.Application.Features.PantryManagement.Services;
 public class PantryItemService : IPantryItemService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IPantryScannerService _pantryScannerService;
 
-    public PantryItemService(IUnitOfWork unitOfWork)
+    public PantryItemService(IUnitOfWork unitOfWork, IPantryScannerService pantryScannerService)
     {
         _unitOfWork = unitOfWork;
+        _pantryScannerService = pantryScannerService;
     }
 
     private async Task<(HouseholdMember? Member, Pantry? Pantry, string? ErrorMessage, ResultStatus Status)> GetOrCreatePantryForUserAsync(Guid userId, CancellationToken cancellationToken)
@@ -243,45 +245,13 @@ public class PantryItemService : IPantryItemService
         var measuringUnits = await _unitOfWork.MeasuringUnits.GetAllAsync(cancellationToken);
         var categories = await _unitOfWork.ProductCategories.GetAllAsync(cancellationToken);
 
-        var defaultUnit = measuringUnits.FirstOrDefault();
-        var defaultCategory = categories.FirstOrDefault();
-
-        var dummyScanItems = new List<PantryScanItemDto>
-        {
-            new PantryScanItemDto
-            {
-                Name = "Fresh Milk 1L",
-                Quantity = 2,
-                MeasuringUnitId = defaultUnit?.Id ?? Guid.NewGuid(),
-                MeasuringUnitName = defaultUnit?.Name.Get(),
-                CategoryId = defaultCategory?.Id ?? Guid.NewGuid(),
-                CategoryName = defaultCategory?.Name.Get(),
-                SuggestedExpireDate = DateTime.UtcNow.AddDays(7)
-            },
-            new PantryScanItemDto
-            {
-                Name = "Greek Yogurt 500g",
-                Quantity = 1,
-                MeasuringUnitId = defaultUnit?.Id ?? Guid.NewGuid(),
-                MeasuringUnitName = defaultUnit?.Name.Get(),
-                CategoryId = defaultCategory?.Id ?? Guid.NewGuid(),
-                CategoryName = defaultCategory?.Name.Get(),
-                SuggestedExpireDate = DateTime.UtcNow.AddDays(14)
-            },
-            new PantryScanItemDto
-            {
-                Name = "Cheddar Cheese 200g",
-                Quantity = 3,
-                MeasuringUnitId = defaultUnit?.Id ?? Guid.NewGuid(),
-                MeasuringUnitName = defaultUnit?.Name.Get(),
-                CategoryId = defaultCategory?.Id ?? Guid.NewGuid(),
-                CategoryName = defaultCategory?.Name.Get(),
-                SuggestedExpireDate = DateTime.UtcNow.AddDays(30)
-            }
-        };
-
-        var response = new PantryScanResponse { Items = dummyScanItems };
-        return Result<PantryScanResponse>.Ok(response, SuccessMessages.Pantry.Scan);
+        using var stream = imageFile.OpenReadStream();
+        return await _pantryScannerService.ScanPantryImageAsync(
+            stream,
+            imageFile.ContentType ?? "image/jpeg",
+            measuringUnits,
+            categories,
+            cancellationToken);
     }
 
     public async Task<Result<IReadOnlyList<PantryItemResponse>>> BulkAddPantryItemsAsync(Guid userId, BulkAddPantryItemsRequest request, CancellationToken cancellationToken = default)

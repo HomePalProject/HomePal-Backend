@@ -234,5 +234,6 @@
   <data name="Pantry.PantryItemNotFound" xml:space="preserve"><value>عنصر المطبخ غير موجود.</value></data>
   <data name="Pantry.InvalidQuantity" xml:space="preserve"><value>يجب أن تكون الكمية أكبر من صفر.</value></data>
   <data name="Pantry.NoHousehold" xml:space="preserve"><value>المستخدم لا ينتمي إلى أي منزل.</value></data>
+  <data name="Pantry.ScanFailed" xml:space="preserve"><value>فشلت عملية مسح عناصر المطبخ من الصورة المرفقة.</value></data>
 </root>
 

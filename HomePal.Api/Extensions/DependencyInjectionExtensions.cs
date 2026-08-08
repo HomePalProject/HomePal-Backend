@@ -7,6 +7,7 @@ public static class DependencyInjectionExtensions
         services.AddDatabaseAndIdentityServices(configuration);
         services.AddJwtAuthenticationServices(configuration);
         services.AddCoreServices(configuration);
+        services.AddAIServices(configuration);
         services.AddOpenApiDocumentation();
 
         return services;

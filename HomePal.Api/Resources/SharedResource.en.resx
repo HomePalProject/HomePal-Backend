@@ -234,5 +234,6 @@
   <data name="Pantry.PantryItemNotFound" xml:space="preserve"><value>Pantry item not found.</value></data>
   <data name="Pantry.InvalidQuantity" xml:space="preserve"><value>Quantity must be greater than zero.</value></data>
   <data name="Pantry.NoHousehold" xml:space="preserve"><value>User does not belong to a household.</value></data>
+  <data name="Pantry.ScanFailed" xml:space="preserve"><value>Failed to scan pantry items from the provided image.</value></data>
 </root>
 

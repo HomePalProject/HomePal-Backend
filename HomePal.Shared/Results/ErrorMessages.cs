@@ -85,5 +85,6 @@ public static class ErrorMessages
         public const string PantryItemNotFound = "Pantry.PantryItemNotFound";
         public const string InvalidQuantity = "Pantry.InvalidQuantity";
         public const string NoHousehold = "Pantry.NoHousehold";
+        public const string ScanFailed = "Pantry.ScanFailed";
     }
 }
