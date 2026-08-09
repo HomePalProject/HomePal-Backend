@@ -12,11 +12,16 @@ public class CanonicalProductService : ICanonicalProductService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IFileStorageService _fileStorageService;
+    private readonly IEmbeddingService _embeddingService;
 
-    public CanonicalProductService(IUnitOfWork unitOfWork, IFileStorageService fileStorageService)
+    public CanonicalProductService(
+        IUnitOfWork unitOfWork,
+        IFileStorageService fileStorageService,
+        IEmbeddingService embeddingService)
     {
         _unitOfWork = unitOfWork;
         _fileStorageService = fileStorageService;
+        _embeddingService = embeddingService;
     }
 
     public async Task<Result<PaginatedList<CanonicalProductResponse>>> GetPagedAsync(CanonicalProductQueryRequest request, CancellationToken cancellationToken = default)
@@ -61,6 +66,9 @@ public class CanonicalProductService : ICanonicalProductService
 
         var product = request.ToEntity();
 
+        var textToEmbed = string.Join(" ", product.Name.Select(n => n.Value)) + (product.Description != null ? " " + string.Join(" ", product.Description.Select(d => d.Value)) : "");
+        product.Embedding = await _embeddingService.GenerateSqlVectorAsync(textToEmbed, cancellationToken);
+
         await _unitOfWork.CanonicalProducts.AddAsync(product, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -86,6 +94,9 @@ public class CanonicalProductService : ICanonicalProductService
         }
 
         product.UpdateEntity(request);
+
+        var textToEmbed = string.Join(" ", product.Name.Select(n => n.Value)) + (product.Description != null ? " " + string.Join(" ", product.Description.Select(d => d.Value)) : "");
+        product.Embedding = await _embeddingService.GenerateSqlVectorAsync(textToEmbed, cancellationToken);
 
         _unitOfWork.CanonicalProducts.Update(product);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

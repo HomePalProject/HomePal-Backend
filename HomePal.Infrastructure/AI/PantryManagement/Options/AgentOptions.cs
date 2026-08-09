@@ -8,4 +8,6 @@ public class AgentOptions
     public string ApiKey { get; set; } = string.Empty;
     public string Endpoint { get; set; } = string.Empty;
     public string ModelId { get; set; } = "gpt-4o";
+    public string EmbeddingModelId { get; set; } = "gemini-embedding-001";
+    public int Dimensions { get; set; } = 1536;
 }

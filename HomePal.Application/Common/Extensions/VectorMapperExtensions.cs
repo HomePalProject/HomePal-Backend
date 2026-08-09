@@ -1,6 +1,6 @@
 using Microsoft.Data.SqlTypes;
 
-namespace HomePal.Application.Features.Catalog.Mappers;
+namespace HomePal.Application.Common.Extensions;
 
 public static class VectorMapperExtensions
 {

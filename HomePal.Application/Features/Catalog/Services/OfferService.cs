@@ -12,11 +12,16 @@ public class OfferService : IOfferService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IFileStorageService _fileStorageService;
+    private readonly IEmbeddingService _embeddingService;
 
-    public OfferService(IUnitOfWork unitOfWork, IFileStorageService fileStorageService)
+    public OfferService(
+        IUnitOfWork unitOfWork,
+        IFileStorageService fileStorageService,
+        IEmbeddingService embeddingService)
     {
         _unitOfWork = unitOfWork;
         _fileStorageService = fileStorageService;
+        _embeddingService = embeddingService;
     }
 
     public async Task<Result<PaginatedList<OfferResponse>>> GetPagedAsync(OfferQueryRequest request, CancellationToken cancellationToken = default)
@@ -87,6 +92,9 @@ public class OfferService : IOfferService
 
         var offer = request.ToEntity();
 
+        var textToEmbed = string.Join(" ", offer.Name.Select(n => n.Value)) + (offer.Description != null ? " " + string.Join(" ", offer.Description.Select(d => d.Value)) : "");
+        offer.Embedding = await _embeddingService.GenerateSqlVectorAsync(textToEmbed, cancellationToken);
+
         await _unitOfWork.Offers.AddAsync(offer, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -136,6 +144,9 @@ public class OfferService : IOfferService
         }
 
         offer.UpdateEntity(request);
+
+        var textToEmbed = string.Join(" ", offer.Name.Select(n => n.Value)) + (offer.Description != null ? " " + string.Join(" ", offer.Description.Select(d => d.Value)) : "");
+        offer.Embedding = await _embeddingService.GenerateSqlVectorAsync(textToEmbed, cancellationToken);
 
         _unitOfWork.Offers.Update(offer);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
