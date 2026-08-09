@@ -220,6 +220,8 @@
   <data name="Catalog.DeleteOfferImageSuccess" xml:space="preserve"><value>تم حذف صورة العرض بنجاح.</value></data>
   <data name="Catalog.DeleteProductCategoryImageSuccess" xml:space="preserve"><value>تم حذف صورة فئة المنتج بنجاح.</value></data>
   <data name="Catalog.ImageUploadFailed" xml:space="preserve"><value>فشل في تحميل الصورة.</value></data>
+  <data name="Catalog.ScrapeJobStarted" xml:space="preserve"><value>بدأت عملية سحب عروض فيسبوك في الخلفية. يمكنك متابعة التقدّم عبر نقطة استعلام الحالة.</value></data>
+  <data name="Catalog.ScrapeJobInProgress" xml:space="preserve"><value>عملية السحب جارية بالفعل. يرجى الانتظار حتى تكتمل.</value></data>
 
   <!-- Pantry -->
   <data name="Pantry.GetItemsSuccess" xml:space="preserve"><value>تم استرداد عناصر المطبخ بنجاح.</value></data>

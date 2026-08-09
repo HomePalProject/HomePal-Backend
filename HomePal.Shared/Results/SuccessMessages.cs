@@ -96,6 +96,7 @@ public static class SuccessMessages
         public const string DeleteCanonicalProductImage = "Catalog.DeleteCanonicalProductImageSuccess";
         public const string DeleteOfferImage = "Catalog.DeleteOfferImageSuccess";
         public const string DeleteProductCategoryImage = "Catalog.DeleteProductCategoryImageSuccess";
+        public const string ScrapeJobStarted = "Catalog.ScrapeJobStarted";
     }
 
     public static class Pantry

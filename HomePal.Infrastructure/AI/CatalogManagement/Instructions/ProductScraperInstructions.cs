@@ -21,6 +21,9 @@ public static class ProductScraperInstructions
             Include items a person buys to cook or prepare food/beverages at home (meat, poultry, seafood, dairy, produce, grains, bakery, canned goods, spices, oils, condiments).
             Skip non-food items (cleaning supplies, electronics, cookware, clothing, cosmetics).
 
+            POST CAPTION & OCR CONTEXT:
+            If a post caption or image OCR text is provided in the user prompt below, actively use it as supplementary context to extract or refine missing product names, prices, quantities, or descriptions that may be truncated or blurry in the image.
+
             FOR EACH QUALIFYING PRODUCT, EXTRACT:
             - Name: Product name in English.
             - NameAr: Product name in Arabic.
@@ -31,6 +34,8 @@ public static class ProductScraperInstructions
             - CategoryName: Closest matching Product Category Name from the database list above; null if unmapped.
             - OriginalPrice: Price before discount (numeric only); null if not shown.
             - DiscountedPrice: The offer / current price (numeric only); null if not shown.
+            - ValidFrom: Offer start date in yyyy-MM-dd format (Egypt Local Time). Note: Egyptian flyers often use DD/MM/YYYY (e.g., 01/08/2026 = 2026-08-01); null if not specified.
+            - ValidTo: Offer expiration / end date in yyyy-MM-dd format (Egypt Local Time). Note: Egyptian flyers often use DD/MM/YYYY (e.g., 15/08/2026 = 2026-08-15); null if not specified.
             - BoundingBox: Location of this product's price/label area within the image as FRACTIONS strictly between 0.0 and 1.0:
               - X: left edge fraction (0.0 to 1.0)
               - Y: top edge fraction (0.0 to 1.0)
@@ -51,6 +56,8 @@ public static class ProductScraperInstructions
                   "categoryName": "Category Name",
                   "originalPrice": 100.0,
                   "discountedPrice": 75.0,
+                  "validFrom": "2026-08-01",
+                  "validTo": "2026-08-15",
                   "boundingBox": {
                     "x": 0.1,
                     "y": 0.2,

@@ -14,6 +14,8 @@ using Microsoft.Extensions.Options;
 using OpenAI;
 using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace HomePal.Infrastructure.AI.PantryManagement.Services;
 
 public class PantryAgentScanner : IPantryScannerService
@@ -23,7 +25,7 @@ public class PantryAgentScanner : IPantryScannerService
     private readonly ILogger<PantryAgentScanner> _logger;
 
     public PantryAgentScanner(
-        AIAgent agent,
+        [FromKeyedServices("PantryScannerAgent")] AIAgent agent,
         IOptions<AgentOptions> options,
         ILogger<PantryAgentScanner> logger)
     {

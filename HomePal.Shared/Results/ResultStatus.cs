@@ -5,6 +5,7 @@ public enum ResultStatus
     // Success (2xx)
     Success,
     Created,
+    Accepted,
     NoContent,
 
     // Client Errors (4xx)

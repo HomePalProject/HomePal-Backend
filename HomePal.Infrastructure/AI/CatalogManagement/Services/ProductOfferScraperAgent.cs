@@ -11,6 +11,7 @@ using HomePal.Shared.Results;
 using Microsoft.Agents.AI;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace HomePal.Infrastructure.AI.CatalogManagement.Services;
@@ -22,15 +23,19 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
     private readonly IEmbeddingService _embeddingService;
     private readonly IFileStorageService _fileStorageService;
     private readonly IApifyScraperService _apifyScraperService;
+    private readonly IScraperJobTracker _jobTracker;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly HttpClient _httpClient;
     private readonly ILogger<ProductOfferScraperAgent> _logger;
 
     public ProductOfferScraperAgent(
-        AIAgent agent,
+        [FromKeyedServices("ProductScraperAgent")] AIAgent agent,
         IUnitOfWork unitOfWork,
         IEmbeddingService embeddingService,
         IFileStorageService fileStorageService,
         IApifyScraperService apifyScraperService,
+        IScraperJobTracker jobTracker,
+        IServiceScopeFactory serviceScopeFactory,
         HttpClient httpClient,
         ILogger<ProductOfferScraperAgent> logger)
     {
@@ -39,6 +44,8 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
         _embeddingService = embeddingService;
         _fileStorageService = fileStorageService;
         _apifyScraperService = apifyScraperService;
+        _jobTracker = jobTracker;
+        _serviceScopeFactory = serviceScopeFactory;
         _httpClient = httpClient;
         _logger = logger;
     }
@@ -63,7 +70,7 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
         var imageBytes = memoryStream.ToArray();
 
         var resultDto = new OfferScraperResultDto { TotalScrapedImages = 1 };
-        await ProcessImageBytesAsync(imageBytes, request.ImageFile.ContentType, request.SupermarketId, request.Caption, request.OcrText, resultDto, cancellationToken);
+        await ProcessImageBytesWithServicesAsync(_unitOfWork, _embeddingService, _fileStorageService, _logger, imageBytes, request.ImageFile.ContentType, request.SupermarketId, request.Caption, request.OcrText, resultDto, cancellationToken);
 
         return Result<OfferScraperResultDto>.Ok(resultDto, SuccessMessages.Catalog.GetOffers);
     }
@@ -78,41 +85,79 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
             return Result<OfferScraperResultDto>.Fail(ErrorMessages.Catalog.SupermarketNotFound, ResultStatus.BadRequest);
         }
 
-        var posts = await _apifyScraperService.FetchFacebookPostsAsync(
-            request.PageUrl,
-            request.DaysBack,
-            request.ResultsLimit,
-            cancellationToken);
-
-        var resultDto = new OfferScraperResultDto();
-
-        foreach (var post in posts)
+        if (!_jobTracker.TryStartJob(request.SupermarketId))
         {
-            if (post.Media == null || post.Media.Count == 0)
-                continue;
-
-            foreach (var media in post.Media)
-            {
-                if (string.IsNullOrWhiteSpace(media.ImgUrl))
-                    continue;
-
-                try
-                {
-                    var imageBytes = await _httpClient.GetByteArrayAsync(media.ImgUrl, cancellationToken);
-                    resultDto.TotalScrapedImages++;
-                    await ProcessImageBytesAsync(imageBytes, "image/jpeg", request.SupermarketId, post.Text, media.OcrText, resultDto, cancellationToken);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Failed to download/process media image from URL {ImgUrl}", media.ImgUrl);
-                }
-            }
+            return Result<OfferScraperResultDto>.Fail(ErrorMessages.Catalog.ScrapeJobInProgress, ResultStatus.Conflict);
         }
 
-        return Result<OfferScraperResultDto>.Ok(resultDto, SuccessMessages.Catalog.GetOffers);
+        _ = Task.Run(async () =>
+        {
+            using var scope = _serviceScopeFactory.CreateScope();
+            var scopedApify = scope.ServiceProvider.GetRequiredService<IApifyScraperService>();
+            var scopedUnitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+            var scopedEmbedding = scope.ServiceProvider.GetRequiredService<IEmbeddingService>();
+            var scopedStorage = scope.ServiceProvider.GetRequiredService<IFileStorageService>();
+            var scopedLogger = scope.ServiceProvider.GetRequiredService<ILogger<ProductOfferScraperAgent>>();
+            var httpClientFactory = scope.ServiceProvider.GetService<IHttpClientFactory>();
+            using var bgHttpClient = httpClientFactory != null ? httpClientFactory.CreateClient() : new HttpClient();
+
+            try
+            {
+                var posts = await scopedApify.FetchFacebookPostsAsync(
+                    request.PageUrl,
+                    request.DaysBack,
+                    request.ResultsLimit,
+                    CancellationToken.None);
+
+                var resultDto = new OfferScraperResultDto();
+
+                foreach (var post in posts)
+                {
+                    if (post.Media == null || post.Media.Count == 0)
+                        continue;
+
+                    foreach (var media in post.Media)
+                    {
+                        if (string.IsNullOrWhiteSpace(media.ImgUrl))
+                            continue;
+
+                        try
+                        {
+                            var imageBytes = await bgHttpClient.GetByteArrayAsync(media.ImgUrl, CancellationToken.None);
+                            var prevOffers = resultDto.TotalExtractedOffers;
+
+                            await ProcessImageBytesWithServicesAsync(
+                                scopedUnitOfWork, scopedEmbedding, scopedStorage, scopedLogger,
+                                imageBytes, "image/jpeg", request.SupermarketId, post.Text, media.OcrText, resultDto, CancellationToken.None);
+
+                            var extractedInThisImage = resultDto.TotalExtractedOffers - prevOffers;
+                            _jobTracker.UpdateProgress(1, extractedInThisImage);
+                        }
+                        catch (Exception ex)
+                        {
+                            scopedLogger.LogError(ex, "Failed to download/process media image from URL {ImgUrl}", media.ImgUrl);
+                        }
+                    }
+                }
+
+                _jobTracker.CompleteJob();
+            }
+            catch (Exception ex)
+            {
+                scopedLogger.LogError(ex, "Background Facebook scraping process failed for page {PageUrl}", request.PageUrl);
+                _jobTracker.FailJob(ex.Message);
+            }
+        }, CancellationToken.None);
+
+        var initialStatus = new OfferScraperResultDto();
+        return Result<OfferScraperResultDto>.Ok(initialStatus, SuccessMessages.Catalog.ScrapeJobStarted, ResultStatus.Accepted);
     }
 
-    private async Task ProcessImageBytesAsync(
+    private async Task ProcessImageBytesWithServicesAsync(
+        IUnitOfWork unitOfWork,
+        IEmbeddingService embeddingService,
+        IFileStorageService fileStorageService,
+        ILogger logger,
         byte[] imageBytes,
         string contentType,
         Guid supermarketId,
@@ -122,8 +167,8 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
         CancellationToken cancellationToken)
     {
         var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-        var categories = await _unitOfWork.ProductCategories.GetAllAsync(cancellationToken);
-        var units = await _unitOfWork.MeasuringUnits.GetAllAsync(cancellationToken);
+        var categories = await unitOfWork.ProductCategories.GetAllAsync(cancellationToken);
+        var units = await unitOfWork.MeasuringUnits.GetAllAsync(cancellationToken);
 
         var categoriesFormatted = string.Join("\n", categories.Select(c => $"- ID: {c.Id}, Name: {c.Name.Get(culture)}"));
         var unitsFormatted = string.Join("\n", units.Select(u => $"- ID: {u.Id}, Name: {u.Name.Get(culture)}"));
@@ -153,24 +198,24 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
 
             resultDto.TotalExtractedOffers++;
 
-            // 1. Crop image
+            // 1. Crop image or fallback to full promotional image if box is unmapped/null
             string? croppedImagePath = null;
-            var croppedBytes = ImageCropperService.CropRegion(imageBytes, productRaw.BoundingBox);
-            if (croppedBytes != null && croppedBytes.Length > 0)
+            var targetImageBytes = ImageCropperService.CropRegion(imageBytes, productRaw.BoundingBox) ?? imageBytes;
+            if (targetImageBytes != null && targetImageBytes.Length > 0)
             {
-                using var cropStream = new MemoryStream(croppedBytes);
-                var formFile = new FormFile(cropStream, 0, croppedBytes.Length, "file", $"{Guid.NewGuid()}.jpg")
+                using var cropStream = new MemoryStream(targetImageBytes);
+                var formFile = new FormFile(cropStream, 0, targetImageBytes.Length, "file", $"{Guid.NewGuid()}.jpg")
                 {
                     Headers = new HeaderDictionary(),
                     ContentType = "image/jpeg"
                 };
                 try
                 {
-                    croppedImagePath = await _fileStorageService.SaveFileAsync(formFile, "products", cancellationToken);
+                    croppedImagePath = await fileStorageService.SaveFileAsync(formFile, "products", cancellationToken);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to save cropped product image.");
+                    logger.LogError(ex, "Failed to save product offer image.");
                 }
             }
 
@@ -196,7 +241,7 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
 
             // 3. Vector Embedding
             var textToEmbed = $"{productRaw.Name} {productRaw.NameAr} {productRaw.Description} {productRaw.DescriptionAr}".Trim();
-            var sqlVector = await _embeddingService.GenerateSqlVectorAsync(textToEmbed, cancellationToken);
+            var sqlVector = await embeddingService.GenerateSqlVectorAsync(textToEmbed, cancellationToken);
 
             // 4. Match Category & Unit IDs
             var matchedCategory = categories.FirstOrDefault(c => string.Equals(c.Name.Get("en"), productRaw.CategoryName, StringComparison.OrdinalIgnoreCase) || string.Equals(c.Name.Get("ar"), productRaw.CategoryName, StringComparison.OrdinalIgnoreCase));
@@ -204,6 +249,9 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
 
             Guid? categoryId = matchedCategory?.Id;
             Guid? unitId = matchedUnit?.Id;
+
+            DateTime? validFromDate = ParseEgyptDateToUtc(productRaw.ValidFrom, isEndDate: false);
+            DateTime? validToDate = ParseEgyptDateToUtc(productRaw.ValidTo, isEndDate: true);
 
             // 5. Create Standalone Offer
             var newOffer = new Offer
@@ -215,6 +263,8 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
                 UnitId = unitId,
                 OriginalPrice = productRaw.OriginalPrice ?? productRaw.DiscountedPrice ?? 0,
                 DiscountedPrice = productRaw.DiscountedPrice ?? productRaw.OriginalPrice ?? 0,
+                ValidFrom = validFromDate,
+                ValidTo = validToDate,
                 CategoryId = categoryId,
                 ImagePath = croppedImagePath,
                 SupermarketId = supermarketId,
@@ -223,8 +273,8 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _unitOfWork.Offers.AddAsync(newOffer, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await unitOfWork.Offers.AddAsync(newOffer, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
 
             resultDto.CreatedOffers.Add(newOffer.ToResponse(culture));
         }
@@ -246,6 +296,47 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
         public string? CategoryName { get; set; }
         public decimal? OriginalPrice { get; set; }
         public decimal? DiscountedPrice { get; set; }
+        public string? ValidFrom { get; set; }
+        public string? ValidTo { get; set; }
         public BoundingBoxDto? BoundingBox { get; set; }
+    }
+
+    private static DateTime? ParseEgyptDateToUtc(string? dateStr, bool isEndDate = false)
+    {
+        if (string.IsNullOrWhiteSpace(dateStr))
+            return null;
+
+        TimeZoneInfo egyptTzi;
+        try
+        {
+            egyptTzi = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
+        }
+        catch
+        {
+            try
+            {
+                egyptTzi = TimeZoneInfo.FindSystemTimeZoneById("Africa/Cairo");
+            }
+            catch
+            {
+                egyptTzi = TimeZoneInfo.Utc;
+            }
+        }
+
+        string[] formats = ["yyyy-MM-dd", "dd/MM/yyyy", "d/M/yyyy", "yyyy/MM/dd", "dd-MM-yyyy"];
+        DateTime parsedDate;
+        if (!DateTime.TryParseExact(dateStr.Trim(), formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate))
+        {
+            if (!DateTime.TryParse(dateStr, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate))
+            {
+                return null;
+            }
+        }
+
+        var localDateTime = isEndDate
+            ? parsedDate.Date.AddHours(23).AddMinutes(59).AddSeconds(59)
+            : parsedDate.Date;
+
+        return TimeZoneInfo.ConvertTimeToUtc(localDateTime, egyptTzi);
     }
 }

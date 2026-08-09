@@ -220,6 +220,8 @@
   <data name="Catalog.DeleteOfferImageSuccess" xml:space="preserve"><value>Offer image deleted successfully.</value></data>
   <data name="Catalog.DeleteProductCategoryImageSuccess" xml:space="preserve"><value>Product category image deleted successfully.</value></data>
   <data name="Catalog.ImageUploadFailed" xml:space="preserve"><value>Failed to upload image.</value></data>
+  <data name="Catalog.ScrapeJobStarted" xml:space="preserve"><value>Facebook scraping process started in the background. Check status endpoint for progress updates.</value></data>
+  <data name="Catalog.ScrapeJobInProgress" xml:space="preserve"><value>A scraping process is already in progress. Please wait for it to complete.</value></data>
 
   <!-- Pantry -->
   <data name="Pantry.GetItemsSuccess" xml:space="preserve"><value>Pantry items retrieved successfully.</value></data>

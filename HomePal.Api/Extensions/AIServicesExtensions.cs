@@ -74,13 +74,8 @@ public static class AIServicesExtensions
         services.AddAIAgent("PantryScannerAgent", instructions: PantryAgentInstructions.SystemInstructions);
         services.AddAIAgent("ProductScraperAgent", instructions: ProductScraperInstructions.SystemInstructions);
 
-        services.AddSingleton<AIAgent>(sp =>
-        {
-            var chatClient = sp.GetRequiredService<IChatClient>();
-            return chatClient.AsAIAgent(instructions: PantryAgentInstructions.SystemInstructions, name: "PantryScannerAgent");
-        });
-
         services.AddHttpClient<IApifyScraperService, ApifyScraperService>();
+        services.AddSingleton<IScraperJobTracker, ScraperJobTracker>();
         services.AddScoped<IPantryScannerService, PantryAgentScanner>();
         services.AddScoped<IEmbeddingService, EmbeddingService>();
         services.AddScoped<IProductOfferScraperService, ProductOfferScraperAgent>();

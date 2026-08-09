@@ -83,6 +83,7 @@ public abstract class BaseApiController : ControllerBase
         {
             ResultStatus.Success            => Ok(responsePayload),
             ResultStatus.Created            => StatusCode(StatusCodes.Status201Created, responsePayload),
+            ResultStatus.Accepted           => StatusCode(StatusCodes.Status202Accepted, responsePayload),
             ResultStatus.NoContent          => NoContent(),
             ResultStatus.BadRequest         => BadRequest(responsePayload),
             ResultStatus.ValidationError    => BadRequest(responsePayload),

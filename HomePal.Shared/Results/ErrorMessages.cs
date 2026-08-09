@@ -77,6 +77,7 @@ public static class ErrorMessages
         public const string OfferNotFound = "Catalog.OfferNotFound";
 
         public const string ImageUploadFailed = "Catalog.ImageUploadFailed";
+        public const string ScrapeJobInProgress = "Catalog.ScrapeJobInProgress";
     }
 
     public static class Pantry
