@@ -29,4 +29,6 @@ public class UpdateOfferRequest
 
     [Required(ErrorMessage = ErrorMessages.Validation.Required)]
     public Guid SupermarketId { get; set; }
+
+    public bool IsVerified { get; set; } = true;
 }

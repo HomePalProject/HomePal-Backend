@@ -49,6 +49,7 @@ public static class OfferMapper
             CategoryId = request.CategoryId,
             ImagePath = request.ImagePath,
             SupermarketId = request.SupermarketId,
+            IsVerified = request.IsVerified,
             CreatedAt = DateTime.UtcNow
         };
     }
@@ -66,6 +67,7 @@ public static class OfferMapper
         offer.CategoryId = request.CategoryId;
         offer.ImagePath = request.ImagePath;
         offer.SupermarketId = request.SupermarketId;
+        offer.IsVerified = request.IsVerified;
         offer.UpdatedAt = DateTime.UtcNow;
     }
 }
