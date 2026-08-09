@@ -21,6 +21,8 @@ public interface IUnitOfWork : IDisposable
     IOfferRepository Offers { get; }
     IPantryRepository Pantries { get; }
     IPantryItemRepository PantryItems { get; }
+    HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListRepository ShoppingLists { get; }
+    HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListItemRepository ShoppingListItems { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     Task BeginTransactionAsync(CancellationToken cancellationToken = default);

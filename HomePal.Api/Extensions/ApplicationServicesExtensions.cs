@@ -56,6 +56,8 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.Catalog.Interfaces.IOfferRepository, OfferRepository>();
         services.AddScoped<HomePal.Application.Features.PantryManagement.Interfaces.IPantryRepository, PantryRepository>();
         services.AddScoped<HomePal.Application.Features.PantryManagement.Interfaces.IPantryItemRepository, PantryItemRepository>();
+        services.AddScoped<HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListRepository, ShoppingListRepository>();
+        services.AddScoped<HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListItemRepository, ShoppingListItemRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<ITokenProvider, TokenProvider>();
@@ -84,6 +86,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.Catalog.Interfaces.ISupermarketService, HomePal.Application.Features.Catalog.Services.SupermarketService>();
         services.AddScoped<HomePal.Application.Features.Catalog.Interfaces.IOfferService, HomePal.Application.Features.Catalog.Services.OfferService>();
         services.AddScoped<HomePal.Application.Features.PantryManagement.Interfaces.IPantryItemService, HomePal.Application.Features.PantryManagement.Services.PantryItemService>();
+        services.AddScoped<HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListService, HomePal.Application.Features.ShoppingList.Services.ShoppingListService>();
 
         services.AddControllers()
             .AddDataAnnotationsLocalization(options =>

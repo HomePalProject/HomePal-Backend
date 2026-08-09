@@ -11,6 +11,7 @@ public class Household
     public DateTime? UpdatedAt { get; set; }
 
     public Pantry? Pantry { get; set; }
+    public ShoppingList? ShoppingList { get; set; }
     public ICollection<HouseholdMember> Members { get; set; } = new List<HouseholdMember>();
     public ICollection<HouseholdInvitation> Invitations { get; set; } = new List<HouseholdInvitation>();
 }

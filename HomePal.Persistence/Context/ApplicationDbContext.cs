@@ -25,6 +25,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<Offer> Offers => Set<Offer>();
     public DbSet<Pantry> Pantries => Set<Pantry>();
     public DbSet<PantryItem> PantryItems => Set<PantryItem>();
+    public DbSet<ShoppingList> ShoppingLists => Set<ShoppingList>();
+    public DbSet<ShoppingListItem> ShoppingListItems => Set<ShoppingListItem>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
