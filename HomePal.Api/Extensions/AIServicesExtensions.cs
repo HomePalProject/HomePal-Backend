@@ -1,4 +1,5 @@
 using System.ClientModel;
+using System.Text;
 using HomePal.Application.Common.Interfaces;
 using HomePal.Application.Features.Catalog.Interfaces;
 using HomePal.Application.Features.PantryManagement.Interfaces;
@@ -14,6 +15,9 @@ using Microsoft.Agents.AI.Hosting;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
 using OpenAI;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace HomePal.Api.Extensions;
 
@@ -28,6 +32,44 @@ public static class AIServicesExtensions
         services.AddOptions<ApifyOptions>()
             .Bind(configuration.GetSection(ApifyOptions.SectionName))
             .ValidateOnStart();
+
+        var agentOptions = configuration.GetSection(AgentOptions.SectionName).Get<AgentOptions>() ?? new AgentOptions();
+        if (agentOptions.Langfuse.Enabled)
+        {
+            var langfuse = agentOptions.Langfuse;
+            var authBytes = Encoding.UTF8.GetBytes($"{langfuse.PublicKey}:{langfuse.SecretKey}");
+            var base64Auth = Convert.ToBase64String(authBytes);
+
+            var rawEndpoint = string.IsNullOrWhiteSpace(langfuse.Endpoint)
+                ? "https://cloud.langfuse.com"
+                : langfuse.Endpoint.TrimEnd('/');
+
+            var endpoint = rawEndpoint.EndsWith("/api/public/otel/v1/traces", StringComparison.OrdinalIgnoreCase)
+                ? rawEndpoint
+                : $"{rawEndpoint}/api/public/otel/v1/traces";
+
+            var serviceName = string.IsNullOrWhiteSpace(langfuse.ServiceName)
+                ? "HomePal.AI"
+                : langfuse.ServiceName;
+
+            services.AddOpenTelemetry()
+                .WithTracing(tracerProviderBuilder =>
+                {
+                    tracerProviderBuilder
+                        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName))
+                        .AddSource("Experimental.Microsoft.Extensions.AI")
+                        .AddSource("Microsoft.Extensions.AI")
+                        .AddSource("Microsoft.Agents.AI")
+                        .AddSource("OpenAI")
+                        .AddSource("*")
+                        .AddOtlpExporter(options =>
+                        {
+                            options.Endpoint = new Uri(endpoint);
+                            options.Protocol = OtlpExportProtocol.HttpProtobuf;
+                            options.Headers = $"Authorization=Basic {base64Auth},x-langfuse-ingestion-version=4";
+                        });
+                });
+        }
 
         services.AddSingleton<IChatClient>(sp =>
         {
@@ -47,7 +89,12 @@ public static class AIServicesExtensions
 
             var openAiClient = new OpenAIClient(new ApiKeyCredential(apiKey), clientOptions);
             var openAiChatClient = openAiClient.GetChatClient(modelId);
-            return openAiChatClient.AsIChatClient();
+            var baseChatClient = openAiChatClient.AsIChatClient();
+
+            return baseChatClient
+                .AsBuilder()
+                .UseOpenTelemetry()
+                .Build(sp);
         });
 
         services.AddSingleton<IEmbeddingGenerator<string, Embedding<float>>>(sp =>
