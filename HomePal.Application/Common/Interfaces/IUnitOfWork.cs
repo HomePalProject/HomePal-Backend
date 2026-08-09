@@ -18,7 +18,6 @@ public interface IUnitOfWork : IDisposable
     IProductCategoryRepository ProductCategories { get; }
     IMeasuringUnitRepository MeasuringUnits { get; }
     ISupermarketRepository Supermarkets { get; }
-    ICanonicalProductRepository CanonicalProducts { get; }
     IOfferRepository Offers { get; }
     IPantryRepository Pantries { get; }
     IPantryItemRepository PantryItems { get; }

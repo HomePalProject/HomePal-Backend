@@ -28,8 +28,7 @@ public static class OfferMapper
             SupermarketName = offer.Supermarket?.Name.Get(culture) ?? string.Empty,
             SupermarketLogoPath = offer.Supermarket?.LogoPath,
             SupermarketWebsiteUrl = offer.Supermarket?.WebsiteUrl,
-            CanonicalProductId = offer.CanonicalProductId,
-            CanonicalProductName = offer.CanonicalProduct?.Name.Get(culture),
+            IsVerified = offer.IsVerified,
             CreatedAt = offer.CreatedAt
         };
     }
@@ -50,7 +49,6 @@ public static class OfferMapper
             CategoryId = request.CategoryId,
             ImagePath = request.ImagePath,
             SupermarketId = request.SupermarketId,
-            CanonicalProductId = request.CanonicalProductId,
             CreatedAt = DateTime.UtcNow
         };
     }
@@ -68,7 +66,6 @@ public static class OfferMapper
         offer.CategoryId = request.CategoryId;
         offer.ImagePath = request.ImagePath;
         offer.SupermarketId = request.SupermarketId;
-        offer.CanonicalProductId = request.CanonicalProductId;
         offer.UpdatedAt = DateTime.UtcNow;
     }
 }

@@ -22,6 +22,9 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
         builder.Property(o => o.Embedding)
             .HasColumnType("vector(1536)");
 
+        builder.Property(o => o.IsVerified)
+            .HasDefaultValue(true);
+
         builder.HasOne(o => o.Supermarket)
             .WithMany(s => s.Offers)
             .HasForeignKey(o => o.SupermarketId)
@@ -35,11 +38,6 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
         builder.HasOne(o => o.Unit)
             .WithMany(u => u.Offers)
             .HasForeignKey(o => o.UnitId)
-            .OnDelete(DeleteBehavior.SetNull);
-
-        builder.HasOne(o => o.CanonicalProduct)
-            .WithMany(p => p.Offers)
-            .HasForeignKey(o => o.CanonicalProductId)
             .OnDelete(DeleteBehavior.SetNull);
     }
 }

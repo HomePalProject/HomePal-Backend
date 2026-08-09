@@ -29,6 +29,4 @@ public class UpdateOfferRequest
 
     [Required(ErrorMessage = ErrorMessages.Validation.Required)]
     public Guid SupermarketId { get; set; }
-
-    public Guid? CanonicalProductId { get; set; }
 }

@@ -37,14 +37,13 @@ public class OffersController : BaseApiController
     [HttpGet("search")]
     [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.HouseholdMember},{Roles.Admin}")]
     [ProducesResponseType(typeof(ApiResponse<PaginatedList<OfferResponse>>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> SearchOffers([FromQuery] string? query, [FromQuery] Guid? categoryId, [FromQuery] Guid? supermarketId, [FromQuery] Guid? canonicalProductId, CancellationToken cancellationToken)
+    public async Task<IActionResult> SearchOffers([FromQuery] string? query, [FromQuery] Guid? categoryId, [FromQuery] Guid? supermarketId, CancellationToken cancellationToken)
     {
         var request = new OfferQueryRequest
         {
             Query = query,
             CategoryId = categoryId,
-            SupermarketId = supermarketId,
-            CanonicalProductId = canonicalProductId
+            SupermarketId = supermarketId
         };
         var result = await _offerService.GetPagedAsync(request, cancellationToken);
         return HandleResult(result);

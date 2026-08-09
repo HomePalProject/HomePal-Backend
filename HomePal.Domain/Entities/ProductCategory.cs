@@ -12,6 +12,5 @@ public class ProductCategory
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
 
-    public ICollection<CanonicalProduct> Products { get; set; } = new List<CanonicalProduct>();
     public ICollection<Offer> Offers { get; set; } = new List<Offer>();
 }

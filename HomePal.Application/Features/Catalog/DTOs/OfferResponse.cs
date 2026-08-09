@@ -20,7 +20,6 @@ public class OfferResponse
     public string SupermarketName { get; set; } = string.Empty;
     public string? SupermarketLogoPath { get; set; }
     public string? SupermarketWebsiteUrl { get; set; }
-    public Guid? CanonicalProductId { get; set; }
-    public string? CanonicalProductName { get; set; }
+    public bool IsVerified { get; set; }
     public DateTime CreatedAt { get; set; }
 }

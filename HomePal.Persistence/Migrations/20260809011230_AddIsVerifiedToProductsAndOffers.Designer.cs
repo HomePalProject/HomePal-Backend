@@ -5,6 +5,7 @@ using Microsoft.Data.SqlTypes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,9 +13,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomePal.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260809011230_AddIsVerifiedToProductsAndOffers")]
+    partial class AddIsVerifiedToProductsAndOffers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,6 +130,39 @@ namespace HomePal.Persistence.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("HomePal.Domain.Entities.CanonicalProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<SqlVector<float>?>("Embedding")
+                        .HasColumnType("vector(1536)");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsVerified")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("CanonicalProducts");
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.Household", b =>
@@ -273,6 +309,9 @@ namespace HomePal.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("CanonicalProductId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
@@ -317,6 +356,8 @@ namespace HomePal.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CanonicalProductId");
 
                     b.HasIndex("CategoryId");
 
@@ -666,6 +707,70 @@ namespace HomePal.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("HomePal.Domain.Entities.CanonicalProduct", b =>
+                {
+                    b.HasOne("HomePal.Domain.Entities.ProductCategory", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.OwnsMany("HomePal.Domain.Common.LocalizedItem", "Description", b1 =>
+                        {
+                            b1.Property<Guid>("CanonicalProductId");
+
+                            b1.Property<int>("__synthesizedOrdinal")
+                                .ValueGeneratedOnAddOrUpdate();
+
+                            b1.Property<string>("Culture")
+                                .IsRequired();
+
+                            b1.Property<string>("Value")
+                                .IsRequired();
+
+                            b1.HasKey("CanonicalProductId", "__synthesizedOrdinal");
+
+                            b1.ToTable("CanonicalProducts");
+
+                            b1
+                                .ToJson("Description")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CanonicalProductId");
+                        });
+
+                    b.OwnsMany("HomePal.Domain.Common.LocalizedItem", "Name", b1 =>
+                        {
+                            b1.Property<Guid>("CanonicalProductId");
+
+                            b1.Property<int>("__synthesizedOrdinal")
+                                .ValueGeneratedOnAddOrUpdate();
+
+                            b1.Property<string>("Culture")
+                                .IsRequired();
+
+                            b1.Property<string>("Value")
+                                .IsRequired();
+
+                            b1.HasKey("CanonicalProductId", "__synthesizedOrdinal");
+
+                            b1.ToTable("CanonicalProducts");
+
+                            b1
+                                .ToJson("Name")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CanonicalProductId");
+                        });
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Description");
+
+                    b.Navigation("Name");
+                });
+
             modelBuilder.Entity("HomePal.Domain.Entities.HouseholdInvitation", b =>
                 {
                     b.HasOne("HomePal.Domain.Entities.Household", "Household")
@@ -762,6 +867,11 @@ namespace HomePal.Persistence.Migrations
 
             modelBuilder.Entity("HomePal.Domain.Entities.Offer", b =>
                 {
+                    b.HasOne("HomePal.Domain.Entities.CanonicalProduct", "CanonicalProduct")
+                        .WithMany("Offers")
+                        .HasForeignKey("CanonicalProductId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("HomePal.Domain.Entities.ProductCategory", "Category")
                         .WithMany("Offers")
                         .HasForeignKey("CategoryId")
@@ -827,6 +937,8 @@ namespace HomePal.Persistence.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("OfferId");
                         });
+
+                    b.Navigation("CanonicalProduct");
 
                     b.Navigation("Category");
 
@@ -1168,6 +1280,11 @@ namespace HomePal.Persistence.Migrations
                     b.Navigation("RefreshTokens");
                 });
 
+            modelBuilder.Entity("HomePal.Domain.Entities.CanonicalProduct", b =>
+                {
+                    b.Navigation("Offers");
+                });
+
             modelBuilder.Entity("HomePal.Domain.Entities.Household", b =>
                 {
                     b.Navigation("Invitations");
@@ -1195,6 +1312,8 @@ namespace HomePal.Persistence.Migrations
             modelBuilder.Entity("HomePal.Domain.Entities.ProductCategory", b =>
                 {
                     b.Navigation("Offers");
+
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.Supermarket", b =>

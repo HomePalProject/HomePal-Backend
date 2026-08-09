@@ -18,7 +18,6 @@ public class OfferRepository : Repository<Offer>, IOfferRepository
             .Include(o => o.Supermarket)
             .Include(o => o.Category)
             .Include(o => o.Unit)
-            .Include(o => o.CanonicalProduct)
             .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
     }
 
@@ -27,15 +26,19 @@ public class OfferRepository : Repository<Offer>, IOfferRepository
         string? query = null,
         Guid? categoryId = null,
         Guid? supermarketId = null,
-        Guid? canonicalProductId = null,
+        bool onlyVerified = true,
         CancellationToken cancellationToken = default)
     {
         var dbQuery = _dbSet.AsNoTracking()
             .Include(o => o.Supermarket)
             .Include(o => o.Category)
             .Include(o => o.Unit)
-            .Include(o => o.CanonicalProduct)
             .AsQueryable();
+
+        if (onlyVerified)
+        {
+            dbQuery = dbQuery.Where(o => o.IsVerified);
+        }
 
         if (categoryId.HasValue)
         {
@@ -45,11 +48,6 @@ public class OfferRepository : Repository<Offer>, IOfferRepository
         if (supermarketId.HasValue)
         {
             dbQuery = dbQuery.Where(o => o.SupermarketId == supermarketId.Value);
-        }
-
-        if (canonicalProductId.HasValue)
-        {
-            dbQuery = dbQuery.Where(o => o.CanonicalProductId == canonicalProductId.Value);
         }
 
         if (!string.IsNullOrWhiteSpace(query))

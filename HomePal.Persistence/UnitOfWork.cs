@@ -24,7 +24,6 @@ public class UnitOfWork : IUnitOfWork
     private IProductCategoryRepository? _productCategories;
     private IMeasuringUnitRepository? _measuringUnits;
     private ISupermarketRepository? _supermarkets;
-    private ICanonicalProductRepository? _canonicalProducts;
     private IOfferRepository? _offers;
     private IPantryRepository? _pantries;
     private IPantryItemRepository? _pantryItems;
@@ -44,7 +43,6 @@ public class UnitOfWork : IUnitOfWork
     public IProductCategoryRepository ProductCategories => _productCategories ??= new ProductCategoryRepository(_context);
     public IMeasuringUnitRepository MeasuringUnits => _measuringUnits ??= new MeasuringUnitRepository(_context);
     public ISupermarketRepository Supermarkets => _supermarkets ??= new SupermarketRepository(_context);
-    public ICanonicalProductRepository CanonicalProducts => _canonicalProducts ??= new CanonicalProductRepository(_context);
     public IOfferRepository Offers => _offers ??= new OfferRepository(_context);
     public IPantryRepository Pantries => _pantries ??= new PantryRepository(_context);
     public IPantryItemRepository PantryItems => _pantryItems ??= new PantryItemRepository(_context);

@@ -1,6 +1,10 @@
 using System.ClientModel;
 using HomePal.Application.Common.Interfaces;
+using HomePal.Application.Features.Catalog.Interfaces;
 using HomePal.Application.Features.PantryManagement.Interfaces;
+using HomePal.Infrastructure.AI.CatalogManagement.Instructions;
+using HomePal.Infrastructure.AI.CatalogManagement.Options;
+using HomePal.Infrastructure.AI.CatalogManagement.Services;
 using HomePal.Infrastructure.AI.PantryManagement.Instructions;
 using HomePal.Infrastructure.AI.PantryManagement.Options;
 using HomePal.Infrastructure.AI.PantryManagement.Services;
@@ -19,6 +23,10 @@ public static class AIServicesExtensions
     {
         services.AddOptions<AgentOptions>()
             .Bind(configuration.GetSection(AgentOptions.SectionName))
+            .ValidateOnStart();
+
+        services.AddOptions<ApifyOptions>()
+            .Bind(configuration.GetSection(ApifyOptions.SectionName))
             .ValidateOnStart();
 
         services.AddSingleton<IChatClient>(sp =>
@@ -45,8 +53,8 @@ public static class AIServicesExtensions
         services.AddSingleton<IEmbeddingGenerator<string, Embedding<float>>>(sp =>
         {
             var options = sp.GetRequiredService<IOptions<AgentOptions>>().Value;
-            var embeddingModelId = options.EmbeddingModelId;
-            var apiKey = options.ApiKey;
+            var embeddingModelId = string.IsNullOrWhiteSpace(options.EmbeddingModelId) ? "gemini-embedding-001" : options.EmbeddingModelId;
+            var apiKey = string.IsNullOrWhiteSpace(options.ApiKey) ? "mock-key" : options.ApiKey;
             var endpoint = options.Endpoint;
 
             OpenAIClientOptions? clientOptions = null;
@@ -64,6 +72,7 @@ public static class AIServicesExtensions
         });
 
         services.AddAIAgent("PantryScannerAgent", instructions: PantryAgentInstructions.SystemInstructions);
+        services.AddAIAgent("ProductScraperAgent", instructions: ProductScraperInstructions.SystemInstructions);
 
         services.AddSingleton<AIAgent>(sp =>
         {
@@ -71,8 +80,10 @@ public static class AIServicesExtensions
             return chatClient.AsAIAgent(instructions: PantryAgentInstructions.SystemInstructions, name: "PantryScannerAgent");
         });
 
+        services.AddHttpClient<IApifyScraperService, ApifyScraperService>();
         services.AddScoped<IPantryScannerService, PantryAgentScanner>();
         services.AddScoped<IEmbeddingService, EmbeddingService>();
+        services.AddScoped<IProductOfferScraperService, ProductOfferScraperAgent>();
 
         return services;
     }

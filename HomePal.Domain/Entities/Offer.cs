@@ -27,10 +27,8 @@ public class Offer
     public Guid SupermarketId { get; set; }
     public Supermarket Supermarket { get; set; } = null!;
 
-    public Guid? CanonicalProductId { get; set; }
-    public CanonicalProduct? CanonicalProduct { get; set; }
-
     public SqlVector<float>? Embedding { get; set; }
+    public bool IsVerified { get; set; } = true;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }

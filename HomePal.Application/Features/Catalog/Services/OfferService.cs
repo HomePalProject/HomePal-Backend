@@ -31,7 +31,7 @@ public class OfferService : IOfferService
             request.Query,
             request.CategoryId,
             request.SupermarketId,
-            request.CanonicalProductId,
+            request.OnlyVerified,
             cancellationToken);
 
         var dtos = pagedOffers.Items.Select(o => o.ToResponse()).ToList();
@@ -81,15 +81,6 @@ public class OfferService : IOfferService
             }
         }
 
-        if (request.CanonicalProductId.HasValue)
-        {
-            var product = await _unitOfWork.CanonicalProducts.GetByIdAsync(request.CanonicalProductId.Value, cancellationToken);
-            if (product == null)
-            {
-                return Result<OfferResponse>.Fail(ErrorMessages.Catalog.CanonicalProductNotFound, ResultStatus.BadRequest);
-            }
-        }
-
         var offer = request.ToEntity();
 
         var textToEmbed = string.Join(" ", offer.Name.Select(n => n.Value)) + (offer.Description != null ? " " + string.Join(" ", offer.Description.Select(d => d.Value)) : "");
@@ -131,15 +122,6 @@ public class OfferService : IOfferService
             if (unit == null)
             {
                 return Result<OfferResponse>.Fail(ErrorMessages.Catalog.MeasuringUnitNotFound, ResultStatus.BadRequest);
-            }
-        }
-
-        if (request.CanonicalProductId.HasValue)
-        {
-            var product = await _unitOfWork.CanonicalProducts.GetByIdAsync(request.CanonicalProductId.Value, cancellationToken);
-            if (product == null)
-            {
-                return Result<OfferResponse>.Fail(ErrorMessages.Catalog.CanonicalProductNotFound, ResultStatus.BadRequest);
             }
         }
 

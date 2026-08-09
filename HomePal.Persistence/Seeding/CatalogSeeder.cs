@@ -159,72 +159,7 @@ public static class CatalogSeeder
         dbContext.Supermarkets.AddRange(marketCarrefour, marketLulu, marketSpinneys, marketMetro);
         await dbContext.SaveChangesAsync();
 
-        // 4. Canonical Products
-        var prodMilk = new CanonicalProduct
-        {
-            Id = Guid.NewGuid(),
-            Name = [new LocalizedItem("en", "Fresh Full Cream Milk 1L"), new LocalizedItem("ar", "حليب كامل الدسم طازج 1 لتر")],
-            Description = [new LocalizedItem("en", "Pasteurized full cream fresh milk"), new LocalizedItem("ar", "حليب طازج مبستر كامل الدسم")],
-            CategoryId = catDairy.Id,
-            ImagePath = await DownloadDummyImageAsync("products", "Milk"),
-            Embedding = null,
-            CreatedAt = DateTime.UtcNow
-        };
-        var prodEggs = new CanonicalProduct
-        {
-            Id = Guid.NewGuid(),
-            Name = [new LocalizedItem("en", "Farm Fresh White Eggs 30 Pack"), new LocalizedItem("ar", "بيض أبيض طازج كرتونة 30 بيضة")],
-            Description = [new LocalizedItem("en", "Grade A fresh white eggs 30 pieces"), new LocalizedItem("ar", "بيض أبيض طازج فئة أ 30 قطعة")],
-            CategoryId = catDairy.Id,
-            ImagePath = await DownloadDummyImageAsync("products", "Eggs"),
-            Embedding = null,
-            CreatedAt = DateTime.UtcNow
-        };
-        var prodBananas = new CanonicalProduct
-        {
-            Id = Guid.NewGuid(),
-            Name = [new LocalizedItem("en", "Fresh Yellow Bananas 1kg"), new LocalizedItem("ar", "موز أصفر طازج 1 كيلو")],
-            Description = [new LocalizedItem("en", "Sweet premium yellow bananas"), new LocalizedItem("ar", "موز أصفر ممتاز عالي الجودة")],
-            CategoryId = catProduce.Id,
-            ImagePath = await DownloadDummyImageAsync("products", "Bananas"),
-            Embedding = null,
-            CreatedAt = DateTime.UtcNow
-        };
-        var prodOrangeJuice = new CanonicalProduct
-        {
-            Id = Guid.NewGuid(),
-            Name = [new LocalizedItem("en", "Natural Orange Juice 1L"), new LocalizedItem("ar", "عصير برتقال طبيعي 1 لتر")],
-            Description = [new LocalizedItem("en", "100% natural pure orange juice"), new LocalizedItem("ar", "عصير برتقال طبيعي نقي 100%")],
-            CategoryId = catBeverages.Id,
-            ImagePath = await DownloadDummyImageAsync("products", "OrangeJuice"),
-            Embedding = null,
-            CreatedAt = DateTime.UtcNow
-        };
-        var prodBread = new CanonicalProduct
-        {
-            Id = Guid.NewGuid(),
-            Name = [new LocalizedItem("en", "White Toast Bread 500g"), new LocalizedItem("ar", "خبز توست أبيض 500 جرام")],
-            Description = [new LocalizedItem("en", "Soft sliced white toast bread"), new LocalizedItem("ar", "خبز توست أبيض شرائح طري")],
-            CategoryId = catBakery.Id,
-            ImagePath = await DownloadDummyImageAsync("products", "ToastBread"),
-            Embedding = null,
-            CreatedAt = DateTime.UtcNow
-        };
-        var prodChicken = new CanonicalProduct
-        {
-            Id = Guid.NewGuid(),
-            Name = [new LocalizedItem("en", "Fresh Chicken Breast Fillet 1kg"), new LocalizedItem("ar", "صدور دجاج مخلية طازجة 1 كيلو")],
-            Description = [new LocalizedItem("en", "Boneless skinless fresh chicken breast"), new LocalizedItem("ar", "صدور دجاج طازجة بدون عظم أو جلد")],
-            CategoryId = catMeat.Id,
-            ImagePath = await DownloadDummyImageAsync("products", "ChickenBreast"),
-            Embedding = null,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        dbContext.CanonicalProducts.AddRange(prodMilk, prodEggs, prodBananas, prodOrangeJuice, prodBread, prodChicken);
-        await dbContext.SaveChangesAsync();
-
-        // 5. Offers
+        // 4. Offers
         var now = DateTime.UtcNow;
         var offers = new List<Offer>
         {
@@ -241,7 +176,6 @@ public static class CatalogSeeder
                 ValidTo = now.AddDays(10),
                 CategoryId = catDairy.Id,
                 SupermarketId = marketCarrefour.Id,
-                CanonicalProductId = prodMilk.Id,
                 ImagePath = await DownloadDummyImageAsync("offers", "OfferMilkCarrefour"),
                 Embedding = null,
                 CreatedAt = now
@@ -259,7 +193,6 @@ public static class CatalogSeeder
                 ValidTo = now.AddDays(7),
                 CategoryId = catDairy.Id,
                 SupermarketId = marketLulu.Id,
-                CanonicalProductId = prodEggs.Id,
                 ImagePath = await DownloadDummyImageAsync("offers", "OfferEggsLulu"),
                 Embedding = null,
                 CreatedAt = now
@@ -277,7 +210,6 @@ public static class CatalogSeeder
                 ValidTo = now.AddDays(5),
                 CategoryId = catProduce.Id,
                 SupermarketId = marketSpinneys.Id,
-                CanonicalProductId = prodBananas.Id,
                 ImagePath = await DownloadDummyImageAsync("offers", "OfferBananasSpinneys"),
                 Embedding = null,
                 CreatedAt = now
@@ -295,7 +227,6 @@ public static class CatalogSeeder
                 ValidTo = now.AddDays(12),
                 CategoryId = catBeverages.Id,
                 SupermarketId = marketMetro.Id,
-                CanonicalProductId = prodOrangeJuice.Id,
                 ImagePath = await DownloadDummyImageAsync("offers", "OfferJuiceMetro"),
                 Embedding = null,
                 CreatedAt = now
@@ -313,7 +244,6 @@ public static class CatalogSeeder
                 ValidTo = now.AddDays(6),
                 CategoryId = catMeat.Id,
                 SupermarketId = marketCarrefour.Id,
-                CanonicalProductId = prodChicken.Id,
                 ImagePath = await DownloadDummyImageAsync("offers", "OfferChickenCarrefour"),
                 Embedding = null,
                 CreatedAt = now

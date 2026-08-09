@@ -12,6 +12,6 @@ public interface IOfferRepository : IRepository<Offer>
         string? query = null,
         Guid? categoryId = null,
         Guid? supermarketId = null,
-        Guid? canonicalProductId = null,
+        bool onlyVerified = true,
         CancellationToken cancellationToken = default);
 }
