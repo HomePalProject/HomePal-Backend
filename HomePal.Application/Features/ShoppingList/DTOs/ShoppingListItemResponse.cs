@@ -6,7 +6,9 @@ public class ShoppingListItemResponse
     public Guid ShoppingListId { get; set; }
     public string Name { get; set; } = string.Empty;
     public double Quantity { get; set; }
+    public int PortionCount { get; set; } = 1;
     public decimal? Price { get; set; }
+    public decimal? TotalPrice { get; set; }
 
     public Guid? UnitId { get; set; }
     public string? UnitName { get; set; }

@@ -11,6 +11,9 @@ public class UpdateShoppingListItemRequest
     [Range(0.0001, double.MaxValue, ErrorMessage = ErrorMessages.Validation.InvalidValue)]
     public double Quantity { get; set; } = 1;
 
+    [Range(1, int.MaxValue, ErrorMessage = ErrorMessages.Validation.InvalidValue)]
+    public int PortionCount { get; set; } = 1;
+
     [Range(0, (double)decimal.MaxValue, ErrorMessage = ErrorMessages.Validation.InvalidValue)]
     public decimal? Price { get; set; }
 

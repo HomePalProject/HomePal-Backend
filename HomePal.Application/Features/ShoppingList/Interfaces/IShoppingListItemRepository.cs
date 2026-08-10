@@ -8,4 +8,5 @@ public interface IShoppingListItemRepository : IRepository<ShoppingListItem>
     Task<List<ShoppingListItem>> GetByShoppingListIdAsync(Guid shoppingListId, CancellationToken cancellationToken = default);
     Task<ShoppingListItem?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken = default);
     Task ClearPurchasedAsync(Guid shoppingListId, CancellationToken cancellationToken = default);
+    Task UpdateFromOfferAsync(Offer offer, CancellationToken cancellationToken = default);
 }

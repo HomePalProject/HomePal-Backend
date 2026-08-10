@@ -131,6 +131,7 @@ public class OfferService : IOfferService
         offer.Embedding = await _embeddingService.GenerateSqlVectorAsync(textToEmbed, cancellationToken);
 
         _unitOfWork.Offers.Update(offer);
+        await _unitOfWork.ShoppingListItems.UpdateFromOfferAsync(offer, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         var updatedOffer = await _unitOfWork.Offers.GetByIdWithDetailsAsync(id, cancellationToken) ?? offer;

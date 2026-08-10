@@ -17,6 +17,10 @@ public class ShoppingListItemConfiguration : IEntityTypeConfiguration<ShoppingLi
         builder.Property(s => s.Quantity)
             .IsRequired();
 
+        builder.Property(s => s.PortionCount)
+            .IsRequired()
+            .HasDefaultValue(1);
+
         builder.Property(s => s.Price)
             .HasColumnType("decimal(18,2)");
 

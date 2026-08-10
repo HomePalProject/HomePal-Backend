@@ -9,6 +9,7 @@ public class ShoppingListItem
 
     public string Name { get; set; } = string.Empty;
     public double Quantity { get; set; } = 1;
+    public int PortionCount { get; set; } = 1;
     public decimal? Price { get; set; }
 
     public Guid? MeasuringUnitId { get; set; }

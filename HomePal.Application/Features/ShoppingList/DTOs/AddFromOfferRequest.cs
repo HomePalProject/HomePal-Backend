@@ -11,5 +11,8 @@ public class AddFromOfferRequest
     [Range(0.0001, double.MaxValue, ErrorMessage = ErrorMessages.Validation.InvalidValue)]
     public double? CustomQuantity { get; set; }
 
+    [Range(1, int.MaxValue, ErrorMessage = ErrorMessages.Validation.InvalidValue)]
+    public int? PortionCount { get; set; }
+
     public string? Notes { get; set; }
 }

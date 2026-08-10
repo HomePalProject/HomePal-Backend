@@ -83,7 +83,7 @@ public class ShoppingListService : IShoppingListService
         }
 
         var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-        var newItem = offer.ToEntity(shoppingList.Id, request.CustomQuantity, request.Notes, culture);
+        var newItem = offer.ToEntity(shoppingList.Id, request.CustomQuantity, request.PortionCount, request.Notes, culture);
 
         await _unitOfWork.ShoppingListItems.AddAsync(newItem, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
