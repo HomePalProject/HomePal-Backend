@@ -87,6 +87,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.Catalog.Interfaces.IOfferService, HomePal.Application.Features.Catalog.Services.OfferService>();
         services.AddScoped<HomePal.Application.Features.PantryManagement.Interfaces.IPantryItemService, HomePal.Application.Features.PantryManagement.Services.PantryItemService>();
         services.AddScoped<HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListService, HomePal.Application.Features.ShoppingList.Services.ShoppingListService>();
+        services.AddScoped<HomePal.Application.Features.UserManagement.Interfaces.IUserManagementService, HomePal.Application.Features.UserManagement.Services.UserManagementService>();
 
         services.AddControllers()
             .AddDataAnnotationsLocalization(options =>

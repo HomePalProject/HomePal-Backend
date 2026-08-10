@@ -46,7 +46,7 @@ public class UserManagementService : IUserManagementService
             userResponses,
             pagedUsers.TotalCount,
             pagedUsers.PageNumber,
-            pagedUsers.PageSize);
+            request.PageSize);
 
         return Result<PaginatedList<UserResponse>>.Ok(result, SuccessMessages.UserManagement.GetUsers);
     }
