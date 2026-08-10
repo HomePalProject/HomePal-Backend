@@ -14,7 +14,7 @@ public class CreateAdminRequest
     public string Email { get; set; } = string.Empty;
 
     [Required(ErrorMessage = ErrorMessages.Validation.Required)]
-    [MinLength(6, ErrorMessages = ErrorMessages.Validation.PasswordFormat)]
+    [MinLength(6, ErrorMessage = ErrorMessages.Validation.PasswordFormat)]
     public string Password { get; set; } = string.Empty;
 
     [Required(ErrorMessage = ErrorMessages.Validation.Required)]
