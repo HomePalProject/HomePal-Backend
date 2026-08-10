@@ -88,4 +88,15 @@ public static class ErrorMessages
         public const string NoHousehold = "Pantry.NoHousehold";
         public const string ScanFailed = "Pantry.ScanFailed";
     }
+
+    public static class UserManagement
+    {
+        public const string UserNotFound = "UserManagement.UserNotFound";
+        public const string AdminNotFound = "UserManagement.AdminNotFound";
+        public const string CannotDeleteProtectedAdmin = "UserManagement.CannotDeleteProtectedAdmin";
+        public const string CannotDeactivateProtectedAdmin = "UserManagement.CannotDeactivateProtectedAdmin";
+        public const string UserIsNotAdmin = "UserManagement.UserIsNotAdmin";
+        public const string AddAdminFailed = "UserManagement.AddAdminFailed";
+        public const string UpdateAdminFailed = "UserManagement.UpdateAdminFailed";
+    }
 }

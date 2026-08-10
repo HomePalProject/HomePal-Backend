@@ -237,5 +237,21 @@
   <data name="Pantry.InvalidQuantity" xml:space="preserve"><value>Quantity must be greater than zero.</value></data>
   <data name="Pantry.NoHousehold" xml:space="preserve"><value>User does not belong to a household.</value></data>
   <data name="Pantry.ScanFailed" xml:space="preserve"><value>Failed to scan pantry items from the provided image.</value></data>
+
+  <!-- User Management -->
+  <data name="UserManagement.GetUsersSuccess" xml:space="preserve"><value>Users retrieved successfully.</value></data>
+  <data name="UserManagement.GetUserSuccess" xml:space="preserve"><value>User details retrieved successfully.</value></data>
+  <data name="UserManagement.AddAdminSuccess" xml:space="preserve"><value>Admin created successfully.</value></data>
+  <data name="UserManagement.UpdateAdminSuccess" xml:space="preserve"><value>Admin details updated successfully.</value></data>
+  <data name="UserManagement.DeleteUserSuccess" xml:space="preserve"><value>User deleted successfully.</value></data>
+  <data name="UserManagement.DeactivateAccountSuccess" xml:space="preserve"><value>Account deactivated successfully.</value></data>
+  <data name="UserManagement.DeleteAdminSuccess" xml:space="preserve"><value>Admin deleted successfully.</value></data>
+  <data name="UserManagement.UserNotFound" xml:space="preserve"><value>User not found.</value></data>
+  <data name="UserManagement.AdminNotFound" xml:space="preserve"><value>Admin not found.</value></data>
+  <data name="UserManagement.CannotDeleteProtectedAdmin" xml:space="preserve"><value>The default admin account cannot be deleted.</value></data>
+  <data name="UserManagement.CannotDeactivateProtectedAdmin" xml:space="preserve"><value>The default admin account cannot be deactivated.</value></data>
+  <data name="UserManagement.UserIsNotAdmin" xml:space="preserve"><value>Target user is not an admin.</value></data>
+  <data name="UserManagement.AddAdminFailed" xml:space="preserve"><value>Failed to create admin user.</value></data>
+  <data name="UserManagement.UpdateAdminFailed" xml:space="preserve"><value>Failed to update admin user.</value></data>
 </root>
 

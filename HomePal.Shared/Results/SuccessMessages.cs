@@ -110,4 +110,15 @@ public static class SuccessMessages
         public const string Scan = "Pantry.ScanSuccess";
         public const string BulkAdd = "Pantry.BulkAddSuccess";
     }
+
+    public static class UserManagement
+    {
+        public const string GetUsers = "UserManagement.GetUsersSuccess";
+        public const string GetUser = "UserManagement.GetUserSuccess";
+        public const string AddAdmin = "UserManagement.AddAdminSuccess";
+        public const string UpdateAdmin = "UserManagement.UpdateAdminSuccess";
+        public const string DeleteUser = "UserManagement.DeleteUserSuccess";
+        public const string DeactivateAccount = "UserManagement.DeactivateAccountSuccess";
+        public const string DeleteAdmin = "UserManagement.DeleteAdminSuccess";
+    }
 }

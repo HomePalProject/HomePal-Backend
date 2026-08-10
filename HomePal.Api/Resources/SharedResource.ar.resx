@@ -237,5 +237,21 @@
   <data name="Pantry.InvalidQuantity" xml:space="preserve"><value>يجب أن تكون الكمية أكبر من صفر.</value></data>
   <data name="Pantry.NoHousehold" xml:space="preserve"><value>المستخدم لا ينتمي إلى أي منزل.</value></data>
   <data name="Pantry.ScanFailed" xml:space="preserve"><value>فشلت عملية مسح عناصر المطبخ من الصورة المرفقة.</value></data>
+
+  <!-- User Management -->
+  <data name="UserManagement.GetUsersSuccess" xml:space="preserve"><value>تم استرداد المستخدمين بنجاح.</value></data>
+  <data name="UserManagement.GetUserSuccess" xml:space="preserve"><value>تم استرداد تفاصيل المستخدم بنجاح.</value></data>
+  <data name="UserManagement.AddAdminSuccess" xml:space="preserve"><value>تم إنشاء المسؤول بنجاح.</value></data>
+  <data name="UserManagement.UpdateAdminSuccess" xml:space="preserve"><value>تم تحديث بيانات المسؤول بنجاح.</value></data>
+  <data name="UserManagement.DeleteUserSuccess" xml:space="preserve"><value>تم حذف المستخدم بنجاح.</value></data>
+  <data name="UserManagement.DeactivateAccountSuccess" xml:space="preserve"><value>تم إلغاء تفعيل الحساب بنجاح.</value></data>
+  <data name="UserManagement.DeleteAdminSuccess" xml:space="preserve"><value>تم حذف المسؤول بنجاح.</value></data>
+  <data name="UserManagement.UserNotFound" xml:space="preserve"><value>المستخدم غير موجود.</value></data>
+  <data name="UserManagement.AdminNotFound" xml:space="preserve"><value>المسؤول غير موجود.</value></data>
+  <data name="UserManagement.CannotDeleteProtectedAdmin" xml:space="preserve"><value>لا يمكن حذف حساب المسؤول الافتراضي النظامي.</value></data>
+  <data name="UserManagement.CannotDeactivateProtectedAdmin" xml:space="preserve"><value>لا يمكن إلغاء تفعيل حساب المسؤول الافتراضي النظامي.</value></data>
+  <data name="UserManagement.UserIsNotAdmin" xml:space="preserve"><value>المستخدم المحدد ليس مسؤولاً.</value></data>
+  <data name="UserManagement.AddAdminFailed" xml:space="preserve"><value>فشل إنشاء حساب المسؤول.</value></data>
+  <data name="UserManagement.UpdateAdminFailed" xml:space="preserve"><value>فشل تحديث حساب المسؤول.</value></data>
 </root>
 
