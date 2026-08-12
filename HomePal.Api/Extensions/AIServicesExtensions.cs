@@ -2,12 +2,13 @@ using System.ClientModel;
 using System.Text;
 using Google.GenAI;
 using HomePal.Application.Common.Interfaces;
-
 using HomePal.Application.Features.Catalog.Interfaces;
 using HomePal.Application.Features.PantryManagement.Interfaces;
 using HomePal.Infrastructure.AI.CatalogManagement.Instructions;
 using HomePal.Infrastructure.AI.CatalogManagement.Options;
 using HomePal.Infrastructure.AI.CatalogManagement.Services;
+using HomePal.Infrastructure.AI.MealPlanning.Instructions;
+using HomePal.Infrastructure.AI.MealPlanning.Tools;
 using HomePal.Infrastructure.AI.PantryManagement.Instructions;
 using HomePal.Infrastructure.AI.PantryManagement.Options;
 using HomePal.Infrastructure.AI.PantryManagement.Services;
@@ -112,7 +113,6 @@ public static class AIServicesExtensions
                 .Build(sp);
         });
 
-
         services.AddSingleton<IEmbeddingGenerator<string, Embedding<float>>>(sp =>
         {
             var options = sp.GetRequiredService<IOptions<AgentOptions>>().Value;
@@ -146,25 +146,70 @@ public static class AIServicesExtensions
         services.AddScoped<ChatHistoryProvider, HomePal.Infrastructure.AI.AgentChat.Services.DbChatHistoryProvider>();
         services.AddScoped<HomePal.Infrastructure.AI.AgentChat.Services.AgentSseStream>();
         services.AddSingleton<HomePal.Infrastructure.AI.AgentChat.Tools.CalculatorTools>();
+        services.AddScoped<MealPlanningSubAgentTools>();
         services.AddScoped<HomePal.Application.Features.AgentChat.Interfaces.IAgentChatService, HomePal.Infrastructure.AI.AgentChat.Services.AgentChatService>();
 
+        // Specialist Sub-Agents
+        services.AddKeyedScoped<AIAgent>("MealAndInventoryAgent", (sp, key) =>
+        {
+            var chatClient = sp.GetRequiredService<IChatClient>();
+            return chatClient.AsAIAgent(new ChatClientAgentOptions
+            {
+                Name = "MealAndInventoryAgent",
+                ChatOptions = new ChatOptions
+                {
+                    Instructions = MealAndInventoryInstructions.SystemInstructions
+                }
+            });
+        });
+
+        services.AddKeyedScoped<AIAgent>("NutritionAndHealthAgent", (sp, key) =>
+        {
+            var chatClient = sp.GetRequiredService<IChatClient>();
+            return chatClient.AsAIAgent(new ChatClientAgentOptions
+            {
+                Name = "NutritionAndHealthAgent",
+                ChatOptions = new ChatOptions
+                {
+                    Instructions = NutritionAndHealthInstructions.SystemInstructions
+                }
+            });
+        });
+
+        services.AddKeyedScoped<AIAgent>("BudgetAndShoppingAgent", (sp, key) =>
+        {
+            var chatClient = sp.GetRequiredService<IChatClient>();
+            return chatClient.AsAIAgent(new ChatClientAgentOptions
+            {
+                Name = "BudgetAndShoppingAgent",
+                ChatOptions = new ChatOptions
+                {
+                    Instructions = BudgetAndShoppingInstructions.SystemInstructions
+                }
+            });
+        });
+
+        // Master Meal Planning Supervisor Agent (Registered as "Agent")
         services.AddKeyedScoped<AIAgent>("Agent", (sp, key) =>
-
-
         {
             var chatClient = sp.GetRequiredService<IChatClient>();
             var historyProvider = sp.GetRequiredService<ChatHistoryProvider>();
             var calcTools = sp.GetRequiredService<HomePal.Infrastructure.AI.AgentChat.Tools.CalculatorTools>();
+            var subAgentTools = sp.GetRequiredService<MealPlanningSubAgentTools>();
 
             var options = new ChatClientAgentOptions
             {
-                Name = "Agent",
+                Name = "MealPlanningSupervisorAgent",
                 ChatOptions = new ChatOptions
                 {
-                    Instructions = "You are a helpful AI assistant equipped with a Calculator tool. " +
-                                   "Whenever a user asks you to perform a mathematical calculation or arithmetic operation, ALWAYS invoke the 'Calculate' tool. " +
-                                   "The 'Calculate' tool requires human approval before execution. Wait for the result after requesting approval.",
-                    Tools = [new ApprovalRequiredAIFunction(AIFunctionFactory.Create(calcTools.Calculate))]
+                    Instructions = MealPlanningSupervisorInstructions.SystemInstructions,
+                    Tools =
+                    [
+                        new ApprovalRequiredAIFunction(AIFunctionFactory.Create(calcTools.Calculate)),
+                        AIFunctionFactory.Create(subAgentTools.ConsultMealAndInventoryAsync),
+                        AIFunctionFactory.Create(subAgentTools.ConsultNutritionAndHealthAsync),
+                        AIFunctionFactory.Create(subAgentTools.ConsultBudgetAndShoppingAsync)
+                    ]
                 },
                 ChatHistoryProvider = historyProvider
             };
@@ -173,6 +218,6 @@ public static class AIServicesExtensions
         });
 
         return services;
-
     }
 }
+
