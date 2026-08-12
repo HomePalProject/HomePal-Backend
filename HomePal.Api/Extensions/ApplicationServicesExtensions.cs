@@ -58,6 +58,8 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.PantryManagement.Interfaces.IPantryItemRepository, PantryItemRepository>();
         services.AddScoped<HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListRepository, ShoppingListRepository>();
         services.AddScoped<HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListItemRepository, ShoppingListItemRepository>();
+        services.AddScoped<HomePal.Application.Features.Budgeting.Interfaces.IHouseholdMonthlyBudgetRepository, HouseholdMonthlyBudgetRepository>();
+        services.AddScoped<HomePal.Application.Features.Budgeting.Interfaces.IHouseholdExpenseRepository, HouseholdExpenseRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<ITokenProvider, TokenProvider>();
@@ -87,6 +89,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.Catalog.Interfaces.IOfferService, HomePal.Application.Features.Catalog.Services.OfferService>();
         services.AddScoped<HomePal.Application.Features.PantryManagement.Interfaces.IPantryItemService, HomePal.Application.Features.PantryManagement.Services.PantryItemService>();
         services.AddScoped<HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListService, HomePal.Application.Features.ShoppingList.Services.ShoppingListService>();
+        services.AddScoped<HomePal.Application.Features.Budgeting.Interfaces.IBudgetService, HomePal.Application.Features.Budgeting.Services.BudgetService>();
         services.AddScoped<HomePal.Application.Features.UserManagement.Interfaces.IUserManagementService, HomePal.Application.Features.UserManagement.Services.UserManagementService>();
 
         services.AddControllers()

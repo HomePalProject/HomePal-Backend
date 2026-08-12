@@ -23,6 +23,8 @@ public interface IUnitOfWork : IDisposable
     IPantryItemRepository PantryItems { get; }
     HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListRepository ShoppingLists { get; }
     HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListItemRepository ShoppingListItems { get; }
+    HomePal.Application.Features.Budgeting.Interfaces.IHouseholdMonthlyBudgetRepository MonthlyBudgets { get; }
+    HomePal.Application.Features.Budgeting.Interfaces.IHouseholdExpenseRepository HouseholdExpenses { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     Task BeginTransactionAsync(CancellationToken cancellationToken = default);

@@ -29,6 +29,8 @@ public class UnitOfWork : IUnitOfWork
     private IPantryItemRepository? _pantryItems;
     private HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListRepository? _shoppingLists;
     private HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListItemRepository? _shoppingListItems;
+    private HomePal.Application.Features.Budgeting.Interfaces.IHouseholdMonthlyBudgetRepository? _monthlyBudgets;
+    private HomePal.Application.Features.Budgeting.Interfaces.IHouseholdExpenseRepository? _householdExpenses;
 
     public UnitOfWork(ApplicationDbContext context)
     {
@@ -50,6 +52,8 @@ public class UnitOfWork : IUnitOfWork
     public IPantryItemRepository PantryItems => _pantryItems ??= new PantryItemRepository(_context);
     public HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListRepository ShoppingLists => _shoppingLists ??= new ShoppingListRepository(_context);
     public HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListItemRepository ShoppingListItems => _shoppingListItems ??= new ShoppingListItemRepository(_context);
+    public HomePal.Application.Features.Budgeting.Interfaces.IHouseholdMonthlyBudgetRepository MonthlyBudgets => _monthlyBudgets ??= new HouseholdMonthlyBudgetRepository(_context);
+    public HomePal.Application.Features.Budgeting.Interfaces.IHouseholdExpenseRepository HouseholdExpenses => _householdExpenses ??= new HouseholdExpenseRepository(_context);
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

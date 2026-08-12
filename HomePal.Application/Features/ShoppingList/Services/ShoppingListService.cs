@@ -3,6 +3,7 @@ using HomePal.Application.Common.Interfaces;
 using HomePal.Application.Features.ShoppingList.DTOs;
 using HomePal.Application.Features.ShoppingList.Interfaces;
 using HomePal.Application.Features.ShoppingList.Mappers;
+using HomePal.Domain.Common;
 using HomePal.Shared.Results;
 
 namespace HomePal.Application.Features.ShoppingList.Services;
@@ -202,6 +203,32 @@ public class ShoppingListService : IShoppingListService
         if (shoppingList == null)
         {
             return Result.Ok(SuccessMessages.General);
+        }
+
+        var purchasedItems = shoppingList.Items.Where(i => i.IsPurchased).ToList();
+        if (purchasedItems.Count > 0)
+        {
+            var now = DateTime.UtcNow;
+            var currentBudget = await _unitOfWork.MonthlyBudgets.GetByHouseholdAndPeriodAsync(householdId.Value, now.Year, now.Month, cancellationToken);
+
+            var newExpenses = purchasedItems
+                .Where(i => i.Price.HasValue && i.Price.Value > 0)
+                .Select(i => new Domain.Entities.HouseholdExpense
+                {
+                    Id = Guid.NewGuid(),
+                    HouseholdId = householdId.Value,
+                    BudgetId = currentBudget?.Id,
+                    Title = i.Name,
+                    Amount = i.Price!.Value * (decimal)(i.PortionCount > 0 ? i.PortionCount : 1),
+                    ExpenseDate = now,
+                    CreatedAt = now
+                })
+                .ToList();
+
+            if (newExpenses.Count > 0)
+            {
+                await _unitOfWork.HouseholdExpenses.AddRangeAsync(newExpenses, cancellationToken);
+            }
         }
 
         await _unitOfWork.ShoppingListItems.ClearPurchasedAsync(shoppingList.Id, cancellationToken);

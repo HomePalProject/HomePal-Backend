@@ -253,5 +253,12 @@
   <data name="UserManagement.UserIsNotAdmin" xml:space="preserve"><value>المستخدم المحدد ليس مسؤولاً.</value></data>
   <data name="UserManagement.AddAdminFailed" xml:space="preserve"><value>فشل إنشاء حساب المسؤول.</value></data>
   <data name="UserManagement.UpdateAdminFailed" xml:space="preserve"><value>فشل تحديث حساب المسؤول.</value></data>
+
+  <!-- Budget Error Codes -->
+  <data name="Budget.BudgetNotFound" xml:space="preserve"><value>لم يتم العثور على الميزانية الشهرية.</value></data>
+  <data name="Budget.ExpenseNotFound" xml:space="preserve"><value>لم يتم العثور على المصروف.</value></data>
+  <data name="Budget.InvalidYearOrMonth" xml:space="preserve"><value>السنة أو الشهر المحدد غير صالح.</value></data>
+  <data name="Budget.InvalidAmount" xml:space="preserve"><value>يجب أن يكون مبلغ الميزانية أو المصروف أكبر من الصفر.</value></data>
+  <data name="Budget.InvalidTitle" xml:space="preserve"><value>عنوان المصروف مطلوب.</value></data>
 </root>
 

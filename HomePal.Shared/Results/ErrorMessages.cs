@@ -99,4 +99,13 @@ public static class ErrorMessages
         public const string AddAdminFailed = "UserManagement.AddAdminFailed";
         public const string UpdateAdminFailed = "UserManagement.UpdateAdminFailed";
     }
+
+    public static class Budget
+    {
+        public const string BudgetNotFound = "Budget.BudgetNotFound";
+        public const string ExpenseNotFound = "Budget.ExpenseNotFound";
+        public const string InvalidYearOrMonth = "Budget.InvalidYearOrMonth";
+        public const string InvalidAmount = "Budget.InvalidAmount";
+        public const string InvalidTitle = "Budget.InvalidTitle";
+    }
 }
