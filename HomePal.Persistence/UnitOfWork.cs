@@ -31,6 +31,7 @@ public class UnitOfWork : IUnitOfWork
     private HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListItemRepository? _shoppingListItems;
     private HomePal.Application.Features.Budgeting.Interfaces.IHouseholdMonthlyBudgetRepository? _monthlyBudgets;
     private HomePal.Application.Features.Budgeting.Interfaces.IHouseholdExpenseRepository? _householdExpenses;
+    private HomePal.Application.Features.AgentChat.Interfaces.IAgentChatRepository? _agentChats;
 
     public UnitOfWork(ApplicationDbContext context)
     {
@@ -54,6 +55,8 @@ public class UnitOfWork : IUnitOfWork
     public HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListItemRepository ShoppingListItems => _shoppingListItems ??= new ShoppingListItemRepository(_context);
     public HomePal.Application.Features.Budgeting.Interfaces.IHouseholdMonthlyBudgetRepository MonthlyBudgets => _monthlyBudgets ??= new HouseholdMonthlyBudgetRepository(_context);
     public HomePal.Application.Features.Budgeting.Interfaces.IHouseholdExpenseRepository HouseholdExpenses => _householdExpenses ??= new HouseholdExpenseRepository(_context);
+    public HomePal.Application.Features.AgentChat.Interfaces.IAgentChatRepository AgentChats => _agentChats ??= new AgentChatRepository(_context);
+
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

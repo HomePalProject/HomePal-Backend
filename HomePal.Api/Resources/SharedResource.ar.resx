@@ -260,5 +260,13 @@
   <data name="Budget.InvalidYearOrMonth" xml:space="preserve"><value>السنة أو الشهر المحدد غير صالح.</value></data>
   <data name="Budget.InvalidAmount" xml:space="preserve"><value>يجب أن يكون مبلغ الميزانية أو المصروف أكبر من الصفر.</value></data>
   <data name="Budget.InvalidTitle" xml:space="preserve"><value>عنوان المصروف مطلوب.</value></data>
+
+  <!-- Agent Chat -->
+  <data name="AgentChat.ChatNotFound" xml:space="preserve"><value>لم يتم العثور على جلسة المحادثة.</value></data>
+  <data name="AgentChat.MessageRequired" xml:space="preserve"><value>محتوى الرسالة مطلوب.</value></data>
+  <data name="AgentChat.ToolCallIdRequired" xml:space="preserve"><value>معرّف طلب الأداة مطلوب عند الموافقة عليها.</value></data>
+  <data name="AgentChat.ChatCleared" xml:space="preserve"><value>تم مسح جلسة المحادثة بنجاح.</value></data>
+  <data name="AgentChat.GetSessionSuccess" xml:space="preserve"><value>تم استرجاع جلسة المحادثة بنجاح.</value></data>
 </root>
+
 

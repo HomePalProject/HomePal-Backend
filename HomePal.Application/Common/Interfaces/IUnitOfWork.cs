@@ -25,6 +25,8 @@ public interface IUnitOfWork : IDisposable
     HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListItemRepository ShoppingListItems { get; }
     HomePal.Application.Features.Budgeting.Interfaces.IHouseholdMonthlyBudgetRepository MonthlyBudgets { get; }
     HomePal.Application.Features.Budgeting.Interfaces.IHouseholdExpenseRepository HouseholdExpenses { get; }
+    HomePal.Application.Features.AgentChat.Interfaces.IAgentChatRepository AgentChats { get; }
+
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     Task BeginTransactionAsync(CancellationToken cancellationToken = default);

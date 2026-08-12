@@ -1,6 +1,8 @@
 using System.ClientModel;
 using System.Text;
+using Google.GenAI;
 using HomePal.Application.Common.Interfaces;
+
 using HomePal.Application.Features.Catalog.Interfaces;
 using HomePal.Application.Features.PantryManagement.Interfaces;
 using HomePal.Infrastructure.AI.CatalogManagement.Instructions;
@@ -74,28 +76,42 @@ public static class AIServicesExtensions
         services.AddSingleton<IChatClient>(sp =>
         {
             var options = sp.GetRequiredService<IOptions<AgentOptions>>().Value;
-            var modelId = string.IsNullOrWhiteSpace(options.ModelId) ? "gpt-4o" : options.ModelId;
-            var apiKey = string.IsNullOrWhiteSpace(options.ApiKey) ? "mock-key" : options.ApiKey;
-            var endpoint = options.Endpoint;
+            var provider = string.IsNullOrWhiteSpace(options.Provider) ? "Google" : options.Provider;
 
-            OpenAIClientOptions? clientOptions = null;
-            if (!string.IsNullOrWhiteSpace(endpoint) && Uri.TryCreate(endpoint, UriKind.Absolute, out var endpointUri))
+            var apiKey = string.IsNullOrWhiteSpace(options.ApiKey) || options.ApiKey == "API_KEY"
+                ? Environment.GetEnvironmentVariable("GEMINI_API_KEY") ?? "mock-key"
+                : options.ApiKey;
+
+            var modelId = string.IsNullOrWhiteSpace(options.ModelId) || options.ModelId == "MODEL_ID"
+                ? Environment.GetEnvironmentVariable("GEMINI_MODEL") ?? "gemini-2.5-flash"
+                : options.ModelId;
+
+            IChatClient baseChatClient;
+
+            if (provider.Equals("OpenAI", StringComparison.OrdinalIgnoreCase))
             {
-                clientOptions = new OpenAIClientOptions
+                OpenAIClientOptions? clientOptions = null;
+                if (!string.IsNullOrWhiteSpace(options.Endpoint) && Uri.TryCreate(options.Endpoint, UriKind.Absolute, out var endpointUri))
                 {
-                    Endpoint = endpointUri
-                };
-            }
+                    clientOptions = new OpenAIClientOptions { Endpoint = endpointUri };
+                }
 
-            var openAiClient = new OpenAIClient(new ApiKeyCredential(apiKey), clientOptions);
-            var openAiChatClient = openAiClient.GetChatClient(modelId);
-            var baseChatClient = openAiChatClient.AsIChatClient();
+                var openAiClient = new OpenAIClient(new ApiKeyCredential(apiKey), clientOptions);
+                baseChatClient = openAiClient.GetChatClient(modelId).AsIChatClient();
+            }
+            else
+            {
+                // Default: Google GenAI (gemini-2.5-flash)
+                var geminiClient = new Google.GenAI.Client(apiKey: apiKey);
+                baseChatClient = geminiClient.AsIChatClient(modelId);
+            }
 
             return baseChatClient
                 .AsBuilder()
                 .UseOpenTelemetry()
                 .Build(sp);
         });
+
 
         services.AddSingleton<IEmbeddingGenerator<string, Embedding<float>>>(sp =>
         {
@@ -127,6 +143,36 @@ public static class AIServicesExtensions
         services.AddScoped<IEmbeddingService, EmbeddingService>();
         services.AddScoped<IProductOfferScraperService, ProductOfferScraperAgent>();
 
+        services.AddScoped<ChatHistoryProvider, HomePal.Infrastructure.AI.AgentChat.Services.DbChatHistoryProvider>();
+        services.AddScoped<HomePal.Infrastructure.AI.AgentChat.Services.AgentSseStream>();
+        services.AddSingleton<HomePal.Infrastructure.AI.AgentChat.Tools.CalculatorTools>();
+        services.AddScoped<HomePal.Application.Features.AgentChat.Interfaces.IAgentChatService, HomePal.Infrastructure.AI.AgentChat.Services.AgentChatService>();
+
+        services.AddKeyedScoped<AIAgent>("Agent", (sp, key) =>
+
+
+        {
+            var chatClient = sp.GetRequiredService<IChatClient>();
+            var historyProvider = sp.GetRequiredService<ChatHistoryProvider>();
+            var calcTools = sp.GetRequiredService<HomePal.Infrastructure.AI.AgentChat.Tools.CalculatorTools>();
+
+            var options = new ChatClientAgentOptions
+            {
+                Name = "Agent",
+                ChatOptions = new ChatOptions
+                {
+                    Instructions = "You are a helpful AI assistant equipped with a Calculator tool. " +
+                                   "Whenever a user asks you to perform a mathematical calculation or arithmetic operation, ALWAYS invoke the 'Calculate' tool. " +
+                                   "The 'Calculate' tool requires human approval before execution. Wait for the result after requesting approval.",
+                    Tools = [new ApprovalRequiredAIFunction(AIFunctionFactory.Create(calcTools.Calculate))]
+                },
+                ChatHistoryProvider = historyProvider
+            };
+
+            return chatClient.AsAIAgent(options);
+        });
+
         return services;
+
     }
 }

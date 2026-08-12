@@ -108,4 +108,14 @@ public static class ErrorMessages
         public const string InvalidAmount = "Budget.InvalidAmount";
         public const string InvalidTitle = "Budget.InvalidTitle";
     }
+
+    public static class AgentChat
+    {
+        public const string ChatNotFound = "AgentChat.ChatNotFound";
+        public const string MessageRequired = "AgentChat.MessageRequired";
+        public const string ToolCallIdRequired = "AgentChat.ToolCallIdRequired";
+        public const string ChatCleared = "AgentChat.ChatCleared";
+        public const string GetSessionSuccess = "AgentChat.GetSessionSuccess";
+    }
 }
+
