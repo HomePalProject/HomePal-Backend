@@ -22,6 +22,8 @@ public class ShoppingListItemResponse
     public string? SupermarketName { get; set; }
     public string? SupermarketLogoPath { get; set; }
 
+    public Guid? MealPlanId { get; set; }
+
     public bool IsPurchased { get; set; }
     public string? Notes { get; set; }
 

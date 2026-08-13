@@ -19,6 +19,7 @@ public class UpdateShoppingListItemRequest
 
     public Guid? UnitId { get; set; }
     public Guid? CategoryId { get; set; }
+    public Guid? MealPlanId { get; set; }
     public bool IsPurchased { get; set; }
     public string? Notes { get; set; }
 }

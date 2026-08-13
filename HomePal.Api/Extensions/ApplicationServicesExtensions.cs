@@ -42,6 +42,8 @@ public static class ApplicationServicesExtensions
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
+        services.AddHttpContextAccessor();
+
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();

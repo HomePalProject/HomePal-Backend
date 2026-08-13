@@ -367,4 +367,8 @@ FodyWeavers.xsd
 !**/wwwroot/uploads/.gitkeep
 
 # Spec document
-spec.md
+spec.md
+
+# Household management test UI
+**/wwwroot/household-management.html
+

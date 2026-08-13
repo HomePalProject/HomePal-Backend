@@ -1,0 +1,425 @@
+{
+    "measuringUnits": [
+        {
+            "nameAr": "جرام",
+            "nameEn": "Gram",
+            "symbolAr": "جم",
+            "symbolEn": "g"
+        },
+        {
+            "nameAr": "كيلوجرام",
+            "nameEn": "Kilogram",
+            "symbolAr": "كجم",
+            "symbolEn": "kg"
+        },
+        {
+            "nameAr": "مليلتر",
+            "nameEn": "Milliliter",
+            "symbolAr": "مل",
+            "symbolEn": "ml"
+        },
+        {
+            "nameAr": "لتر",
+            "nameEn": "Liter",
+            "symbolAr": "لتر",
+            "symbolEn": "L"
+        },
+        {
+            "nameAr": "قطعة",
+            "nameEn": "Piece",
+            "symbolAr": "قطعة",
+            "symbolEn": "pcs"
+        },
+        {
+            "nameAr": "عبوة",
+            "nameEn": "Pack",
+            "symbolAr": "عبوة",
+            "symbolEn": "pack"
+        },
+        {
+            "nameAr": "علبة",
+            "nameEn": "Can",
+            "symbolAr": "علبة",
+            "symbolEn": "can"
+        },
+        {
+            "nameAr": "زجاجة",
+            "nameEn": "Bottle",
+            "symbolAr": "زجاجة",
+            "symbolEn": "btl"
+        },
+        {
+            "nameAr": "صندوق",
+            "nameEn": "Box",
+            "symbolAr": "صندوق",
+            "symbolEn": "box"
+        },
+        {
+            "nameAr": "كوب",
+            "nameEn": "Cup",
+            "symbolAr": "كوب",
+            "symbolEn": "cup"
+        },
+        {
+            "nameAr": "ملعقة كبيرة",
+            "nameEn": "Tablespoon",
+            "symbolAr": "ملعقة كبيرة",
+            "symbolEn": "tbsp"
+        },
+        {
+            "nameAr": "ملعقة صغيرة",
+            "nameEn": "Teaspoon",
+            "symbolAr": "ملعقة صغيرة",
+            "symbolEn": "tsp"
+        },
+        {
+            "nameAr": "شريحة",
+            "nameEn": "Slice",
+            "symbolAr": "شريحة",
+            "symbolEn": "slice"
+        },
+        {
+            "nameAr": "حزمة",
+            "nameEn": "Bunch",
+            "symbolAr": "حزمة",
+            "symbolEn": "bunch"
+        },
+        {
+            "nameAr": "فص",
+            "nameEn": "Clove",
+            "symbolAr": "فص",
+            "symbolEn": "clove"
+        },
+        {
+            "nameAr": "رشة",
+            "nameEn": "Pinch",
+            "symbolAr": "رشة",
+            "symbolEn": "pinch"
+        }
+    ],
+    "productCategories": [
+        {
+            "nameAr": "الألبان والبيض",
+            "nameEn": "Dairy & Eggs",
+            "descriptionAr": "الحليب والجبن والزبادي والبيض ومنتجات الألبان الأخرى.",
+            "descriptionEn": "Milk, cheese, yogurt, eggs, and other dairy products.",
+            "imagePath": "/images/categories/dairy-eggs.jpg"
+        },
+        {
+            "nameAr": "اللحوم",
+            "nameEn": "Meat",
+            "descriptionAr": "اللحوم الحمراء ومنتجات اللحوم المختلفة.",
+            "descriptionEn": "Red meat and other meat products.",
+            "imagePath": "/images/categories/meat.jpg"
+        },
+        {
+            "nameAr": "الدواجن",
+            "nameEn": "Poultry",
+            "descriptionAr": "الدجاج والديك الرومي ومنتجات الدواجن.",
+            "descriptionEn": "Chicken, turkey, and other poultry products.",
+            "imagePath": "/images/categories/poultry.jpg"
+        },
+        {
+            "nameAr": "الأسماك والمأكولات البحرية",
+            "nameEn": "Fish & Seafood",
+            "descriptionAr": "الأسماك والمحار والمأكولات البحرية المختلفة.",
+            "descriptionEn": "Fish, shellfish, and other seafood products.",
+            "imagePath": "/images/categories/fish-seafood.jpg"
+        },
+        {
+            "nameAr": "الفواكه",
+            "nameEn": "Fruits",
+            "descriptionAr": "الفواكه الطازجة والمجمدة والمجففة.",
+            "descriptionEn": "Fresh, frozen, and dried fruits.",
+            "imagePath": "/images/categories/fruits.jpg"
+        },
+        {
+            "nameAr": "الخضروات",
+            "nameEn": "Vegetables",
+            "descriptionAr": "الخضروات الطازجة والمجمدة.",
+            "descriptionEn": "Fresh and frozen vegetables.",
+            "imagePath": "/images/categories/vegetables.jpg"
+        },
+        {
+            "nameAr": "الحبوب والحبوب الكاملة",
+            "nameEn": "Grains & Cereals",
+            "descriptionAr": "الأرز والشوفان والحبوب ومنتجات الحبوب.",
+            "descriptionEn": "Rice, oats, cereals, and other grain products.",
+            "imagePath": "/images/categories/grains-cereals.jpg"
+        },
+        {
+            "nameAr": "المعكرونة والنودلز",
+            "nameEn": "Pasta & Noodles",
+            "descriptionAr": "المعكرونة والنودلز ومنتجاتها المختلفة.",
+            "descriptionEn": "Pasta, noodles, and related products.",
+            "imagePath": "/images/categories/pasta-noodles.jpg"
+        },
+        {
+            "nameAr": "البقوليات",
+            "nameEn": "Legumes & Beans",
+            "descriptionAr": "الفول والعدس والحمص والفاصوليا والبقوليات الأخرى.",
+            "descriptionEn": "Beans, lentils, chickpeas, and other legumes.",
+            "imagePath": "/images/categories/legumes-beans.jpg"
+        },
+        {
+            "nameAr": "الخبز والمخبوزات",
+            "nameEn": "Bread & Bakery",
+            "descriptionAr": "الخبز والمعجنات والمخبوزات المختلفة.",
+            "descriptionEn": "Bread, pastries, and other bakery products.",
+            "imagePath": "/images/categories/bread-bakery.jpg"
+        },
+        {
+            "nameAr": "المكسرات والبذور",
+            "nameEn": "Nuts & Seeds",
+            "descriptionAr": "المكسرات والبذور ومنتجاتها.",
+            "descriptionEn": "Nuts, seeds, and related products.",
+            "imagePath": "/images/categories/nuts-seeds.jpg"
+        },
+        {
+            "nameAr": "الزيوت والدهون",
+            "nameEn": "Oils & Fats",
+            "descriptionAr": "زيوت الطبخ والزبدة والسمن والدهون الأخرى.",
+            "descriptionEn": "Cooking oils, butter, ghee, and other fats.",
+            "imagePath": "/images/categories/oils-fats.jpg"
+        },
+        {
+            "nameAr": "الصلصات والتوابل",
+            "nameEn": "Sauces & Condiments",
+            "descriptionAr": "الصلصات والكاتشب والمايونيز والخل والتتبيلات.",
+            "descriptionEn": "Sauces, ketchup, mayonnaise, vinegar, and dressings.",
+            "imagePath": "/images/categories/sauces-condiments.jpg"
+        },
+        {
+            "nameAr": "التوابل والأعشاب",
+            "nameEn": "Spices & Herbs",
+            "descriptionAr": "التوابل والأعشاب والبهارات المستخدمة في الطهي.",
+            "descriptionEn": "Spices, herbs, and seasonings used in cooking.",
+            "imagePath": "/images/categories/spices-herbs.jpg"
+        },
+        {
+            "nameAr": "المعلبات والمحفوظات",
+            "nameEn": "Canned & Preserved Foods",
+            "descriptionAr": "الأطعمة المعلبة والمحفوظة والمخللات.",
+            "descriptionEn": "Canned foods, preserved foods, and pickles.",
+            "imagePath": "/images/categories/canned-preserved.jpg"
+        },
+        {
+            "nameAr": "الأطعمة المجمدة",
+            "nameEn": "Frozen Foods",
+            "descriptionAr": "الخضروات والوجبات والمنتجات الغذائية المجمدة.",
+            "descriptionEn": "Frozen vegetables, meals, and other frozen foods.",
+            "imagePath": "/images/categories/frozen-foods.jpg"
+        },
+        {
+            "nameAr": "الوجبات الخفيفة والحلويات",
+            "nameEn": "Snacks & Sweets",
+            "descriptionAr": "الشيبسي والبسكويت والحلويات والشوكولاتة والوجبات الخفيفة.",
+            "descriptionEn": "Chips, biscuits, sweets, chocolate, and other snacks.",
+            "imagePath": "/images/categories/snacks-sweets.jpg"
+        },
+        {
+            "nameAr": "المشروبات",
+            "nameEn": "Beverages",
+            "descriptionAr": "المياه والعصائر والمشروبات الغازية والمشروبات الأخرى.",
+            "descriptionEn": "Water, juices, soft drinks, and other beverages.",
+            "imagePath": "/images/categories/beverages.jpg"
+        },
+        {
+            "nameAr": "أطعمة الإفطار",
+            "nameEn": "Breakfast Foods",
+            "descriptionAr": "حبوب الإفطار والمربى والعسل ومنتجات الإفطار الأخرى.",
+            "descriptionEn": "Breakfast cereals, jams, honey, and other breakfast products.",
+            "imagePath": "/images/categories/breakfast-foods.jpg"
+        },
+        {
+            "nameAr": "الوجبات الجاهزة",
+            "nameEn": "Ready Meals",
+            "descriptionAr": "الوجبات المطبوخة والجاهزة للتناول.",
+            "descriptionEn": "Prepared meals and ready-to-eat foods.",
+            "imagePath": "/images/categories/ready-meals.jpg"
+        }
+    ],
+    "preferenceCategories": [
+        {
+            "nameAr": "الحساسيات الغذائية",
+            "nameEn": "Allergies",
+            "descriptionAr": "الحساسيات تجاه أطعمة أو مكونات غذائية معينة.",
+            "descriptionEn": "Allergies to specific foods or food ingredients."
+        },
+        {
+            "nameAr": "الأنظمة الغذائية",
+            "nameEn": "Dietary",
+            "descriptionAr": "الأنظمة والتفضيلات الغذائية التي تحدد أنواع الأطعمة المناسبة.",
+            "descriptionEn": "Dietary patterns and preferences that determine suitable foods."
+        },
+        {
+            "nameAr": "الحالات الصحية",
+            "nameEn": "Health Conditions",
+            "descriptionAr": "الحالات الصحية التي قد تؤثر على اختيار الأطعمة والوجبات.",
+            "descriptionEn": "Health conditions that may affect food and meal choices."
+        }
+    ],
+    "preferences": [
+        {
+            "nameAr": "الحليب",
+            "nameEn": "Milk",
+            "descriptionAr": "تجنب الحليب ومنتجاته بسبب الحساسية.",
+            "descriptionEn": "Avoid milk and dairy products due to an allergy.",
+            "preferenceCategory": "Allergies"
+        },
+        {
+            "nameAr": "البيض",
+            "nameEn": "Eggs",
+            "descriptionAr": "تجنب البيض والمنتجات التي تحتوي عليه بسبب الحساسية.",
+            "descriptionEn": "Avoid eggs and products containing eggs due to an allergy.",
+            "preferenceCategory": "Allergies"
+        },
+        {
+            "nameAr": "الفول السوداني",
+            "nameEn": "Peanuts",
+            "descriptionAr": "تجنب الفول السوداني والمنتجات التي تحتوي عليه.",
+            "descriptionEn": "Avoid peanuts and products containing peanuts.",
+            "preferenceCategory": "Allergies"
+        },
+        {
+            "nameAr": "المكسرات",
+            "nameEn": "Tree Nuts",
+            "descriptionAr": "تجنب المكسرات مثل اللوز والجوز والكاجو.",
+            "descriptionEn": "Avoid tree nuts such as almonds, walnuts, and cashews.",
+            "preferenceCategory": "Allergies"
+        },
+        {
+            "nameAr": "السمك",
+            "nameEn": "Fish",
+            "descriptionAr": "تجنب الأسماك بسبب الحساسية.",
+            "descriptionEn": "Avoid fish due to an allergy.",
+            "preferenceCategory": "Allergies"
+        },
+        {
+            "nameAr": "المحار",
+            "nameEn": "Shellfish",
+            "descriptionAr": "تجنب المحار والمأكولات البحرية ذات الصلة.",
+            "descriptionEn": "Avoid shellfish and related seafood.",
+            "preferenceCategory": "Allergies"
+        },
+        {
+            "nameAr": "فول الصويا",
+            "nameEn": "Soy",
+            "descriptionAr": "تجنب فول الصويا والمنتجات التي تحتوي عليه.",
+            "descriptionEn": "Avoid soy and products containing soy.",
+            "preferenceCategory": "Allergies"
+        },
+        {
+            "nameAr": "القمح",
+            "nameEn": "Wheat",
+            "descriptionAr": "تجنب القمح والمنتجات التي تحتوي عليه.",
+            "descriptionEn": "Avoid wheat and products containing wheat.",
+            "preferenceCategory": "Allergies"
+        },
+        {
+            "nameAr": "السمسم",
+            "nameEn": "Sesame",
+            "descriptionAr": "تجنب السمسم والمنتجات التي تحتوي عليه.",
+            "descriptionEn": "Avoid sesame and products containing sesame.",
+            "preferenceCategory": "Allergies"
+        },
+        {
+            "nameAr": "نباتي",
+            "nameEn": "Vegetarian",
+            "descriptionAr": "نظام غذائي يتجنب اللحوم والدواجن والأسماك.",
+            "descriptionEn": "A diet that avoids meat, poultry, and fish.",
+            "preferenceCategory": "Dietary"
+        },
+        {
+            "nameAr": "نباتي صرف",
+            "nameEn": "Vegan",
+            "descriptionAr": "نظام غذائي يستبعد جميع المنتجات الحيوانية.",
+            "descriptionEn": "A diet that excludes animal-derived products.",
+            "preferenceCategory": "Dietary"
+        },
+        {
+            "nameAr": "مرن نباتي",
+            "nameEn": "Flexitarian",
+            "descriptionAr": "نظام غذائي يعتمد بشكل أساسي على النباتات مع تناول اللحوم أحيانًا.",
+            "descriptionEn": "A primarily plant-based diet that occasionally includes meat.",
+            "preferenceCategory": "Dietary"
+        },
+        {
+            "nameAr": "آكل الأسماك",
+            "nameEn": "Pescatarian",
+            "descriptionAr": "نظام غذائي يتجنب اللحوم والدواجن ويسمح بالأسماك والمأكولات البحرية.",
+            "descriptionEn": "A diet that avoids meat and poultry while allowing fish and seafood.",
+            "preferenceCategory": "Dietary"
+        },
+        {
+            "nameAr": "قليل الكربوهيدرات",
+            "nameEn": "Low Carb",
+            "descriptionAr": "نظام غذائي يركز على تقليل استهلاك الكربوهيدرات.",
+            "descriptionEn": "A diet focused on reducing carbohydrate intake.",
+            "preferenceCategory": "Dietary"
+        },
+        {
+            "nameAr": "كيتو",
+            "nameEn": "Keto",
+            "descriptionAr": "نظام غذائي منخفض الكربوهيدرات وعالي الدهون.",
+            "descriptionEn": "A low-carbohydrate, high-fat diet.",
+            "preferenceCategory": "Dietary"
+        },
+        {
+            "nameAr": "خالي من الجلوتين",
+            "nameEn": "Gluten-Free",
+            "descriptionAr": "نظام غذائي يتجنب الأطعمة التي تحتوي على الجلوتين.",
+            "descriptionEn": "A diet that avoids foods containing gluten.",
+            "preferenceCategory": "Dietary"
+        },
+        {
+            "nameAr": "خالي من منتجات الألبان",
+            "nameEn": "Dairy-Free",
+            "descriptionAr": "نظام غذائي يتجنب الحليب ومنتجات الألبان.",
+            "descriptionEn": "A diet that avoids milk and dairy products.",
+            "preferenceCategory": "Dietary"
+        },
+        {
+            "nameAr": "عالي البروتين",
+            "nameEn": "High Protein",
+            "descriptionAr": "نظام غذائي يركز على زيادة استهلاك البروتين.",
+            "descriptionEn": "A diet focused on increasing protein intake.",
+            "preferenceCategory": "Dietary"
+        },
+        {
+            "nameAr": "السكري",
+            "nameEn": "Diabetes",
+            "descriptionAr": "حالة صحية تتطلب الانتباه إلى كمية ونوع الكربوهيدرات والسكريات.",
+            "descriptionEn": "A health condition requiring attention to carbohydrate and sugar intake.",
+            "preferenceCategory": "Health Conditions"
+        },
+        {
+            "nameAr": "ارتفاع ضغط الدم",
+            "nameEn": "Hypertension",
+            "descriptionAr": "حالة صحية قد تتطلب تقليل استهلاك الصوديوم.",
+            "descriptionEn": "A health condition that may require limiting sodium intake.",
+            "preferenceCategory": "Health Conditions"
+        },
+        {
+            "nameAr": "ارتفاع الكوليسترول",
+            "nameEn": "High Cholesterol",
+            "descriptionAr": "حالة صحية تتطلب الانتباه إلى الدهون المشبعة والكوليسترول الغذائي.",
+            "descriptionEn": "A health condition requiring attention to saturated fat and dietary cholesterol.",
+            "preferenceCategory": "Health Conditions"
+        },
+        {
+            "nameAr": "أمراض القلب",
+            "nameEn": "Heart Disease",
+            "descriptionAr": "حالة صحية قد تتطلب التحكم في الدهون المشبعة والصوديوم.",
+            "descriptionEn": "A health condition that may require controlling saturated fat and sodium intake.",
+            "preferenceCategory": "Health Conditions"
+        },
+        {
+            "nameAr": "أمراض الكلى",
+            "nameEn": "Kidney Disease",
+            "descriptionAr": "حالة صحية قد تتطلب التحكم في بعض العناصر الغذائية مثل الصوديوم والبروتين.",
+            "descriptionEn": "A health condition that may require controlling nutrients such as sodium and protein.",
+            "preferenceCategory": "Health Conditions"
+        }
+    ]
+}

@@ -21,6 +21,9 @@ public class ShoppingListItem
     public Guid? OfferId { get; set; }
     public Offer? Offer { get; set; }
 
+    public Guid? MealPlanId { get; set; }
+    public MealPlan? MealPlan { get; set; }
+
     public bool IsPurchased { get; set; } = false;
     public string? Notes { get; set; }
 

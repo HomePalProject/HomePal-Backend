@@ -46,5 +46,10 @@ public class ShoppingListItemConfiguration : IEntityTypeConfiguration<ShoppingLi
             .WithMany()
             .HasForeignKey(s => s.OfferId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(s => s.MealPlan)
+            .WithMany()
+            .HasForeignKey(s => s.MealPlanId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

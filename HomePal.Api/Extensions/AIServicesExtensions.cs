@@ -12,6 +12,7 @@ using HomePal.Infrastructure.AI.MealPlanning.Tools;
 using HomePal.Infrastructure.AI.PantryManagement.Instructions;
 using HomePal.Infrastructure.AI.PantryManagement.Options;
 using HomePal.Infrastructure.AI.PantryManagement.Services;
+using HomePal.Infrastructure.AI.PantryManagement.Tools;
 using HomePal.Infrastructure.AI.Services;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting;
@@ -145,20 +146,37 @@ public static class AIServicesExtensions
 
         services.AddScoped<ChatHistoryProvider, HomePal.Infrastructure.AI.AgentChat.Services.DbChatHistoryProvider>();
         services.AddScoped<HomePal.Infrastructure.AI.AgentChat.Services.AgentSseStream>();
-        services.AddSingleton<HomePal.Infrastructure.AI.AgentChat.Tools.CalculatorTools>();
-        services.AddScoped<MealPlanningSubAgentTools>();
+        services.AddScoped<HomePal.Infrastructure.AI.Common.AgentUserContext>();
+        services.AddSingleton<CalculatorTools>();
+        services.AddScoped<MealPlanTools>();
+        services.AddScoped<PantryTools>();
+        services.AddScoped<BudgetTools>();
+        services.AddScoped<ShoppingListTools>();
+        services.AddScoped<CatalogReferenceTools>();
+        services.AddScoped<HouseholdTools>();
         services.AddScoped<HomePal.Application.Features.AgentChat.Interfaces.IAgentChatService, HomePal.Infrastructure.AI.AgentChat.Services.AgentChatService>();
 
         // Specialist Sub-Agents
         services.AddKeyedScoped<AIAgent>("MealAndInventoryAgent", (sp, key) =>
         {
             var chatClient = sp.GetRequiredService<IChatClient>();
+            var pantryTools = sp.GetRequiredService<PantryTools>();
+            var catalogTools = sp.GetRequiredService<CatalogReferenceTools>();
             return chatClient.AsAIAgent(new ChatClientAgentOptions
             {
                 Name = "MealAndInventoryAgent",
+                Description = "Evaluates pantry stock, expiration dates, available ingredients, and manages pantry inventory items (viewing, adding, updating, and removing stock).",
                 ChatOptions = new ChatOptions
                 {
-                    Instructions = MealAndInventoryInstructions.SystemInstructions
+                    Instructions = MealAndInventoryInstructions.SystemInstructions,
+                    Tools =
+                    [
+                        AIFunctionFactory.Create(pantryTools.GetPantryAsync),
+                        AIFunctionFactory.Create(pantryTools.AddPantryItemAsync),
+                        AIFunctionFactory.Create(pantryTools.UpdatePantryAsync),
+                        AIFunctionFactory.Create(pantryTools.DeletePantryItemAsync),
+                        AIFunctionFactory.Create(catalogTools.GetCategoriesAndUnitsAsync)
+                    ]
                 }
             });
         });
@@ -166,12 +184,18 @@ public static class AIServicesExtensions
         services.AddKeyedScoped<AIAgent>("NutritionAndHealthAgent", (sp, key) =>
         {
             var chatClient = sp.GetRequiredService<IChatClient>();
+            var householdTools = sp.GetRequiredService<HouseholdTools>();
             return chatClient.AsAIAgent(new ChatClientAgentOptions
             {
                 Name = "NutritionAndHealthAgent",
+                Description = "Analyzes dietary guidelines, macronutrients, calorie targets, allergies, and health restrictions for household members.",
                 ChatOptions = new ChatOptions
                 {
-                    Instructions = NutritionAndHealthInstructions.SystemInstructions
+                    Instructions = NutritionAndHealthInstructions.SystemInstructions,
+                    Tools =
+                    [
+                        AIFunctionFactory.Create(householdTools.GetHouseholdMembersWithPreferencesAsync)
+                    ]
                 }
             });
         });
@@ -179,12 +203,27 @@ public static class AIServicesExtensions
         services.AddKeyedScoped<AIAgent>("BudgetAndShoppingAgent", (sp, key) =>
         {
             var chatClient = sp.GetRequiredService<IChatClient>();
+            var calcTools = sp.GetRequiredService<CalculatorTools>();
+            var budgetTools = sp.GetRequiredService<BudgetTools>();
+            var shoppingListTools = sp.GetRequiredService<ShoppingListTools>();
+            var catalogTools = sp.GetRequiredService<CatalogReferenceTools>();
             return chatClient.AsAIAgent(new ChatClientAgentOptions
             {
                 Name = "BudgetAndShoppingAgent",
+                Description = "Checks household budget constraints, current monthly budget, remaining balance, estimates meal preparation costs, and manages shopping lists (adding, updating, viewing, and removing shopping list items).",
                 ChatOptions = new ChatOptions
                 {
-                    Instructions = BudgetAndShoppingInstructions.SystemInstructions
+                    Instructions = BudgetAndShoppingInstructions.SystemInstructions,
+                    Tools =
+                    [
+                        AIFunctionFactory.Create(calcTools.Calculate),
+                        AIFunctionFactory.Create(budgetTools.GetCurrentBudgetAsync),
+                        AIFunctionFactory.Create(shoppingListTools.GetShoppingListAsync),
+                        AIFunctionFactory.Create(shoppingListTools.AddShoppingListItemAsync),
+                        AIFunctionFactory.Create(shoppingListTools.UpdateShoppingListItemAsync),
+                        AIFunctionFactory.Create(shoppingListTools.DeleteShoppingListItemAsync),
+                        AIFunctionFactory.Create(catalogTools.GetCategoriesAndUnitsAsync)
+                    ]
                 }
             });
         });
@@ -194,8 +233,11 @@ public static class AIServicesExtensions
         {
             var chatClient = sp.GetRequiredService<IChatClient>();
             var historyProvider = sp.GetRequiredService<ChatHistoryProvider>();
-            var calcTools = sp.GetRequiredService<HomePal.Infrastructure.AI.AgentChat.Tools.CalculatorTools>();
-            var subAgentTools = sp.GetRequiredService<MealPlanningSubAgentTools>();
+            var mealPlanTools = sp.GetRequiredService<MealPlanTools>();
+
+            var mealAndInventoryAgent = sp.GetRequiredKeyedService<AIAgent>("MealAndInventoryAgent");
+            var nutritionAndHealthAgent = sp.GetRequiredKeyedService<AIAgent>("NutritionAndHealthAgent");
+            var budgetAndShoppingAgent = sp.GetRequiredKeyedService<AIAgent>("BudgetAndShoppingAgent");
 
             var options = new ChatClientAgentOptions
             {
@@ -205,10 +247,12 @@ public static class AIServicesExtensions
                     Instructions = MealPlanningSupervisorInstructions.SystemInstructions,
                     Tools =
                     [
-                        new ApprovalRequiredAIFunction(AIFunctionFactory.Create(calcTools.Calculate)),
-                        AIFunctionFactory.Create(subAgentTools.ConsultMealAndInventoryAsync),
-                        AIFunctionFactory.Create(subAgentTools.ConsultNutritionAndHealthAsync),
-                        AIFunctionFactory.Create(subAgentTools.ConsultBudgetAndShoppingAsync)
+                        mealAndInventoryAgent.AsAIFunction(),
+                        nutritionAndHealthAgent.AsAIFunction(),
+                        budgetAndShoppingAgent.AsAIFunction(),
+                        AIFunctionFactory.Create(mealPlanTools.SaveMealPlanAsync),
+                        AIFunctionFactory.Create(mealPlanTools.GetLastMealPlanAsync),
+                        AIFunctionFactory.Create(mealPlanTools.UpdateLastMealPlanAsync)
                     ]
                 },
                 ChatHistoryProvider = historyProvider

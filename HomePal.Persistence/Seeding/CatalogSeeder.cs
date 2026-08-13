@@ -1,3 +1,4 @@
+using System.Text.Json;
 using HomePal.Domain.Common;
 using HomePal.Domain.Entities;
 using HomePal.Persistence.Context;
@@ -14,118 +15,223 @@ public static class CatalogSeeder
     {
         using var scope = serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        var environment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
+        var environment = scope.ServiceProvider.GetService<IWebHostEnvironment>();
         var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("CatalogSeeder");
 
-        if (await dbContext.ProductCategories.AnyAsync())
+        logger.LogInformation("Checking and executing database seed data...");
+
+        // 1. Locate and parse seed.json
+        var seedJsonPath = FindSeedJsonPath();
+        if (seedJsonPath == null || !File.Exists(seedJsonPath))
         {
-            logger.LogInformation("Catalog data already exists. Skipping catalog seeding.");
+            logger.LogWarning("seed.json not found. Skipping JSON seeding.");
             return;
         }
 
-        logger.LogInformation("Seeding Catalog dummy data...");
+        var jsonContent = await File.ReadAllTextAsync(seedJsonPath);
+        var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var seedData = JsonSerializer.Deserialize<SeedDataDto>(jsonContent, jsonOptions);
 
-        using var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
-
-        // 1. Measuring Units
-        var unitKg = new MeasuringUnit
+        if (seedData == null)
         {
-            Id = Guid.NewGuid(),
-            Symbol = [new LocalizedItem("en", "kg"), new LocalizedItem("ar", "كجم")],
-            Name = [new LocalizedItem("en", "Kilogram"), new LocalizedItem("ar", "كيلوجرام")],
-            CreatedAt = DateTime.UtcNow
-        };
-        var unitG = new MeasuringUnit
-        {
-            Id = Guid.NewGuid(),
-            Symbol = [new LocalizedItem("en", "g"), new LocalizedItem("ar", "جم")],
-            Name = [new LocalizedItem("en", "Gram"), new LocalizedItem("ar", "جرام")],
-            CreatedAt = DateTime.UtcNow
-        };
-        var unitL = new MeasuringUnit
-        {
-            Id = Guid.NewGuid(),
-            Symbol = [new LocalizedItem("en", "L"), new LocalizedItem("ar", "لتر")],
-            Name = [new LocalizedItem("en", "Liter"), new LocalizedItem("ar", "لتر")],
-            CreatedAt = DateTime.UtcNow
-        };
-        var unitPcs = new MeasuringUnit
-        {
-            Id = Guid.NewGuid(),
-            Symbol = [new LocalizedItem("en", "pcs"), new LocalizedItem("ar", "قطعة")],
-            Name = [new LocalizedItem("en", "Piece"), new LocalizedItem("ar", "قطعة")],
-            CreatedAt = DateTime.UtcNow
-        };
-        var unitPack = new MeasuringUnit
-        {
-            Id = Guid.NewGuid(),
-            Symbol = [new LocalizedItem("en", "pack"), new LocalizedItem("ar", "عبوة")],
-            Name = [new LocalizedItem("en", "Pack"), new LocalizedItem("ar", "عبوة")],
-            CreatedAt = DateTime.UtcNow
-        };
-
-        dbContext.MeasuringUnits.AddRange(unitKg, unitG, unitL, unitPcs, unitPack);
-        await dbContext.SaveChangesAsync();
-
-        // Helper to get dummy image
-        async Task<string> DownloadDummyImageAsync(string folder, string label)
-        {
-            return await SaveSampleImageAsync(environment, httpClient, folder, label);
+            logger.LogWarning("Failed to deserialize seed.json.");
+            return;
         }
 
-        // 2. Product Categories
-        var catDairy = new ProductCategory
+        // 2. Seed Measuring Units
+        if (seedData.MeasuringUnits != null && seedData.MeasuringUnits.Count > 0)
         {
-            Id = Guid.NewGuid(),
-            Name = [new LocalizedItem("en", "Dairy & Eggs"), new LocalizedItem("ar", "ألبان وبيض")],
-            Description = [new LocalizedItem("en", "Fresh milk, cheese, eggs and dairy products"), new LocalizedItem("ar", "حليب طازج، أجبان، بيض ومنتجات الألبان")],
-            ImagePath = await DownloadDummyImageAsync("categories", "Dairy"),
-            CreatedAt = DateTime.UtcNow
-        };
-        var catProduce = new ProductCategory
-        {
-            Id = Guid.NewGuid(),
-            Name = [new LocalizedItem("en", "Fruits & Vegetables"), new LocalizedItem("ar", "فواكه وخضروات")],
-            Description = [new LocalizedItem("en", "Fresh organic fruits and vegetables"), new LocalizedItem("ar", "فواكه وخضروات طازجة وعضوية")],
-            ImagePath = await DownloadDummyImageAsync("categories", "Produce"),
-            CreatedAt = DateTime.UtcNow
-        };
-        var catBeverages = new ProductCategory
-        {
-            Id = Guid.NewGuid(),
-            Name = [new LocalizedItem("en", "Beverages"), new LocalizedItem("ar", "مشروبات")],
-            Description = [new LocalizedItem("en", "Juices, soft drinks, water and hot beverages"), new LocalizedItem("ar", "عصائر، مشروبات غازية، مياه ومشروبات ساخنة")],
-            ImagePath = await DownloadDummyImageAsync("categories", "Beverages"),
-            CreatedAt = DateTime.UtcNow
-        };
-        var catBakery = new ProductCategory
-        {
-            Id = Guid.NewGuid(),
-            Name = [new LocalizedItem("en", "Bakery"), new LocalizedItem("ar", "مخبوزات")],
-            Description = [new LocalizedItem("en", "Fresh bread, cakes, pastries and baked goods"), new LocalizedItem("ar", "خبز طازج، كيك، فطائر ومخبوزات")],
-            ImagePath = await DownloadDummyImageAsync("categories", "Bakery"),
-            CreatedAt = DateTime.UtcNow
-        };
-        var catMeat = new ProductCategory
-        {
-            Id = Guid.NewGuid(),
-            Name = [new LocalizedItem("en", "Meat & Poultry"), new LocalizedItem("ar", "لحوم ودواجن")],
-            Description = [new LocalizedItem("en", "Fresh beef, chicken, lamb and poultry"), new LocalizedItem("ar", "لحم بقر طازج، دجاج، لحم ضأن ودواجن")],
-            ImagePath = await DownloadDummyImageAsync("categories", "Meat"),
-            CreatedAt = DateTime.UtcNow
-        };
+            var existingUnits = await dbContext.MeasuringUnits.ToListAsync();
+            var unitsToAdd = new List<MeasuringUnit>();
 
-        dbContext.ProductCategories.AddRange(catDairy, catProduce, catBeverages, catBakery, catMeat);
-        await dbContext.SaveChangesAsync();
+            foreach (var unitDto in seedData.MeasuringUnits)
+            {
+                bool exists = existingUnits.Any(u =>
+                    u.Name.Any(n => n.Value.Equals(unitDto.NameEn, StringComparison.OrdinalIgnoreCase) ||
+                                    n.Value.Equals(unitDto.NameAr, StringComparison.OrdinalIgnoreCase)) ||
+                    u.Symbol.Any(s => s.Value.Equals(unitDto.SymbolEn, StringComparison.OrdinalIgnoreCase) ||
+                                      s.Value.Equals(unitDto.SymbolAr, StringComparison.OrdinalIgnoreCase)));
 
-        // 3. Supermarkets
+                if (!exists)
+                {
+                    var newUnit = new MeasuringUnit
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = [new LocalizedItem("en", unitDto.NameEn), new LocalizedItem("ar", unitDto.NameAr)],
+                        Symbol = [new LocalizedItem("en", unitDto.SymbolEn), new LocalizedItem("ar", unitDto.SymbolAr)],
+                        CreatedAt = DateTime.UtcNow
+                    };
+                    unitsToAdd.Add(newUnit);
+                    existingUnits.Add(newUnit);
+                }
+            }
+
+            if (unitsToAdd.Count > 0)
+            {
+                await dbContext.MeasuringUnits.AddRangeAsync(unitsToAdd);
+                await dbContext.SaveChangesAsync();
+                logger.LogInformation("Seeded {Count} new measuring units.", unitsToAdd.Count);
+            }
+        }
+
+        // 3. Seed Product Categories
+        if (seedData.ProductCategories != null && seedData.ProductCategories.Count > 0)
+        {
+            var existingCategories = await dbContext.ProductCategories.ToListAsync();
+            var categoriesToAdd = new List<ProductCategory>();
+
+            foreach (var catDto in seedData.ProductCategories)
+            {
+                bool exists = existingCategories.Any(c =>
+                    c.Name.Any(n => n.Value.Equals(catDto.NameEn, StringComparison.OrdinalIgnoreCase) ||
+                                    n.Value.Equals(catDto.NameAr, StringComparison.OrdinalIgnoreCase)));
+
+                if (!exists)
+                {
+                    var newCat = new ProductCategory
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = [new LocalizedItem("en", catDto.NameEn), new LocalizedItem("ar", catDto.NameAr)],
+                        Description = [new LocalizedItem("en", catDto.DescriptionEn), new LocalizedItem("ar", catDto.DescriptionAr)],
+                        ImagePath = catDto.ImagePath,
+                        CreatedAt = DateTime.UtcNow
+                    };
+                    categoriesToAdd.Add(newCat);
+                    existingCategories.Add(newCat);
+                }
+            }
+
+            if (categoriesToAdd.Count > 0)
+            {
+                await dbContext.ProductCategories.AddRangeAsync(categoriesToAdd);
+                await dbContext.SaveChangesAsync();
+                logger.LogInformation("Seeded {Count} new product categories.", categoriesToAdd.Count);
+            }
+        }
+
+        // 4. Seed Preference Categories
+        var prefCatMap = new Dictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
+        if (seedData.PreferenceCategories != null && seedData.PreferenceCategories.Count > 0)
+        {
+            var existingPrefCats = await dbContext.PreferenceCategories.ToListAsync();
+            var prefCatsToAdd = new List<PreferenceCategory>();
+
+            foreach (var prefCatDto in seedData.PreferenceCategories)
+            {
+                var match = existingPrefCats.FirstOrDefault(pc =>
+                    pc.Name.Any(n => n.Value.Equals(prefCatDto.NameEn, StringComparison.OrdinalIgnoreCase) ||
+                                     n.Value.Equals(prefCatDto.NameAr, StringComparison.OrdinalIgnoreCase)));
+
+                if (match == null)
+                {
+                    var newPrefCat = new PreferenceCategory
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = [new LocalizedItem("en", prefCatDto.NameEn), new LocalizedItem("ar", prefCatDto.NameAr)],
+                        Description = [new LocalizedItem("en", prefCatDto.DescriptionEn), new LocalizedItem("ar", prefCatDto.DescriptionAr)],
+                        CreatedAt = DateTime.UtcNow
+                    };
+                    prefCatsToAdd.Add(newPrefCat);
+                    existingPrefCats.Add(newPrefCat);
+                    prefCatMap[prefCatDto.NameEn] = newPrefCat.Id;
+                    prefCatMap[prefCatDto.NameAr] = newPrefCat.Id;
+                }
+                else
+                {
+                    prefCatMap[prefCatDto.NameEn] = match.Id;
+                    prefCatMap[prefCatDto.NameAr] = match.Id;
+                }
+            }
+
+            if (prefCatsToAdd.Count > 0)
+            {
+                await dbContext.PreferenceCategories.AddRangeAsync(prefCatsToAdd);
+                await dbContext.SaveChangesAsync();
+                logger.LogInformation("Seeded {Count} new preference categories.", prefCatsToAdd.Count);
+            }
+        }
+
+        // 5. Seed Preferences
+        if (seedData.Preferences != null && seedData.Preferences.Count > 0)
+        {
+            var allPrefCats = await dbContext.PreferenceCategories.ToListAsync();
+            var existingPreferences = await dbContext.Preferences.ToListAsync();
+            var preferencesToAdd = new List<Preference>();
+
+            foreach (var prefDto in seedData.Preferences)
+            {
+                // Resolve parent category
+                Guid catId = Guid.Empty;
+                if (prefCatMap.TryGetValue(prefDto.PreferenceCategory, out var mappedId))
+                {
+                    catId = mappedId;
+                }
+                else
+                {
+                    var matchedCat = allPrefCats.FirstOrDefault(pc =>
+                        pc.Name.Any(n => n.Value.Equals(prefDto.PreferenceCategory, StringComparison.OrdinalIgnoreCase)));
+                    if (matchedCat != null)
+                    {
+                        catId = matchedCat.Id;
+                    }
+                }
+
+                if (catId == Guid.Empty)
+                {
+                    logger.LogWarning("Preference '{NameEn}' references unknown category '{Cat}'. Skipping.", prefDto.NameEn, prefDto.PreferenceCategory);
+                    continue;
+                }
+
+                bool exists = existingPreferences.Any(p =>
+                    p.CategoryId == catId &&
+                    p.Name.Any(n => n.Value.Equals(prefDto.NameEn, StringComparison.OrdinalIgnoreCase) ||
+                                    n.Value.Equals(prefDto.NameAr, StringComparison.OrdinalIgnoreCase)));
+
+                if (!exists)
+                {
+                    var newPref = new Preference
+                    {
+                        Id = Guid.NewGuid(),
+                        CategoryId = catId,
+                        Name = [new LocalizedItem("en", prefDto.NameEn), new LocalizedItem("ar", prefDto.NameAr)],
+                        Description = [new LocalizedItem("en", prefDto.DescriptionEn), new LocalizedItem("ar", prefDto.DescriptionAr)],
+                        CreatedAt = DateTime.UtcNow
+                    };
+                    preferencesToAdd.Add(newPref);
+                    existingPreferences.Add(newPref);
+                }
+            }
+
+            if (preferencesToAdd.Count > 0)
+            {
+                await dbContext.Preferences.AddRangeAsync(preferencesToAdd);
+                await dbContext.SaveChangesAsync();
+                logger.LogInformation("Seeded {Count} new preferences.", preferencesToAdd.Count);
+            }
+        }
+
+        // 6. Seed Supermarkets & Sample Offers if not present
+        if (!await dbContext.Supermarkets.AnyAsync())
+        {
+            await SeedSupermarketsAndOffersAsync(dbContext, environment, logger);
+        }
+
+        logger.LogInformation("Database seed check and execution completed successfully.");
+    }
+
+    private static async Task SeedSupermarketsAndOffersAsync(
+        ApplicationDbContext dbContext,
+        IWebHostEnvironment? environment,
+        ILogger logger)
+    {
+        logger.LogInformation("Seeding Supermarkets and Sample Offers...");
+
         var marketCarrefour = new Supermarket
         {
             Id = Guid.NewGuid(),
             Name = [new LocalizedItem("en", "Carrefour"), new LocalizedItem("ar", "كارفور")],
             Address = "Cairo Festival City, New Cairo",
             WebsiteUrl = "https://www.carrefouregypt.com",
-            LogoPath = await DownloadDummyImageAsync("supermarkets", "Carrefour"),
             CreatedAt = DateTime.UtcNow
         };
         var marketLulu = new Supermarket
@@ -134,7 +240,6 @@ public static class CatalogSeeder
             Name = [new LocalizedItem("en", "LuLu Hypermarket"), new LocalizedItem("ar", "اللولو هايبر ماركت")],
             Address = "Twin Plaza, First Settlement",
             WebsiteUrl = "https://www.luluhypermarket.com",
-            LogoPath = await DownloadDummyImageAsync("supermarkets", "Lulu"),
             CreatedAt = DateTime.UtcNow
         };
         var marketSpinneys = new Supermarket
@@ -143,7 +248,6 @@ public static class CatalogSeeder
             Name = [new LocalizedItem("en", "Spinneys"), new LocalizedItem("ar", "سبينيس")],
             Address = "City Centre Almaza, Heliopolis",
             WebsiteUrl = "https://spinneys-egypt.com",
-            LogoPath = await DownloadDummyImageAsync("supermarkets", "Spinneys"),
             CreatedAt = DateTime.UtcNow
         };
         var marketMetro = new Supermarket
@@ -152,178 +256,158 @@ public static class CatalogSeeder
             Name = [new LocalizedItem("en", "Metro Market"), new LocalizedItem("ar", "مترو ماركت")],
             Address = "90th Street, Fifth Settlement",
             WebsiteUrl = "https://metro-markets.com",
-            LogoPath = await DownloadDummyImageAsync("supermarkets", "Metro"),
             CreatedAt = DateTime.UtcNow
         };
 
         dbContext.Supermarkets.AddRange(marketCarrefour, marketLulu, marketSpinneys, marketMetro);
         await dbContext.SaveChangesAsync();
 
-        // 4. Offers
-        var now = DateTime.UtcNow;
-        var offers = new List<Offer>
+        var unitL = await dbContext.MeasuringUnits.FirstOrDefaultAsync(u => u.Symbol.Any(s => s.Value == "L" || s.Value == "l"));
+        var unitKg = await dbContext.MeasuringUnits.FirstOrDefaultAsync(u => u.Symbol.Any(s => s.Value == "kg" || s.Value == "كجم"));
+        var unitPack = await dbContext.MeasuringUnits.FirstOrDefaultAsync(u => u.Symbol.Any(s => s.Value == "pack" || s.Value == "عبوة"));
+
+        var catDairy = await dbContext.ProductCategories.FirstOrDefaultAsync(c => c.Name.Any(n => n.Value.Contains("Dairy") || n.Value.Contains("الألبان")));
+        var catProduce = await dbContext.ProductCategories.FirstOrDefaultAsync(c => c.Name.Any(n => n.Value.Contains("Fruit") || n.Value.Contains("Produce") || n.Value.Contains("الفواكه")));
+        var catMeat = await dbContext.ProductCategories.FirstOrDefaultAsync(c => c.Name.Any(n => n.Value.Contains("Meat") || n.Value.Contains("اللحوم") || n.Value.Contains("Poultry")));
+
+        if (unitL != null && catDairy != null)
         {
-            new Offer
+            var now = DateTime.UtcNow;
+            var offers = new List<Offer>
             {
-                Id = Guid.NewGuid(),
-                Name = [new LocalizedItem("en", "Full Cream Milk 1L Offer"), new LocalizedItem("ar", "عرض حليب كامل الدسم 1 لتر")],
-                Description = [new LocalizedItem("en", "Special discount on 1L fresh milk"), new LocalizedItem("ar", "خصم خاص على الحليب الطازج 1 لتر")],
-                Quantity = 1,
-                UnitId = unitL.Id,
-                OriginalPrice = 45.00m,
-                DiscountedPrice = 36.50m,
-                ValidFrom = now.AddDays(-2),
-                ValidTo = now.AddDays(10),
-                CategoryId = catDairy.Id,
-                SupermarketId = marketCarrefour.Id,
-                ImagePath = await DownloadDummyImageAsync("offers", "OfferMilkCarrefour"),
-                Embedding = null,
-                CreatedAt = now
-            },
-            new Offer
+                new Offer
+                {
+                    Id = Guid.NewGuid(),
+                    Name = [new LocalizedItem("en", "Full Cream Milk 1L Offer"), new LocalizedItem("ar", "عرض حليب كامل الدسم 1 لتر")],
+                    Description = [new LocalizedItem("en", "Special discount on 1L fresh milk"), new LocalizedItem("ar", "خصم خاص على الحليب الطازج 1 لتر")],
+                    Quantity = 1,
+                    UnitId = unitL.Id,
+                    OriginalPrice = 45.00m,
+                    DiscountedPrice = 36.50m,
+                    ValidFrom = now.AddDays(-2),
+                    ValidTo = now.AddDays(10),
+                    CategoryId = catDairy.Id,
+                    SupermarketId = marketCarrefour.Id,
+                    CreatedAt = now
+                }
+            };
+
+            if (unitPack != null)
             {
-                Id = Guid.NewGuid(),
-                Name = [new LocalizedItem("en", "Farm Eggs 30s Big Saver"), new LocalizedItem("ar", "عرض البيض 30 بيضة توفير كبيير")],
-                Description = [new LocalizedItem("en", "Pack of 30 eggs at lowest price"), new LocalizedItem("ar", "طبق بيض 30 بيضة بأقل سعر")],
-                Quantity = 1,
-                UnitId = unitPack.Id,
-                OriginalPrice = 160.00m,
-                DiscountedPrice = 139.99m,
-                ValidFrom = now.AddDays(-1),
-                ValidTo = now.AddDays(7),
-                CategoryId = catDairy.Id,
-                SupermarketId = marketLulu.Id,
-                ImagePath = await DownloadDummyImageAsync("offers", "OfferEggsLulu"),
-                Embedding = null,
-                CreatedAt = now
-            },
-            new Offer
-            {
-                Id = Guid.NewGuid(),
-                Name = [new LocalizedItem("en", "Fresh Bananas 1kg Deal"), new LocalizedItem("ar", "صفقة الموز الطازج 1 كيلو")],
-                Description = [new LocalizedItem("en", "Freshly picked yellow bananas"), new LocalizedItem("ar", "موز أصفر طازج مقطوف حديثاً")],
-                Quantity = 1,
-                UnitId = unitKg.Id,
-                OriginalPrice = 35.00m,
-                DiscountedPrice = 24.99m,
-                ValidFrom = now.AddDays(-3),
-                ValidTo = now.AddDays(5),
-                CategoryId = catProduce.Id,
-                SupermarketId = marketSpinneys.Id,
-                ImagePath = await DownloadDummyImageAsync("offers", "OfferBananasSpinneys"),
-                Embedding = null,
-                CreatedAt = now
-            },
-            new Offer
-            {
-                Id = Guid.NewGuid(),
-                Name = [new LocalizedItem("en", "Pure Orange Juice 1L Promo"), new LocalizedItem("ar", "عرض عصير البرتقال الطبيعي 1 لتر")],
-                Description = [new LocalizedItem("en", "Buy 1L natural juice at discount"), new LocalizedItem("ar", "اشتر عصير طبيعي 1 لتر بخصم")],
-                Quantity = 1,
-                UnitId = unitL.Id,
-                OriginalPrice = 50.00m,
-                DiscountedPrice = 39.50m,
-                ValidFrom = now.AddDays(-5),
-                ValidTo = now.AddDays(12),
-                CategoryId = catBeverages.Id,
-                SupermarketId = marketMetro.Id,
-                ImagePath = await DownloadDummyImageAsync("offers", "OfferJuiceMetro"),
-                Embedding = null,
-                CreatedAt = now
-            },
-            new Offer
-            {
-                Id = Guid.NewGuid(),
-                Name = [new LocalizedItem("en", "Chicken Breast Fillet 1kg Super Sale"), new LocalizedItem("ar", "تخفيضات سوبر على صدور الدجاج 1 كيلو")],
-                Description = [new LocalizedItem("en", "Premium fresh boneless chicken breasts"), new LocalizedItem("ar", "صدور دجاج مخلية ممتازة")],
-                Quantity = 1,
-                UnitId = unitKg.Id,
-                OriginalPrice = 240.00m,
-                DiscountedPrice = 195.00m,
-                ValidFrom = now.AddDays(-1),
-                ValidTo = now.AddDays(6),
-                CategoryId = catMeat.Id,
-                SupermarketId = marketCarrefour.Id,
-                ImagePath = await DownloadDummyImageAsync("offers", "OfferChickenCarrefour"),
-                Embedding = null,
-                CreatedAt = now
+                offers.Add(new Offer
+                {
+                    Id = Guid.NewGuid(),
+                    Name = [new LocalizedItem("en", "Farm Eggs 30s Big Saver"), new LocalizedItem("ar", "عرض البيض 30 بيضة توفير كبير")],
+                    Description = [new LocalizedItem("en", "Pack of 30 eggs at lowest price"), new LocalizedItem("ar", "طبق بيض 30 بيضة بأقل سعر")],
+                    Quantity = 1,
+                    UnitId = unitPack.Id,
+                    OriginalPrice = 160.00m,
+                    DiscountedPrice = 139.99m,
+                    ValidFrom = now.AddDays(-1),
+                    ValidTo = now.AddDays(7),
+                    CategoryId = catDairy.Id,
+                    SupermarketId = marketLulu.Id,
+                    CreatedAt = now
+                });
             }
+
+            if (unitKg != null && catProduce != null)
+            {
+                offers.Add(new Offer
+                {
+                    Id = Guid.NewGuid(),
+                    Name = [new LocalizedItem("en", "Fresh Bananas 1kg Deal"), new LocalizedItem("ar", "صفقة الموز الطازج 1 كيلو")],
+                    Description = [new LocalizedItem("en", "Freshly picked yellow bananas"), new LocalizedItem("ar", "موز أصفر طازج مقطوف حديثاً")],
+                    Quantity = 1,
+                    UnitId = unitKg.Id,
+                    OriginalPrice = 35.00m,
+                    DiscountedPrice = 24.99m,
+                    ValidFrom = now.AddDays(-3),
+                    ValidTo = now.AddDays(5),
+                    CategoryId = catProduce.Id,
+                    SupermarketId = marketSpinneys.Id,
+                    CreatedAt = now
+                });
+            }
+
+            if (unitKg != null && catMeat != null)
+            {
+                offers.Add(new Offer
+                {
+                    Id = Guid.NewGuid(),
+                    Name = [new LocalizedItem("en", "Chicken Breast Fillet 1kg Super Sale"), new LocalizedItem("ar", "تخفيضات سوبر على صدور الدجاج 1 كيلو")],
+                    Description = [new LocalizedItem("en", "Premium fresh boneless chicken breasts"), new LocalizedItem("ar", "صدور دجاج مخلية ممتازة")],
+                    Quantity = 1,
+                    UnitId = unitKg.Id,
+                    OriginalPrice = 240.00m,
+                    DiscountedPrice = 195.00m,
+                    ValidFrom = now.AddDays(-1),
+                    ValidTo = now.AddDays(6),
+                    CategoryId = catMeat.Id,
+                    SupermarketId = marketCarrefour.Id,
+                    CreatedAt = now
+                });
+            }
+
+            await dbContext.Offers.AddRangeAsync(offers);
+            await dbContext.SaveChangesAsync();
+            logger.LogInformation("Seeded Supermarkets and {Count} sample offers.", offers.Count);
+        }
+    }
+
+    private static string? FindSeedJsonPath()
+    {
+        var candidates = new[]
+        {
+            Path.Combine(AppContext.BaseDirectory, "Seeding", "seed.json"),
+            Path.Combine(AppContext.BaseDirectory, "seed.json"),
+            Path.Combine(Directory.GetCurrentDirectory(), "HomePal.Persistence", "Seeding", "seed.json"),
+            Path.Combine(Directory.GetCurrentDirectory(), "..", "HomePal.Persistence", "Seeding", "seed.json"),
+            Path.Combine(Directory.GetCurrentDirectory(), "seed.json")
         };
 
-        dbContext.Offers.AddRange(offers);
-        await dbContext.SaveChangesAsync();
-
-        logger.LogInformation("Catalog dummy data seeded successfully.");
+        return candidates.FirstOrDefault(File.Exists);
     }
 
-    private static async Task<string> SaveSampleImageAsync(
-        IWebHostEnvironment environment,
-        HttpClient httpClient,
-        string folder,
-        string text)
+    private class SeedDataDto
     {
-        var webRootPath = environment.WebRootPath;
-        if (string.IsNullOrWhiteSpace(webRootPath))
-        {
-            webRootPath = Path.Combine(AppContext.BaseDirectory, "wwwroot");
-        }
-
-        var folderPath = Path.Combine(webRootPath, "uploads", folder);
-        if (!Directory.Exists(folderPath))
-        {
-            Directory.CreateDirectory(folderPath);
-        }
-
-        var fileName = $"{Guid.NewGuid():N}.jpg";
-        var filePath = Path.Combine(folderPath, fileName);
-
-        byte[]? imageBytes = null;
-
-        // Try downloading random image from reliable placeholder service
-        try
-        {
-            var placeholderUrl = $"https://dummyimage.com/400x300/3498db/ffffff.jpg&text={Uri.EscapeDataString(text)}";
-            imageBytes = await httpClient.GetByteArrayAsync(placeholderUrl);
-        }
-        catch
-        {
-            // Ignore network errors and fall back to generated byte array
-        }
-
-        if (imageBytes == null || imageBytes.Length == 0)
-        {
-            imageBytes = GenerateFallbackJpegBytes();
-        }
-
-        await File.WriteAllBytesAsync(filePath, imageBytes);
-        return $"/uploads/{folder}/{fileName}";
+        public List<MeasuringUnitSeedDto>? MeasuringUnits { get; set; }
+        public List<ProductCategorySeedDto>? ProductCategories { get; set; }
+        public List<PreferenceCategorySeedDto>? PreferenceCategories { get; set; }
+        public List<PreferenceSeedDto>? Preferences { get; set; }
     }
 
-    private static byte[] GenerateFallbackJpegBytes()
+    private class MeasuringUnitSeedDto
     {
-        // Minimal valid 1x1 JPEG image byte array
-        return [
-            0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x01, 0x00, 0x48,
-            0x00, 0x48, 0x00, 0x00, 0xFF, 0xDB, 0x00, 0x43, 0x00, 0x08, 0x06, 0x06, 0x07, 0x06, 0x05, 0x08,
-            0x07, 0x07, 0x07, 0x09, 0x09, 0x08, 0x0A, 0x0C, 0x14, 0x0D, 0x0C, 0x0B, 0x0B, 0x0C, 0x19, 0x12,
-            0x13, 0x0F, 0x14, 0x1D, 0x1A, 0x1F, 0x1E, 0x1D, 0x1A, 0x1C, 0x1C, 0x20, 0x24, 0x2E, 0x27, 0x20,
-            0x22, 0x2C, 0x23, 0x1C, 0x1C, 0x28, 0x37, 0x29, 0x2C, 0x30, 0x31, 0x34, 0x34, 0x34, 0x1F, 0x27,
-            0x39, 0x3D, 0x38, 0x32, 0x3C, 0x2E, 0x33, 0x34, 0x32, 0xFF, 0xC0, 0x00, 0x0B, 0x08, 0x00, 0x01,
-            0x00, 0x01, 0x01, 0x01, 0x11, 0x00, 0xFF, 0xC4, 0x00, 0x1F, 0x00, 0x00, 0x01, 0x05, 0x01, 0x01,
-            0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x04,
-            0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0xFF, 0xC4, 0x00, 0xB5, 0x10, 0x00, 0x02, 0x01, 0x03,
-            0x03, 0x02, 0x04, 0x03, 0x05, 0x05, 0x04, 0x04, 0x00, 0x01, 0x7D, 0x01, 0x02, 0x03, 0x00, 0x04,
-            0x11, 0x05, 0x12, 0x21, 0x31, 0x41, 0x06, 0x13, 0x51, 0x61, 0x07, 0x22, 0x71, 0x14, 0x32, 0x81,
-            0x91, 0xA1, 0x08, 0x23, 0x42, 0xB1, 0xC1, 0x15, 0x52, 0xD1, 0xF0, 0x24, 0x33, 0x62, 0x72, 0x82,
-            0x09, 0x0A, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x34, 0x35, 0x36,
-            0x37, 0x38, 0x39, 0x3A, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x53, 0x54, 0x55, 0x56,
-            0x57, 0x58, 0x59, 0x5A, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A, 0x73, 0x74, 0x75, 0x76,
-            0x77, 0x78, 0x79, 0x7A, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x92, 0x93, 0x94, 0x95,
-            0x96, 0x97, 0x98, 0x99, 0x9A, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xB2, 0xB3,
-            0xB4, 0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA,
-            0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7,
-            0xE8, 0xE9, 0xEA, 0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFF, 0xDA, 0x00,
-            0x08, 0x01, 0x01, 0x00, 0x00, 0x3F, 0x00, 0xFB, 0xD0, 0x7F, 0xFF, 0xD9
-        ];
+        public string NameAr { get; set; } = string.Empty;
+        public string NameEn { get; set; } = string.Empty;
+        public string SymbolAr { get; set; } = string.Empty;
+        public string SymbolEn { get; set; } = string.Empty;
+    }
+
+    private class ProductCategorySeedDto
+    {
+        public string NameAr { get; set; } = string.Empty;
+        public string NameEn { get; set; } = string.Empty;
+        public string DescriptionAr { get; set; } = string.Empty;
+        public string DescriptionEn { get; set; } = string.Empty;
+        public string ImagePath { get; set; } = string.Empty;
+    }
+
+    private class PreferenceCategorySeedDto
+    {
+        public string NameAr { get; set; } = string.Empty;
+        public string NameEn { get; set; } = string.Empty;
+        public string DescriptionAr { get; set; } = string.Empty;
+        public string DescriptionEn { get; set; } = string.Empty;
+    }
+
+    private class PreferenceSeedDto
+    {
+        public string NameAr { get; set; } = string.Empty;
+        public string NameEn { get; set; } = string.Empty;
+        public string DescriptionAr { get; set; } = string.Empty;
+        public string DescriptionEn { get; set; } = string.Empty;
+        public string PreferenceCategory { get; set; } = string.Empty;
     }
 }

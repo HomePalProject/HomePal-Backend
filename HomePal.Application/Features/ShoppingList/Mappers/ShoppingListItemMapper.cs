@@ -29,6 +29,7 @@ public static class ShoppingListItemMapper
             OfferImagePath = item.Offer?.ImagePath,
             SupermarketName = supermarket?.Name.Get(culture),
             SupermarketLogoPath = supermarket?.LogoPath,
+            MealPlanId = item.MealPlanId,
             IsPurchased = item.IsPurchased,
             Notes = item.Notes,
             CreatedAt = item.CreatedAt,
@@ -48,6 +49,7 @@ public static class ShoppingListItemMapper
             Price = request.Price,
             MeasuringUnitId = request.UnitId,
             CategoryId = request.CategoryId,
+            MealPlanId = request.MealPlanId,
             Notes = request.Notes,
             IsPurchased = false,
             CreatedAt = DateTime.UtcNow
@@ -82,6 +84,7 @@ public static class ShoppingListItemMapper
         item.Price = request.Price;
         item.MeasuringUnitId = request.UnitId;
         item.CategoryId = request.CategoryId;
+        item.MealPlanId = request.MealPlanId;
         item.IsPurchased = request.IsPurchased;
         item.Notes = request.Notes;
         item.OfferId = null;

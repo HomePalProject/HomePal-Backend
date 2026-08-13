@@ -7,6 +7,7 @@ using HomePal.Shared.Results;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 
 // Aliases
 using AiMessage = Microsoft.Extensions.AI.ChatMessage;
@@ -18,15 +19,27 @@ public class AgentChatService : IAgentChatService
     private readonly IUnitOfWork _unitOfWork;
     private readonly AgentSseStream _sseStream;
     private readonly AIAgent _agent;
+    private readonly IStringLocalizer _localizer;
 
     public AgentChatService(
         IUnitOfWork unitOfWork,
         AgentSseStream sseStream,
-        [FromKeyedServices("Agent")] AIAgent agent)
+        [FromKeyedServices("Agent")] AIAgent agent,
+        IStringLocalizerFactory localizerFactory)
     {
         _unitOfWork = unitOfWork;
         _sseStream = sseStream;
         _agent = agent;
+        _localizer = localizerFactory.Create("SharedResource", "HomePal.Api");
+    }
+
+    private string Localize(string key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+            return key;
+
+        var localized = _localizer[key];
+        return !localized.ResourceNotFound ? localized.Value : key;
     }
 
     public async Task<Result<AgentChatSessionResponse>> GetUserSessionAsync(Guid userId, CancellationToken cancellationToken = default)
@@ -97,7 +110,7 @@ public class AgentChatService : IAgentChatService
                 yield return new SseItem<string>(JsonSerializer.Serialize(new
                 {
                     type = "ERROR",
-                    message = "ToolCallId is required when approving a tool call."
+                    message = Localize(ErrorMessages.AgentChat.ToolCallIdRequired)
                 }));
                 yield break;
             }
@@ -123,7 +136,7 @@ public class AgentChatService : IAgentChatService
                 yield return new SseItem<string>(JsonSerializer.Serialize(new
                 {
                     type = "ERROR",
-                    message = "Message content is required."
+                    message = Localize(ErrorMessages.AgentChat.MessageRequired)
                 }));
                 yield break;
             }
