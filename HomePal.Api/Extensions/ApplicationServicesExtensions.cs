@@ -61,6 +61,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.Budgeting.Interfaces.IHouseholdMonthlyBudgetRepository, HouseholdMonthlyBudgetRepository>();
         services.AddScoped<HomePal.Application.Features.Budgeting.Interfaces.IHouseholdExpenseRepository, HouseholdExpenseRepository>();
         services.AddScoped<HomePal.Application.Features.AgentChat.Interfaces.IAgentChatRepository, AgentChatRepository>();
+        services.AddScoped<HomePal.Application.Features.MealPlanning.Interfaces.IMealPlanRepository, MealPlanRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<ITokenProvider, TokenProvider>();
@@ -92,6 +93,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListService, HomePal.Application.Features.ShoppingList.Services.ShoppingListService>();
         services.AddScoped<HomePal.Application.Features.Budgeting.Interfaces.IBudgetService, HomePal.Application.Features.Budgeting.Services.BudgetService>();
         services.AddScoped<HomePal.Application.Features.UserManagement.Interfaces.IUserManagementService, HomePal.Application.Features.UserManagement.Services.UserManagementService>();
+        services.AddScoped<HomePal.Application.Features.MealPlanning.Interfaces.IMealPlanService, HomePal.Application.Features.MealPlanning.Services.MealPlanService>();
 
 
         services.AddControllers()

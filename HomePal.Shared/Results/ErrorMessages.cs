@@ -117,5 +117,12 @@ public static class ErrorMessages
         public const string ChatCleared = "AgentChat.ChatCleared";
         public const string GetSessionSuccess = "AgentChat.GetSessionSuccess";
     }
+
+    public static class MealPlan
+    {
+        public const string MealPlanNotFound = "MealPlan.MealPlanNotFound";
+        public const string InvalidDates = "MealPlan.InvalidDates";
+        public const string NoHousehold = "MealPlan.NoHousehold";
+    }
 }
 

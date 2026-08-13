@@ -267,6 +267,17 @@
   <data name="AgentChat.ToolCallIdRequired" xml:space="preserve"><value>ToolCallId is required when approving a tool call.</value></data>
   <data name="AgentChat.ChatCleared" xml:space="preserve"><value>Chat session cleared successfully.</value></data>
   <data name="AgentChat.GetSessionSuccess" xml:space="preserve"><value>Chat session retrieved successfully.</value></data>
+
+  <!-- MealPlan -->
+  <data name="MealPlan.MealPlanNotFound" xml:space="preserve"><value>Meal plan not found.</value></data>
+  <data name="MealPlan.InvalidDates" xml:space="preserve"><value>End date must be greater than or equal to start date.</value></data>
+  <data name="MealPlan.NoHousehold" xml:space="preserve"><value>User does not belong to any household.</value></data>
+  <data name="MealPlan.CreateSuccess" xml:space="preserve"><value>Meal plan created successfully.</value></data>
+  <data name="MealPlan.GetSuccess" xml:space="preserve"><value>Meal plan retrieved successfully.</value></data>
+  <data name="MealPlan.GetAllSuccess" xml:space="preserve"><value>Meal plans retrieved successfully.</value></data>
+  <data name="MealPlan.GetLastSuccess" xml:space="preserve"><value>Last meal plan retrieved successfully.</value></data>
+  <data name="MealPlan.UpdateSuccess" xml:space="preserve"><value>Meal plan updated successfully.</value></data>
+  <data name="MealPlan.DeleteSuccess" xml:space="preserve"><value>Meal plan deleted successfully.</value></data>
 </root>
 
 

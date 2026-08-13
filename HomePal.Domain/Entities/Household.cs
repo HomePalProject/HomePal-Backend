@@ -16,4 +16,5 @@ public class Household
     public ICollection<HouseholdInvitation> Invitations { get; set; } = new List<HouseholdInvitation>();
     public ICollection<HouseholdMonthlyBudget> Budgets { get; set; } = new List<HouseholdMonthlyBudget>();
     public ICollection<HouseholdExpense> Expenses { get; set; } = new List<HouseholdExpense>();
+    public ICollection<MealPlan> MealPlans { get; set; } = new List<MealPlan>();
 }

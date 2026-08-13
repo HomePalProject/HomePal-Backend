@@ -267,6 +267,17 @@
   <data name="AgentChat.ToolCallIdRequired" xml:space="preserve"><value>معرّف طلب الأداة مطلوب عند الموافقة عليها.</value></data>
   <data name="AgentChat.ChatCleared" xml:space="preserve"><value>تم مسح جلسة المحادثة بنجاح.</value></data>
   <data name="AgentChat.GetSessionSuccess" xml:space="preserve"><value>تم استرجاع جلسة المحادثة بنجاح.</value></data>
+
+  <!-- MealPlan -->
+  <data name="MealPlan.MealPlanNotFound" xml:space="preserve"><value>خطة الوجبات غير موجودة.</value></data>
+  <data name="MealPlan.InvalidDates" xml:space="preserve"><value>تاريخ الانتهاء يجب أن يكون بعد أو يطابق تاريخ البداية.</value></data>
+  <data name="MealPlan.NoHousehold" xml:space="preserve"><value>المستخدم لا ينتمي إلى أي أسرة.</value></data>
+  <data name="MealPlan.CreateSuccess" xml:space="preserve"><value>تم إنشاء خطة الوجبات بنجاح.</value></data>
+  <data name="MealPlan.GetSuccess" xml:space="preserve"><value>تم جلب خطة الوجبات بنجاح.</value></data>
+  <data name="MealPlan.GetAllSuccess" xml:space="preserve"><value>تم جلب خطط الوجبات بنجاح.</value></data>
+  <data name="MealPlan.GetLastSuccess" xml:space="preserve"><value>تم جلب آخر خطة وجبات بنجاح.</value></data>
+  <data name="MealPlan.UpdateSuccess" xml:space="preserve"><value>تم تحديث خطة الوجبات بنجاح.</value></data>
+  <data name="MealPlan.DeleteSuccess" xml:space="preserve"><value>تم حذف خطة الوجبات بنجاح.</value></data>
 </root>
 
 

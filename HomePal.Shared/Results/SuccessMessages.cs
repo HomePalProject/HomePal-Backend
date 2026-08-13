@@ -121,4 +121,14 @@ public static class SuccessMessages
         public const string DeactivateAccount = "UserManagement.DeactivateAccountSuccess";
         public const string DeleteAdmin = "UserManagement.DeleteAdminSuccess";
     }
+
+    public static class MealPlan
+    {
+        public const string Create = "MealPlan.CreateSuccess";
+        public const string Get = "MealPlan.GetSuccess";
+        public const string GetAll = "MealPlan.GetAllSuccess";
+        public const string GetLast = "MealPlan.GetLastSuccess";
+        public const string Update = "MealPlan.UpdateSuccess";
+        public const string Delete = "MealPlan.DeleteSuccess";
+    }
 }
