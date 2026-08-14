@@ -103,140 +103,140 @@
             "nameEn": "Dairy & Eggs",
             "descriptionAr": "الحليب والجبن والزبادي والبيض ومنتجات الألبان الأخرى.",
             "descriptionEn": "Milk, cheese, yogurt, eggs, and other dairy products.",
-            "imagePath": "/images/categories/dairy-eggs.jpg"
+            "imagePath": "/uploads/categories/dairy-eggs.jpg"
         },
         {
             "nameAr": "اللحوم",
             "nameEn": "Meat",
             "descriptionAr": "اللحوم الحمراء ومنتجات اللحوم المختلفة.",
             "descriptionEn": "Red meat and other meat products.",
-            "imagePath": "/images/categories/meat.jpg"
+            "imagePath": "/uploads/categories/meat.jpg"
         },
         {
             "nameAr": "الدواجن",
             "nameEn": "Poultry",
             "descriptionAr": "الدجاج والديك الرومي ومنتجات الدواجن.",
             "descriptionEn": "Chicken, turkey, and other poultry products.",
-            "imagePath": "/images/categories/poultry.jpg"
+            "imagePath": "/uploads/categories/poultry.jpg"
         },
         {
             "nameAr": "الأسماك والمأكولات البحرية",
             "nameEn": "Fish & Seafood",
             "descriptionAr": "الأسماك والمحار والمأكولات البحرية المختلفة.",
             "descriptionEn": "Fish, shellfish, and other seafood products.",
-            "imagePath": "/images/categories/fish-seafood.jpg"
+            "imagePath": "/uploads/categories/fish-seafood.jpg"
         },
         {
             "nameAr": "الفواكه",
             "nameEn": "Fruits",
             "descriptionAr": "الفواكه الطازجة والمجمدة والمجففة.",
             "descriptionEn": "Fresh, frozen, and dried fruits.",
-            "imagePath": "/images/categories/fruits.jpg"
+            "imagePath": "/uploads/categories/fruits.jpg"
         },
         {
             "nameAr": "الخضروات",
             "nameEn": "Vegetables",
             "descriptionAr": "الخضروات الطازجة والمجمدة.",
             "descriptionEn": "Fresh and frozen vegetables.",
-            "imagePath": "/images/categories/vegetables.jpg"
+            "imagePath": "/uploads/categories/vegetables.jpg"
         },
         {
             "nameAr": "الحبوب والحبوب الكاملة",
             "nameEn": "Grains & Cereals",
             "descriptionAr": "الأرز والشوفان والحبوب ومنتجات الحبوب.",
             "descriptionEn": "Rice, oats, cereals, and other grain products.",
-            "imagePath": "/images/categories/grains-cereals.jpg"
+            "imagePath": "/uploads/categories/grains-cereals.jpg"
         },
         {
             "nameAr": "المعكرونة والنودلز",
             "nameEn": "Pasta & Noodles",
             "descriptionAr": "المعكرونة والنودلز ومنتجاتها المختلفة.",
             "descriptionEn": "Pasta, noodles, and related products.",
-            "imagePath": "/images/categories/pasta-noodles.jpg"
+            "imagePath": "/uploads/categories/pasta-noodles.jpg"
         },
         {
             "nameAr": "البقوليات",
             "nameEn": "Legumes & Beans",
             "descriptionAr": "الفول والعدس والحمص والفاصوليا والبقوليات الأخرى.",
             "descriptionEn": "Beans, lentils, chickpeas, and other legumes.",
-            "imagePath": "/images/categories/legumes-beans.jpg"
+            "imagePath": "/uploads/categories/legumes-beans.jpg"
         },
         {
             "nameAr": "الخبز والمخبوزات",
             "nameEn": "Bread & Bakery",
             "descriptionAr": "الخبز والمعجنات والمخبوزات المختلفة.",
             "descriptionEn": "Bread, pastries, and other bakery products.",
-            "imagePath": "/images/categories/bread-bakery.jpg"
+            "imagePath": "/uploads/categories/bread-bakery.jpg"
         },
         {
             "nameAr": "المكسرات والبذور",
             "nameEn": "Nuts & Seeds",
             "descriptionAr": "المكسرات والبذور ومنتجاتها.",
             "descriptionEn": "Nuts, seeds, and related products.",
-            "imagePath": "/images/categories/nuts-seeds.jpg"
+            "imagePath": "/uploads/categories/nuts-seeds.jpg"
         },
         {
             "nameAr": "الزيوت والدهون",
             "nameEn": "Oils & Fats",
             "descriptionAr": "زيوت الطبخ والزبدة والسمن والدهون الأخرى.",
             "descriptionEn": "Cooking oils, butter, ghee, and other fats.",
-            "imagePath": "/images/categories/oils-fats.jpg"
+            "imagePath": "/uploads/categories/oils-fats.jpg"
         },
         {
             "nameAr": "الصلصات والتوابل",
             "nameEn": "Sauces & Condiments",
             "descriptionAr": "الصلصات والكاتشب والمايونيز والخل والتتبيلات.",
             "descriptionEn": "Sauces, ketchup, mayonnaise, vinegar, and dressings.",
-            "imagePath": "/images/categories/sauces-condiments.jpg"
+            "imagePath": "/uploads/categories/sauces-condiments.jpg"
         },
         {
             "nameAr": "التوابل والأعشاب",
             "nameEn": "Spices & Herbs",
             "descriptionAr": "التوابل والأعشاب والبهارات المستخدمة في الطهي.",
             "descriptionEn": "Spices, herbs, and seasonings used in cooking.",
-            "imagePath": "/images/categories/spices-herbs.jpg"
+            "imagePath": "/uploads/categories/spices-herbs.jpg"
         },
         {
             "nameAr": "المعلبات والمحفوظات",
             "nameEn": "Canned & Preserved Foods",
             "descriptionAr": "الأطعمة المعلبة والمحفوظة والمخللات.",
             "descriptionEn": "Canned foods, preserved foods, and pickles.",
-            "imagePath": "/images/categories/canned-preserved.jpg"
+            "imagePath": "/uploads/categories/canned-preserved.jpg"
         },
         {
             "nameAr": "الأطعمة المجمدة",
             "nameEn": "Frozen Foods",
             "descriptionAr": "الخضروات والوجبات والمنتجات الغذائية المجمدة.",
             "descriptionEn": "Frozen vegetables, meals, and other frozen foods.",
-            "imagePath": "/images/categories/frozen-foods.jpg"
+            "imagePath": "/uploads/categories/frozen-foods.jpg"
         },
         {
             "nameAr": "الوجبات الخفيفة والحلويات",
             "nameEn": "Snacks & Sweets",
             "descriptionAr": "الشيبسي والبسكويت والحلويات والشوكولاتة والوجبات الخفيفة.",
             "descriptionEn": "Chips, biscuits, sweets, chocolate, and other snacks.",
-            "imagePath": "/images/categories/snacks-sweets.jpg"
+            "imagePath": "/uploads/categories/snacks-sweets.jpg"
         },
         {
             "nameAr": "المشروبات",
             "nameEn": "Beverages",
             "descriptionAr": "المياه والعصائر والمشروبات الغازية والمشروبات الأخرى.",
             "descriptionEn": "Water, juices, soft drinks, and other beverages.",
-            "imagePath": "/images/categories/beverages.jpg"
+            "imagePath": "/uploads/categories/beverages.jpg"
         },
         {
             "nameAr": "أطعمة الإفطار",
             "nameEn": "Breakfast Foods",
             "descriptionAr": "حبوب الإفطار والمربى والعسل ومنتجات الإفطار الأخرى.",
             "descriptionEn": "Breakfast cereals, jams, honey, and other breakfast products.",
-            "imagePath": "/images/categories/breakfast-foods.jpg"
+            "imagePath": "/uploads/categories/breakfast-foods.jpg"
         },
         {
             "nameAr": "الوجبات الجاهزة",
             "nameEn": "Ready Meals",
             "descriptionAr": "الوجبات المطبوخة والجاهزة للتناول.",
             "descriptionEn": "Prepared meals and ready-to-eat foods.",
-            "imagePath": "/images/categories/ready-meals.jpg"
+            "imagePath": "/uploads/categories/ready-meals.jpg"
         }
     ],
     "preferenceCategories": [
