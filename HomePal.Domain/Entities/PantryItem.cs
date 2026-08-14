@@ -1,6 +1,8 @@
+using HomePal.Domain.Common;
+
 namespace HomePal.Domain.Entities;
 
-public class PantryItem
+public class PantryItem : BaseAuditableEntity
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     
@@ -16,7 +18,4 @@ public class PantryItem
 
     public Guid CategoryId { get; set; }
     public ProductCategory Category { get; set; } = null!;
-
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime? UpdatedAt { get; set; }
 }

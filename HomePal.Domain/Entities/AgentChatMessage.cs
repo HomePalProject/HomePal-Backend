@@ -1,6 +1,8 @@
+using HomePal.Domain.Common;
+
 namespace HomePal.Domain.Entities;
 
-public class AgentChatMessage
+public class AgentChatMessage : BaseAuditableEntity
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
@@ -10,5 +12,4 @@ public class AgentChatMessage
     public string Role { get; set; } = "user"; // user | assistant | tool | system
     public string Content { get; set; } = string.Empty;
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

@@ -1,6 +1,8 @@
+using HomePal.Domain.Common;
+
 namespace HomePal.Domain.Entities;
 
-public class HouseholdMonthlyBudget
+public class HouseholdMonthlyBudget : BaseAuditableEntity
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
@@ -11,9 +13,6 @@ public class HouseholdMonthlyBudget
     public int Month { get; set; }
     public decimal Amount { get; set; }
     public string? Notes { get; set; }
-
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime? UpdatedAt { get; set; }
 
     public ICollection<HouseholdExpense> Expenses { get; set; } = new List<HouseholdExpense>();
 }

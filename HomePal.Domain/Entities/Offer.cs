@@ -3,7 +3,7 @@ using Microsoft.Data.SqlTypes;
 
 namespace HomePal.Domain.Entities;
 
-public class Offer
+public class Offer : BaseAuditableEntity
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public List<LocalizedItem> Name { get; set; } = new();
@@ -29,7 +29,4 @@ public class Offer
 
     public SqlVector<float>? Embedding { get; set; }
     public bool IsVerified { get; set; } = true;
-
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime? UpdatedAt { get; set; }
 }

@@ -1,8 +1,9 @@
+using HomePal.Domain.Common;
 using HomePal.Domain.Enums;
 
 namespace HomePal.Domain.Entities;
 
-public class HouseholdMember
+public class HouseholdMember : BaseAuditableEntity
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid HouseholdId { get; set; }

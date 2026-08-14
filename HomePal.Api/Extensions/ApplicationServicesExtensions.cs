@@ -98,6 +98,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.MealPlanning.Interfaces.IMealPlanService, HomePal.Application.Features.MealPlanning.Services.MealPlanService>();
 
 
+
         services.AddControllers()
             .AddDataAnnotationsLocalization(options =>
             {

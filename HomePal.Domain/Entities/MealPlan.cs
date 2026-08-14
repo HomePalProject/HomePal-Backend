@@ -1,6 +1,8 @@
+using HomePal.Domain.Common;
+
 namespace HomePal.Domain.Entities;
 
-public class MealPlan
+public class MealPlan : BaseAuditableEntity
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
@@ -12,7 +14,4 @@ public class MealPlan
     public DateTime EndDate { get; set; }
     public decimal TotalEstimatedCost { get; set; }
     public string PlanData { get; set; } = string.Empty;
-
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime? UpdatedAt { get; set; }
 }

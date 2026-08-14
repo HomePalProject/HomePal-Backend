@@ -1,4 +1,6 @@
+using System.Linq.Expressions;
 using System.Reflection;
+using HomePal.Domain.Common;
 using HomePal.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -33,10 +35,56 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<AgentChatMessage> AgentChatMessages => Set<AgentChatMessage>();
     public DbSet<MealPlan> MealPlans => Set<MealPlan>();
 
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        // Apply global soft-delete query filter to all BaseAuditableEntity types
+        foreach (var entityType in builder.Model.GetEntityTypes())
+        {
+            if (typeof(BaseAuditableEntity).IsAssignableFrom(entityType.ClrType))
+            {
+                var parameter = Expression.Parameter(entityType.ClrType, "e");
+                var property = Expression.Property(parameter, nameof(BaseAuditableEntity.IsDeleted));
+                var notDeleted = Expression.Not(property);
+                var lambda = Expression.Lambda(notDeleted, parameter);
+                builder.Entity(entityType.ClrType).HasQueryFilter(lambda);
+            }
+        }
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        ApplyAuditAndSoftDeleteInfo();
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    public override int SaveChanges()
+    {
+        ApplyAuditAndSoftDeleteInfo();
+        return base.SaveChanges();
+    }
+
+    private void ApplyAuditAndSoftDeleteInfo()
+    {
+        foreach (var entry in ChangeTracker.Entries<BaseAuditableEntity>())
+        {
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    entry.Entity.CreatedAt = DateTime.UtcNow;
+                    entry.Entity.IsDeleted = false;
+                    break;
+                case EntityState.Modified:
+                    entry.Entity.UpdatedAt = DateTime.UtcNow;
+                    break;
+                case EntityState.Deleted:
+                    entry.State = EntityState.Modified;
+                    entry.Entity.IsDeleted = true;
+                    entry.Entity.DeletedAt = DateTime.UtcNow;
+                    break;
+            }
+        }
     }
 }

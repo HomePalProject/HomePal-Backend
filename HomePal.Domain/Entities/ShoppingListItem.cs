@@ -1,6 +1,8 @@
+using HomePal.Domain.Common;
+
 namespace HomePal.Domain.Entities;
 
-public class ShoppingListItem
+public class ShoppingListItem : BaseAuditableEntity
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
@@ -26,7 +28,4 @@ public class ShoppingListItem
 
     public bool IsPurchased { get; set; } = false;
     public string? Notes { get; set; }
-
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime? UpdatedAt { get; set; }
 }
