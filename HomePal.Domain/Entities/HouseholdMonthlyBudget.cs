@@ -9,8 +9,7 @@ public class HouseholdMonthlyBudget : BaseAuditableEntity
     public Guid HouseholdId { get; set; }
     public Household Household { get; set; } = null!;
 
-    public int Year { get; set; }
-    public int Month { get; set; }
+    public DateTime BudgetDate { get; set; }
     public decimal Amount { get; set; }
     public string? Notes { get; set; }
 

@@ -25,8 +25,7 @@ public static class BudgetMapper
         {
             Id = Guid.NewGuid(),
             HouseholdId = householdId,
-            Year = request.Year,
-            Month = request.Month,
+            BudgetDate = new DateTime(request.Year, request.Month, 1, 0, 0, 0, DateTimeKind.Utc),
             Amount = request.TargetAmount,
             Notes = request.Notes,
             CreatedAt = DateTime.UtcNow
