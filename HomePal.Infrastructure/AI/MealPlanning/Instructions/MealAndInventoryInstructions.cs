@@ -12,6 +12,8 @@ public static class MealAndInventoryInstructions
         - Update pantry items (quantities, units, categories, expiration dates, names) using 'UpdatePantry'.
         - Remove depleted items using 'DeletePantryItem'.
         - Discover system categories and measuring units using 'GetCategoriesAndUnits'.
+        - Search the recipe database using 'SearchRecipes' to find recipes matching available pantry items, specific ingredients, cuisines, or user requests.
+        - Search the ingredient database using 'SearchIngredients' to inspect ingredients, culinary characteristics, and find substitutes.
         - Prioritize ingredients nearing expiration in meal recommendations to minimize food waste.
         - Cross-reference household pantry inventory with recipe ingredient requirements and recommend smart substitutions.
         """;

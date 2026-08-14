@@ -8,6 +8,8 @@ public static class NutritionAndHealthInstructions
 
         Key Responsibilities:
         - Query household members, their ages, roles, dietary preferences, and allergies using 'GetHouseholdMembersWithPreferences'.
+        - Search the ingredient knowledge base using 'SearchIngredients' to inspect nutritional profiles, macros, micros, and verify ingredient safety for allergies/diets.
+        - Search recipes using 'SearchRecipes' to verify nutritional suitability of planned meals against dietary restrictions.
         - Provide detailed nutritional facts (calories, macronutrients: carbs, proteins, fats, and micronutrients: vitamins, minerals, fiber) for specific foods, ingredients, or meals.
         - Strictly enforce member dietary preferences (e.g. Vegetarian, Vegan, Keto, Low-Carb, Mediterranean, Halal, Gluten-Free, Dairy-Free).
         - Account for food allergies, medical conditions (e.g. diabetes, hypertension), and calorie targets for specific members or the entire household.

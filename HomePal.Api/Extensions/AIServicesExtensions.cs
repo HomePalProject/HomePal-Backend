@@ -3,6 +3,7 @@ using System.Text;
 using Google.GenAI;
 using HomePal.Application.Common.Interfaces;
 using HomePal.Application.Features.Catalog.Interfaces;
+using HomePal.Application.Features.MealPlanning.Interfaces;
 using HomePal.Application.Features.PantryManagement.Interfaces;
 using HomePal.Infrastructure.AI.CatalogManagement.Instructions;
 using HomePal.Infrastructure.AI.CatalogManagement.Options;
@@ -13,11 +14,14 @@ using HomePal.Infrastructure.AI.PantryManagement.Instructions;
 using HomePal.Infrastructure.AI.PantryManagement.Options;
 using HomePal.Infrastructure.AI.PantryManagement.Services;
 using HomePal.Infrastructure.AI.PantryManagement.Tools;
+using HomePal.Infrastructure.AI.Rag.Options;
+using HomePal.Infrastructure.AI.Rag.Services;
 using HomePal.Infrastructure.AI.Services;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using OpenAI;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Resources;
@@ -36,6 +40,9 @@ public static class AIServicesExtensions
         services.AddOptions<ApifyOptions>()
             .Bind(configuration.GetSection(ApifyOptions.SectionName))
             .ValidateOnStart();
+
+        services.AddOptions<MongoRagOptions>()
+            .Bind(configuration.GetSection(MongoRagOptions.SectionName));
 
         var agentOptions = configuration.GetSection(AgentOptions.SectionName).Get<AgentOptions>() ?? new AgentOptions();
         if (agentOptions.Langfuse.Enabled)
@@ -135,6 +142,12 @@ public static class AIServicesExtensions
             return embeddingClient.AsIEmbeddingGenerator();
         });
 
+        services.AddSingleton<IMongoClient>(sp =>
+        {
+            var options = sp.GetRequiredService<IOptions<MongoRagOptions>>().Value;
+            return new MongoClient(options.ConnectionString);
+        });
+
         services.AddAIAgent("PantryScannerAgent", instructions: PantryAgentInstructions.SystemInstructions);
         services.AddAIAgent("ProductScraperAgent", instructions: ProductScraperInstructions.SystemInstructions);
 
@@ -143,6 +156,12 @@ public static class AIServicesExtensions
         services.AddScoped<IPantryScannerService, PantryAgentScanner>();
         services.AddScoped<IEmbeddingService, EmbeddingService>();
         services.AddScoped<IProductOfferScraperService, ProductOfferScraperAgent>();
+
+        // RAG / MongoDB Vector Search Services & Tools
+        services.AddScoped<IFoodRecipeSearchService, FoodRecipeSearchService>();
+        services.AddScoped<IIngredientSearchService, IngredientSearchService>();
+        services.AddScoped<RecipeSearchTools>();
+        services.AddScoped<IngredientSearchTools>();
 
         services.AddScoped<ChatHistoryProvider, HomePal.Infrastructure.AI.AgentChat.Services.DbChatHistoryProvider>();
         services.AddScoped<HomePal.Infrastructure.AI.AgentChat.Services.AgentSseStream>();
@@ -162,10 +181,12 @@ public static class AIServicesExtensions
             var chatClient = sp.GetRequiredService<IChatClient>();
             var pantryTools = sp.GetRequiredService<PantryTools>();
             var catalogTools = sp.GetRequiredService<CatalogReferenceTools>();
+            var recipeTools = sp.GetRequiredService<RecipeSearchTools>();
+            var ingredientTools = sp.GetRequiredService<IngredientSearchTools>();
             return chatClient.AsAIAgent(new ChatClientAgentOptions
             {
                 Name = "MealAndInventoryAgent",
-                Description = "Evaluates pantry stock, expiration dates, available ingredients, and manages pantry inventory items (viewing, adding, updating, and removing stock).",
+                Description = "Evaluates pantry stock, expiration dates, available ingredients, manages pantry inventory items (viewing, adding, updating, and removing stock), and searches real recipes and ingredients.",
                 ChatOptions = new ChatOptions
                 {
                     Instructions = MealAndInventoryInstructions.SystemInstructions,
@@ -175,7 +196,9 @@ public static class AIServicesExtensions
                         AIFunctionFactory.Create(pantryTools.AddPantryItemAsync),
                         AIFunctionFactory.Create(pantryTools.UpdatePantryAsync),
                         AIFunctionFactory.Create(pantryTools.DeletePantryItemAsync),
-                        AIFunctionFactory.Create(catalogTools.GetCategoriesAndUnitsAsync)
+                        AIFunctionFactory.Create(catalogTools.GetCategoriesAndUnitsAsync),
+                        AIFunctionFactory.Create(recipeTools.SearchRecipesAsync),
+                        AIFunctionFactory.Create(ingredientTools.SearchIngredientsAsync)
                     ]
                 }
             });
@@ -185,16 +208,20 @@ public static class AIServicesExtensions
         {
             var chatClient = sp.GetRequiredService<IChatClient>();
             var householdTools = sp.GetRequiredService<HouseholdTools>();
+            var ingredientTools = sp.GetRequiredService<IngredientSearchTools>();
+            var recipeTools = sp.GetRequiredService<RecipeSearchTools>();
             return chatClient.AsAIAgent(new ChatClientAgentOptions
             {
                 Name = "NutritionAndHealthAgent",
-                Description = "Analyzes dietary guidelines, macronutrients, calorie targets, allergies, and health restrictions for household members.",
+                Description = "Analyzes dietary guidelines, macronutrients, calorie targets, allergies, health restrictions, and searches ingredients and recipes for nutritional details.",
                 ChatOptions = new ChatOptions
                 {
                     Instructions = NutritionAndHealthInstructions.SystemInstructions,
                     Tools =
                     [
-                        AIFunctionFactory.Create(householdTools.GetHouseholdMembersWithPreferencesAsync)
+                        AIFunctionFactory.Create(householdTools.GetHouseholdMembersWithPreferencesAsync),
+                        AIFunctionFactory.Create(ingredientTools.SearchIngredientsAsync),
+                        AIFunctionFactory.Create(recipeTools.SearchRecipesAsync)
                     ]
                 }
             });
