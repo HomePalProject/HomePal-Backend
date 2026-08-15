@@ -35,6 +35,13 @@ public class ExceptionMiddleware
 
     private Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
+
+        if (context.Response.HasStarted)
+        {
+            _logger.LogWarning(exception, "The response has already started, cannot write JSON error response: {Message}", exception.Message);
+            return Task.CompletedTask;
+        }
+
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 

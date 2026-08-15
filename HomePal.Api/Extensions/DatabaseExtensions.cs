@@ -1,6 +1,7 @@
 using HomePal.Api.Factories;
 using HomePal.Domain.Entities;
 using HomePal.Persistence.Context;
+using HomePal.Persistence.Interceptors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,9 +14,13 @@ public static class DatabaseExtensions
         var connectionString = configuration.GetConnectionString("DefaultConnection") 
             ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-        services.AddDbContext<ApplicationDbContext>(options =>
+        services.AddScoped<AuditableEntitySaveChangesInterceptor>();
+
+        services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {
-            options.UseSqlServer(connectionString);
+            var interceptor = sp.GetRequiredService<AuditableEntitySaveChangesInterceptor>();
+            options.UseSqlServer(connectionString)
+                   .AddInterceptors(interceptor);
         });
 
         services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
