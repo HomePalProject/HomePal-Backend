@@ -11,8 +11,10 @@ public class CurrentUserResponse
     public string Username { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public DateOnly BirthDate { get; set; }
-    public string Governorate { get; set; } = string.Empty;
-    public string City { get; set; } = string.Empty;
+    public Guid? GovernorateId { get; set; }
+    public string? Governorate { get; set; }
+    public Guid? CityId { get; set; }
+    public string? City { get; set; }
     public bool IsActive { get; set; }
     public bool IsProfileComplete { get; set; }
     public string? ProfileImageUrl { get; set; }

@@ -15,7 +15,7 @@ public class UpdateAdminRequest
 
     public Gender Gender { get; set; } = Gender.Male;
     public DateOnly BirthDate { get; set; }
-    public string Governorate { get; set; } = string.Empty;
-    public string City { get; set; } = string.Empty;
+    public Guid? GovernorateId { get; set; }
+    public Guid? CityId { get; set; }
     public string? PhoneNumber { get; set; }
 }

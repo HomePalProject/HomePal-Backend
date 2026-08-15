@@ -1,11 +1,12 @@
 using HomePal.Application.Features.UserManagement.DTOs;
+using HomePal.Domain.Common;
 using HomePal.Domain.Entities;
 
 namespace HomePal.Application.Features.UserManagement.Mappers;
 
 public static class UserManagementMapper
 {
-    public static UserResponse ToResponse(this ApplicationUser user, IList<string> roles)
+    public static UserResponse ToResponse(this ApplicationUser user, IList<string> roles, string? culture = null)
     {
         return new UserResponse
         {
@@ -16,8 +17,10 @@ public static class UserManagementMapper
             Email = user.Email ?? string.Empty,
             PhoneNumber = user.PhoneNumber,
             BirthDate = user.BirthDate,
-            Governorate = user.Governorate,
-            City = user.City,
+            GovernorateId = user.GovernorateId,
+            Governorate = user.Governorate?.Name.Get(culture),
+            CityId = user.CityId,
+            City = user.City?.Name.Get(culture),
             IsActive = user.IsActive,
             IsProfileComplete = user.IsProfileComplete,
             ProfileImageUrl = user.ProfileImageUrl,
@@ -38,8 +41,8 @@ public static class UserManagementMapper
             FullName = request.FullName,
             Gender = request.Gender,
             BirthDate = request.BirthDate,
-            Governorate = request.Governorate,
-            City = request.City,
+            GovernorateId = request.GovernorateId,
+            CityId = request.CityId,
             PhoneNumber = request.PhoneNumber,
             IsActive = true,
             IsProfileComplete = true,

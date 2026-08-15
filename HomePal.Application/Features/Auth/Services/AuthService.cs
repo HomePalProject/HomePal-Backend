@@ -164,8 +164,8 @@ public class AuthService : IAuthService
                 IsProfileComplete = false,
                 CreatedAt = DateTime.UtcNow,
                 LastLoginAt = DateTime.UtcNow,
-                Governorate = "Not Specified",
-                City = "Not Specified",
+                GovernorateId = null,
+                CityId = null,
                 Gender = Gender.Male,
                 BirthDate = DateOnly.FromDateTime(DateTime.UtcNow.AddYears(-20))
             };
@@ -404,7 +404,7 @@ public class AuthService : IAuthService
 
     public async Task<Result<CurrentUserResponse>> GetCurrentUserAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        var user = await _userManager.FindByIdAsync(userId.ToString());
+        var user = await _unitOfWork.Users.GetByIdWithLocationAsync(userId, cancellationToken);
         if (user == null)
         {
             return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.UserNotFound, ResultStatus.NotFound);
@@ -430,8 +430,8 @@ public class AuthService : IAuthService
         user.FullName = request.FullName.Trim();
         user.Gender = request.Gender!.Value;
         user.BirthDate = request.BirthDate!.Value;
-        user.Governorate = request.Governorate.Trim();
-        user.City = request.City.Trim();
+        user.GovernorateId = request.GovernorateId;
+        user.CityId = request.CityId;
         user.IsProfileComplete = true;
 
         var updateResult = await _userManager.UpdateAsync(user);
@@ -440,8 +440,9 @@ public class AuthService : IAuthService
             return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.UpdateProfileFailed, ResultStatus.BadRequest);
         }
 
-        var roles = await _userManager.GetRolesAsync(user);
-        return Result<CurrentUserResponse>.Ok(user.ToCurrentUserResponse(roles), SuccessMessages.Auth.UpdateProfile);
+        var updatedUser = await _unitOfWork.Users.GetByIdWithLocationAsync(userId, cancellationToken) ?? user;
+        var roles = await _userManager.GetRolesAsync(updatedUser);
+        return Result<CurrentUserResponse>.Ok(updatedUser.ToCurrentUserResponse(roles), SuccessMessages.Auth.UpdateProfile);
     }
 
     public async Task<Result<CurrentUserResponse>> UpdateProfileImageAsync(Guid userId, Microsoft.AspNetCore.Http.IFormFile imageFile, CancellationToken cancellationToken = default)
@@ -483,8 +484,9 @@ public class AuthService : IAuthService
             return Result<CurrentUserResponse>.Fail(ErrorMessages.Auth.UpdateProfileFailed, ResultStatus.BadRequest);
         }
 
-        var roles = await _userManager.GetRolesAsync(user);
-        return Result<CurrentUserResponse>.Ok(user.ToCurrentUserResponse(roles), SuccessMessages.Auth.UpdateProfileImage);
+        var updatedUser = await _unitOfWork.Users.GetByIdWithLocationAsync(userId, cancellationToken) ?? user;
+        var roles = await _userManager.GetRolesAsync(updatedUser);
+        return Result<CurrentUserResponse>.Ok(updatedUser.ToCurrentUserResponse(roles), SuccessMessages.Auth.UpdateProfileImage);
     }
 
     public async Task<Result<CurrentUserResponse>> DeleteProfileImageAsync(Guid userId, CancellationToken cancellationToken = default)
@@ -507,7 +509,8 @@ public class AuthService : IAuthService
             await _userManager.UpdateAsync(user);
         }
 
-        var roles = await _userManager.GetRolesAsync(user);
-        return Result<CurrentUserResponse>.Ok(user.ToCurrentUserResponse(roles), SuccessMessages.Auth.DeleteProfileImage);
+        var updatedUser = await _unitOfWork.Users.GetByIdWithLocationAsync(userId, cancellationToken) ?? user;
+        var roles = await _userManager.GetRolesAsync(updatedUser);
+        return Result<CurrentUserResponse>.Ok(updatedUser.ToCurrentUserResponse(roles), SuccessMessages.Auth.DeleteProfileImage);
     }
 }

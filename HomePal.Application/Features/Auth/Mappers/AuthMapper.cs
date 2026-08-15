@@ -1,4 +1,5 @@
 using HomePal.Application.Features.Auth.DTOs;
+using HomePal.Domain.Common;
 using HomePal.Domain.Constants;
 using HomePal.Domain.Entities;
 
@@ -16,15 +17,15 @@ public static class AuthMapper
             UserName = request.Username.Trim(),
             Email = request.Email.Trim(),
             BirthDate = request.BirthDate!.Value,
-            Governorate = request.Governorate.Trim(),
-            City = request.City.Trim(),
+            GovernorateId = request.GovernorateId,
+            CityId = request.CityId,
             IsActive = true,
             IsProfileComplete = true,
             CreatedAt = DateTime.UtcNow
         };
     }
 
-    public static CurrentUserResponse ToCurrentUserResponse(this ApplicationUser user, IList<string> roles)
+    public static CurrentUserResponse ToCurrentUserResponse(this ApplicationUser user, IList<string> roles, string? culture = null)
     {
         return new CurrentUserResponse
         {
@@ -34,8 +35,10 @@ public static class AuthMapper
             Username = user.UserName ?? string.Empty,
             Email = user.Email ?? string.Empty,
             BirthDate = user.BirthDate,
-            Governorate = user.Governorate,
-            City = user.City,
+            GovernorateId = user.GovernorateId,
+            Governorate = user.Governorate?.Name.Get(culture),
+            CityId = user.CityId,
+            City = user.City?.Name.Get(culture),
             IsActive = user.IsActive,
             IsProfileComplete = user.IsProfileComplete,
             ProfileImageUrl = user.ProfileImageUrl,

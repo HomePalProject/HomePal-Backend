@@ -15,6 +15,8 @@ public class HouseholdRepository : Repository<Household>, IHouseholdRepository
     {
         return await _dbSet
             .AsNoTracking()
+            .Include(h => h.Governorate)
+            .Include(h => h.City)
             .Include(h => h.Members)
             .FirstOrDefaultAsync(h => h.Id == id, cancellationToken);
     }
@@ -23,6 +25,8 @@ public class HouseholdRepository : Repository<Household>, IHouseholdRepository
     {
         return await _dbSet
             .AsNoTracking()
+            .Include(h => h.Governorate)
+            .Include(h => h.City)
             .Include(h => h.Members)
             .FirstOrDefaultAsync(h => h.Members.Any(m => m.UserId == userId), cancellationToken);
     }

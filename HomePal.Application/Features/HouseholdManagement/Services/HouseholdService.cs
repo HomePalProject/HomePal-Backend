@@ -66,7 +66,8 @@ public class HouseholdService : IHouseholdService
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result<HouseholdResponse>.Ok(household.ToResponse(1), SuccessMessages.Household.Create, ResultStatus.Created);
+        var createdHousehold = await _unitOfWork.Households.GetByIdWithMembersAsync(household.Id, cancellationToken) ?? household;
+        return Result<HouseholdResponse>.Ok(createdHousehold.ToResponse(1), SuccessMessages.Household.Create, ResultStatus.Created);
     }
 
     public async Task<Result<HouseholdResponse>> GetMyHouseholdAsync(Guid userId, CancellationToken cancellationToken = default)
@@ -97,14 +98,15 @@ public class HouseholdService : IHouseholdService
         var household = member.Household;
         household.Name = request.Name.Trim();
         household.Address = request.Address?.Trim();
-        household.Governorate = request.Governorate?.Trim();
-        household.City = request.City?.Trim();
+        household.GovernorateId = request.GovernorateId;
+        household.CityId = request.CityId;
         household.UpdatedAt = DateTime.UtcNow;
 
         _unitOfWork.Households.Update(household);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        var response = household.ToResponse(household.Members?.Count ?? 0);
+        var updatedHousehold = await _unitOfWork.Households.GetByIdWithMembersAsync(household.Id, cancellationToken) ?? household;
+        var response = updatedHousehold.ToResponse(updatedHousehold.Members?.Count ?? 0);
         return Result<HouseholdResponse>.Ok(response, SuccessMessages.Household.Update);
     }
 

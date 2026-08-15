@@ -18,10 +18,8 @@ public class UpdateProfileRequest
     public DateOnly? BirthDate { get; set; }
 
     [Required(ErrorMessage = ErrorMessages.Validation.Required)]
-    [StringLength(100, ErrorMessage = ErrorMessages.Validation.InvalidValue)]
-    public string Governorate { get; set; } = string.Empty;
+    public Guid? GovernorateId { get; set; }
 
     [Required(ErrorMessage = ErrorMessages.Validation.Required)]
-    [StringLength(100, ErrorMessage = ErrorMessages.Validation.InvalidValue)]
-    public string City { get; set; } = string.Empty;
+    public Guid? CityId { get; set; }
 }

@@ -13,15 +13,27 @@ public class UserRepository : Repository<ApplicationUser>, IUserRepository
     {
     }
 
+    public async Task<ApplicationUser?> GetByIdWithLocationAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet
+            .Include(u => u.Governorate)
+            .Include(u => u.City)
+            .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+    }
+
     public async Task<ApplicationUser?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
         return await _dbSet
+            .Include(u => u.Governorate)
+            .Include(u => u.City)
             .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
     }
 
     public async Task<ApplicationUser?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
     {
         return await _dbSet
+            .Include(u => u.Governorate)
+            .Include(u => u.City)
             .FirstOrDefaultAsync(u => u.UserName == username, cancellationToken);
     }
 
@@ -29,6 +41,8 @@ public class UserRepository : Repository<ApplicationUser>, IUserRepository
     {
         return await _dbSet
             .Include(u => u.RefreshTokens)
+            .Include(u => u.Governorate)
+            .Include(u => u.City)
             .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
     }
 
@@ -38,7 +52,10 @@ public class UserRepository : Repository<ApplicationUser>, IUserRepository
         string? searchTerm = null,
         CancellationToken cancellationToken = default)
     {
-        var dbQuery = _dbSet.AsNoTracking().AsQueryable();
+        var dbQuery = _dbSet.AsNoTracking()
+            .Include(u => u.Governorate)
+            .Include(u => u.City)
+            .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(role))
         {

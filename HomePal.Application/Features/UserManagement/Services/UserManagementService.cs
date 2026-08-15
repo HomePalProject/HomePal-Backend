@@ -53,7 +53,7 @@ public class UserManagementService : IUserManagementService
 
     public async Task<Result<UserResponse>> GetUserByIdAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        var user = await _userManager.FindByIdAsync(userId.ToString());
+        var user = await _unitOfWork.Users.GetByIdWithLocationAsync(userId, cancellationToken);
         if (user == null)
         {
             return Result<UserResponse>.Fail(ErrorMessages.UserManagement.UserNotFound, ResultStatus.NotFound);
@@ -92,8 +92,9 @@ public class UserManagementService : IUserManagementService
 
         await _userManager.AddToRoleAsync(user, Roles.Admin);
 
-        var roles = await _userManager.GetRolesAsync(user);
-        return Result<UserResponse>.Ok(user.ToResponse(roles), SuccessMessages.UserManagement.AddAdmin, ResultStatus.Created);
+        var createdUser = await _unitOfWork.Users.GetByIdWithLocationAsync(user.Id, cancellationToken) ?? user;
+        var roles = await _userManager.GetRolesAsync(createdUser);
+        return Result<UserResponse>.Ok(createdUser.ToResponse(roles), SuccessMessages.UserManagement.AddAdmin, ResultStatus.Created);
     }
 
     public async Task<Result<UserResponse>> UpdateAdminAsync(Guid adminId, UpdateAdminRequest request, CancellationToken cancellationToken = default)
@@ -122,8 +123,8 @@ public class UserManagementService : IUserManagementService
         user.FullName = request.FullName;
         user.Gender = request.Gender;
         user.BirthDate = request.BirthDate;
-        user.Governorate = request.Governorate;
-        user.City = request.City;
+        user.GovernorateId = request.GovernorateId;
+        user.CityId = request.CityId;
         user.PhoneNumber = request.PhoneNumber;
 
         var updateResult = await _userManager.UpdateAsync(user);
@@ -133,8 +134,9 @@ public class UserManagementService : IUserManagementService
             return Result<UserResponse>.Fail(ErrorMessages.UserManagement.UpdateAdminFailed, ResultStatus.BadRequest, errors);
         }
 
-        var roles = await _userManager.GetRolesAsync(user);
-        return Result<UserResponse>.Ok(user.ToResponse(roles), SuccessMessages.UserManagement.UpdateAdmin);
+        var updatedUser = await _unitOfWork.Users.GetByIdWithLocationAsync(adminId, cancellationToken) ?? user;
+        var roles = await _userManager.GetRolesAsync(updatedUser);
+        return Result<UserResponse>.Ok(updatedUser.ToResponse(roles), SuccessMessages.UserManagement.UpdateAdmin);
     }
 
     public async Task<Result> DeleteUserAsync(Guid userId, CancellationToken cancellationToken = default)

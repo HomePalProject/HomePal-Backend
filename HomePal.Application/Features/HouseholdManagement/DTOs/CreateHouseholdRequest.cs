@@ -12,9 +12,6 @@ public class CreateHouseholdRequest
     [StringLength(200, ErrorMessage = ErrorMessages.Validation.InvalidValue)]
     public string? Address { get; set; }
 
-    [StringLength(100, ErrorMessage = ErrorMessages.Validation.InvalidValue)]
-    public string? Governorate { get; set; }
-
-    [StringLength(100, ErrorMessage = ErrorMessages.Validation.InvalidValue)]
-    public string? City { get; set; }
+    public Guid? GovernorateId { get; set; }
+    public Guid? CityId { get; set; }
 }

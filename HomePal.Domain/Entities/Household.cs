@@ -7,8 +7,10 @@ public class Household : BaseAuditableEntity
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; } = string.Empty;
     public string? Address { get; set; }
-    public string? Governorate { get; set; }
-    public string? City { get; set; }
+    public Guid? GovernorateId { get; set; }
+    public Governorate? Governorate { get; set; }
+    public Guid? CityId { get; set; }
+    public City? City { get; set; }
 
     public Pantry? Pantry { get; set; }
     public ShoppingList? ShoppingList { get; set; }

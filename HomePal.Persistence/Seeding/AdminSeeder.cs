@@ -30,6 +30,12 @@ public static class AdminSeeder
 
         if (existingAdmin == null)
         {
+            var dbContext = scope.ServiceProvider.GetRequiredService<HomePal.Persistence.Context.ApplicationDbContext>();
+            var defaultGov = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(dbContext.Governorates, g => g.Code == "CAI");
+            var defaultCity = defaultGov != null 
+                ? await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(dbContext.Cities, c => c.GovernorateId == defaultGov.Id)
+                : null;
+
             var adminUser = new ApplicationUser
             {
                 Id = Guid.NewGuid(),
@@ -39,8 +45,8 @@ public static class AdminSeeder
                 EmailConfirmed = true,
                 IsActive = true,
                 IsProfileComplete = true,
-                Governorate = "Headquarters",
-                City = "Headquarters",
+                GovernorateId = defaultGov?.Id,
+                CityId = defaultCity?.Id,
                 Gender = Gender.Male,
                 BirthDate = DateOnly.FromDateTime(DateTime.UtcNow.AddYears(-30)),
                 CreatedAt = DateTime.UtcNow

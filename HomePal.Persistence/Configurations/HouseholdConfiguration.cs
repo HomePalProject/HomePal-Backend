@@ -17,11 +17,15 @@ public class HouseholdConfiguration : IEntityTypeConfiguration<Household>
         builder.Property(h => h.Address)
             .HasMaxLength(250);
 
-        builder.Property(h => h.Governorate)
-            .HasMaxLength(100);
+        builder.HasOne(h => h.Governorate)
+            .WithMany()
+            .HasForeignKey(h => h.GovernorateId)
+            .OnDelete(DeleteBehavior.SetNull);
 
-        builder.Property(h => h.City)
-            .HasMaxLength(100);
+        builder.HasOne(h => h.City)
+            .WithMany()
+            .HasForeignKey(h => h.CityId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasMany(h => h.Members)
             .WithOne(m => m.Household)

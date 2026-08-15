@@ -1,4 +1,5 @@
 using HomePal.Application.Features.HouseholdManagement.DTOs;
+using HomePal.Domain.Common;
 using HomePal.Domain.Constants;
 using HomePal.Domain.Entities;
 
@@ -13,21 +14,23 @@ public static class HouseholdMapper
             Id = Guid.NewGuid(),
             Name = request.Name.Trim(),
             Address = request.Address?.Trim(),
-            Governorate = request.Governorate?.Trim(),
-            City = request.City?.Trim(),
+            GovernorateId = request.GovernorateId,
+            CityId = request.CityId,
             CreatedAt = DateTime.UtcNow
         };
     }
 
-    public static HouseholdResponse ToResponse(this Household household, int membersCount)
+    public static HouseholdResponse ToResponse(this Household household, int membersCount, string? culture = null)
     {
         return new HouseholdResponse
         {
             Id = household.Id,
             Name = household.Name,
             Address = household.Address,
-            Governorate = household.Governorate,
-            City = household.City,
+            GovernorateId = household.GovernorateId,
+            Governorate = household.Governorate?.Name.Get(culture),
+            CityId = household.CityId,
+            City = household.City?.Name.Get(culture),
             CreatedAt = household.CreatedAt,
             MembersCount = membersCount
         };

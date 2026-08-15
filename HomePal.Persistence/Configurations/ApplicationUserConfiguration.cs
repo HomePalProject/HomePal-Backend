@@ -17,13 +17,15 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
             .HasConversion<string>()
             .HasMaxLength(10);
 
-        builder.Property(u => u.Governorate)
-            .IsRequired()
-            .HasMaxLength(100);
+        builder.HasOne(u => u.Governorate)
+            .WithMany()
+            .HasForeignKey(u => u.GovernorateId)
+            .OnDelete(DeleteBehavior.SetNull);
 
-        builder.Property(u => u.City)
-            .IsRequired()
-            .HasMaxLength(100);
+        builder.HasOne(u => u.City)
+            .WithMany()
+            .HasForeignKey(u => u.CityId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.Property(u => u.IsActive)
             .HasDefaultValue(true);
