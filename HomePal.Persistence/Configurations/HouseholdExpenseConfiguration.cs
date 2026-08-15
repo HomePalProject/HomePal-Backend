@@ -21,7 +21,7 @@ public class HouseholdExpenseConfiguration : IEntityTypeConfiguration<HouseholdE
         builder.HasOne(e => e.Household)
             .WithMany(h => h.Expenses)
             .HasForeignKey(e => e.HouseholdId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.ClientCascade);
 
         builder.HasOne(e => e.Budget)
             .WithMany(b => b.Expenses)

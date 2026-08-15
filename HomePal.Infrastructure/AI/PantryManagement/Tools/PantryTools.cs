@@ -107,8 +107,8 @@ public class PantryTools
         {
             Name = !string.IsNullOrWhiteSpace(newName) ? newName.Trim() : existing.Name,
             Quantity = quantity.HasValue && quantity.Value >= 0 ? quantity.Value : existing.Quantity,
-            MeasuringUnitId = unitId ?? existing.MeasuringUnitId,
-            CategoryId = categoryId ?? existing.CategoryId,
+            MeasuringUnitId = unitId ?? existing.MeasuringUnitId.GetValueOrDefault(),
+            CategoryId = categoryId ?? existing.CategoryId.GetValueOrDefault(),
             ExpireDate = expireDate ?? existing.ExpireDate
         };
 

@@ -28,7 +28,7 @@ public class HouseholdInvitationConfiguration : IEntityTypeConfiguration<Househo
         builder.HasOne(i => i.InvitedBy)
             .WithMany()
             .HasForeignKey(i => i.InvitedById)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(i => i.Token)
             .IsUnique();

@@ -20,11 +20,11 @@ public class PantryItemConfiguration : IEntityTypeConfiguration<PantryItem>
         builder.HasOne(pi => pi.MeasuringUnit)
             .WithMany()
             .HasForeignKey(pi => pi.MeasuringUnitId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(pi => pi.Category)
             .WithMany()
             .HasForeignKey(pi => pi.CategoryId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

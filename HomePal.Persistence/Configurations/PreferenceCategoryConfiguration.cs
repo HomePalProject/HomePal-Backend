@@ -16,7 +16,7 @@ public class PreferenceCategoryConfiguration : IEntityTypeConfiguration<Preferen
         builder.HasMany(c => c.Preferences)
             .WithOne(p => p.Category)
             .HasForeignKey(p => p.CategoryId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
 
