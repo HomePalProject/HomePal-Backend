@@ -182,7 +182,7 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
                 Name = city.Name.Get(),
                 Growth = $"{(growthPct >= 0 ? "+" : "")}{growthPct:0.#}%",
                 HhDensity = hhDensity,
-                AvgIncome = $"{avgCityBudget:N0} AED",
+                AvgIncome = $"{avgCityBudget:N0} EGP",
                 Pop = popCount.ToString("N0", CultureInfo.InvariantCulture),
                 Intensity = intensity,
                 Lat = city.Latitude,
@@ -210,7 +210,7 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
 
         var budgetMetric = new BudgetMetricDto
         {
-            Value = $"{avgCurrentBudget:N0} AED",
+            Value = $"{avgCurrentBudget:N0} EGP",
             Change = $"{(budgetChangePct >= 0 ? "+" : "")}{budgetChangePct:0.#}%",
             Region = "Citywide"
         };
@@ -302,7 +302,7 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
         {
             Districts = districts,
             Budget = budgetMetric,
-            AvgBudgetPerHousehold = $"{avgBudgetPerHh:N0} AED",
+            AvgBudgetPerHousehold = $"{avgBudgetPerHh:N0} EGP",
             TopCategories = topCategories,
             HouseholdSize = householdSize,
             GenderSplit = genderSplit,
@@ -385,7 +385,7 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
             TotalHouseholds = totalHouseholds,
             ActiveHouseholds = activeHouseholds,
             AvgHouseholdSize = avgHouseholdSize,
-            AvgHouseholdIncome = $"{avgIncome:N0} AED",
+            AvgHouseholdIncome = $"{avgIncome:N0} EGP",
             GrowthRate = $"{(growthPct >= 0 ? "+" : "")}{growthPct:0.#}% MoM",
             TotalUsers = totalUsers,
             TopRegions = topRegions,
@@ -440,25 +440,24 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
                 : 0
         };
 
-        // 2. Most Common Inventory Item
-        var pantryItems = await _context.PantryItems
+        // 2. Most Common Inventory Category
+        var pantryCategoryItems = await _context.PantryItems
             .AsNoTracking()
             .Include(pi => pi.Category)
-            .Where(pi => !pi.IsDeleted)
+            .Where(pi => !pi.IsDeleted && pi.Category != null)
             .ToListAsync(cancellationToken);
 
-        var totalPantry = pantryItems.Count;
-        var mostCommonPantryGroup = pantryItems
-            .Where(pi => !string.IsNullOrWhiteSpace(pi.Name))
-            .GroupBy(pi => pi.Name.Trim().ToLowerInvariant())
+        var totalPantryCategories = pantryCategoryItems.Count;
+        var mostCommonPantryCatGroup = pantryCategoryItems
+            .GroupBy(pi => pi.CategoryId)
             .OrderByDescending(g => g.Count())
             .FirstOrDefault();
 
-        var mostCommonItem = new ItemShareDto
+        var mostCommonInventoryCategory = new CategoryShareDto
         {
-            Name = mostCommonPantryGroup != null ? mostCommonPantryGroup.First().Name : string.Empty,
-            Percentage = totalPantry > 0 && mostCommonPantryGroup != null
-                ? Math.Round((double)mostCommonPantryGroup.Count() / totalPantry * 100, 1)
+            Name = mostCommonPantryCatGroup != null ? mostCommonPantryCatGroup.First().Category!.Name.Get() : string.Empty,
+            Percentage = totalPantryCategories > 0 && mostCommonPantryCatGroup != null
+                ? Math.Round((double)mostCommonPantryCatGroup.Count() / totalPantryCategories * 100, 1)
                 : 0
         };
 
@@ -473,7 +472,7 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
             ? topSupermarketGroup.First().Offer!.Supermarket!.Name.Get()
             : string.Empty;
 
-        // 4. Allergy Rankings (strictly from member preferences belonging to Allergies category)
+        // 4. Preference Rankings (from all household member preferences across all preference categories)
         var membersWithPreferences = await _context.HouseholdMembers
             .AsNoTracking()
             .Include(m => m.Preferences)
@@ -481,22 +480,27 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
             .Where(m => !m.IsDeleted)
             .ToListAsync(cancellationToken);
 
-        var allergyPreferences = membersWithPreferences
+        var allMemberPreferences = membersWithPreferences
             .SelectMany(m => m.Preferences)
-            .Where(p => p.Category != null && (p.Category.Name.Get("en").Contains("Allerg", StringComparison.OrdinalIgnoreCase) || p.Category.Name.Get("ar").Contains("حساسية", StringComparison.OrdinalIgnoreCase)))
+            .Where(p => !p.IsDeleted)
             .ToList();
 
-        var totalAllergies = allergyPreferences.Count;
-        var allergyRanking = new List<AllergyRankingDto>();
+        var totalPreferences = allMemberPreferences.Count;
+        var preferenceRanking = new List<PreferenceRankingDto>();
 
-        if (totalAllergies > 0)
+        if (totalPreferences > 0)
         {
-            allergyRanking = allergyPreferences
+            preferenceRanking = allMemberPreferences
                 .GroupBy(p => p.Id)
-                .Select(g => new AllergyRankingDto
+                .Select(g =>
                 {
-                    Allergen = g.First().Name.Get(),
-                    Percentage = Math.Round((double)g.Count() / totalAllergies * 100, 1)
+                    var first = g.First();
+                    return new PreferenceRankingDto
+                    {
+                        Preference = first.Name.Get(),
+                        Category = first.Category != null ? first.Category.Name.Get() : string.Empty,
+                        Percentage = Math.Round((double)g.Count() / totalPreferences * 100, 1)
+                    };
                 })
                 .OrderByDescending(a => a.Percentage)
                 .Take(5)
@@ -506,9 +510,9 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
         return new ShoppingTrendsDto
         {
             MostBoughtCategory = mostBoughtCat,
-            MostCommonInventoryItem = mostCommonItem,
+            MostCommonInventoryCategory = mostCommonInventoryCategory,
             MostSuccessfulSupermarket = mostSuccessfulSupermarket,
-            AllergyRanking = allergyRanking
+            PreferenceRanking = preferenceRanking
         };
     }
 

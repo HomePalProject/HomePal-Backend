@@ -46,7 +46,7 @@ public class LangfuseMetricsService : ILangfuseMetricsService
         if (!langfuse.Enabled || string.IsNullOrWhiteSpace(langfuse.PublicKey) || string.IsNullOrWhiteSpace(langfuse.SecretKey))
         {
             _logger.LogInformation("Langfuse is disabled or keys are missing; returning default token metrics.");
-            return Result<TokenUsageMetricsDto>.Ok(resultDto, "Analytics.FetchSuccess");
+            return Result<TokenUsageMetricsDto>.Ok(resultDto, SuccessMessages.Analytics.Fetch);
         }
 
         try
@@ -95,7 +95,7 @@ public class LangfuseMetricsService : ILangfuseMetricsService
             {
                 var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
                 _logger.LogWarning("Langfuse metrics API responded with status {StatusCode}: {Error}", response.StatusCode, errorContent);
-                return Result<TokenUsageMetricsDto>.Ok(resultDto, "Analytics.FetchSuccess");
+                return Result<TokenUsageMetricsDto>.Ok(resultDto, SuccessMessages.Analytics.Fetch);
             }
 
             var responseBody = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -112,12 +112,12 @@ public class LangfuseMetricsService : ILangfuseMetricsService
                 }
             }
 
-            return Result<TokenUsageMetricsDto>.Ok(resultDto, "Analytics.FetchSuccess");
+            return Result<TokenUsageMetricsDto>.Ok(resultDto, SuccessMessages.Analytics.Fetch);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to fetch metrics from Langfuse API");
-            return Result<TokenUsageMetricsDto>.Ok(resultDto, "Analytics.FetchSuccess");
+            return Result<TokenUsageMetricsDto>.Ok(resultDto, SuccessMessages.Analytics.Fetch);
         }
     }
 

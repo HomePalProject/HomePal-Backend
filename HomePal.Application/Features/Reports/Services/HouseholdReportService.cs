@@ -19,10 +19,10 @@ public class HouseholdReportService : IHouseholdReportService
         var member = await _unitOfWork.HouseholdMembers.GetByUserIdAsync(userId, cancellationToken);
         if (member == null)
         {
-            return Result<HouseholdOverviewReportDto>.Fail("Household.NotFound", ResultStatus.NotFound);
+            return Result<HouseholdOverviewReportDto>.Fail(ErrorMessages.Household.HouseholdNotFound, ResultStatus.NotFound);
         }
 
         var report = await _unitOfWork.Reports.GetHouseholdOverviewDataAsync(member.HouseholdId, cancellationToken);
-        return Result<HouseholdOverviewReportDto>.Ok(report, "Reports.FetchSuccess");
+        return Result<HouseholdOverviewReportDto>.Ok(report, SuccessMessages.Reports.Fetch);
     }
 }

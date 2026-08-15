@@ -286,6 +286,10 @@
   <data name="Locations.GetCitySuccess" xml:space="preserve"><value>City details retrieved successfully.</value></data>
   <data name="Locations.GovernorateNotFound" xml:space="preserve"><value>Governorate not found.</value></data>
   <data name="Locations.CityNotFound" xml:space="preserve"><value>City not found.</value></data>
+
+  <!-- Analytics & Reports -->
+  <data name="Analytics.FetchSuccess" xml:space="preserve"><value>Analytics data retrieved successfully.</value></data>
+  <data name="Reports.FetchSuccess" xml:space="preserve"><value>Household report retrieved successfully.</value></data>
 </root>
 
 

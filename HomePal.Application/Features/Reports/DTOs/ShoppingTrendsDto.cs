@@ -5,19 +5,14 @@ namespace HomePal.Application.Features.Reports.DTOs;
 public class ShoppingTrendsDto
 {
     public CategoryShareDto MostBoughtCategory { get; set; } = new();
-    public ItemShareDto MostCommonInventoryItem { get; set; } = new();
+    public CategoryShareDto MostCommonInventoryCategory { get; set; } = new();
     public string MostSuccessfulSupermarket { get; set; } = string.Empty;
-    public List<AllergyRankingDto> AllergyRanking { get; set; } = new();
+    public List<PreferenceRankingDto> PreferenceRanking { get; set; } = new();
 }
 
-public class ItemShareDto
+public class PreferenceRankingDto
 {
-    public string Name { get; set; } = string.Empty;
-    public double Percentage { get; set; }
-}
-
-public class AllergyRankingDto
-{
-    public string Allergen { get; set; } = string.Empty;
+    public string Preference { get; set; } = string.Empty;
+    public string Category { get; set; } = string.Empty;
     public double Percentage { get; set; }
 }

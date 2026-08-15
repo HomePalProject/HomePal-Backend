@@ -139,5 +139,15 @@ public static class SuccessMessages
         public const string GetAllCities = "Locations.GetAllCitiesSuccess";
         public const string GetCity = "Locations.GetCitySuccess";
     }
+
+    public static class Analytics
+    {
+        public const string Fetch = "Analytics.FetchSuccess";
+    }
+
+    public static class Reports
+    {
+        public const string Fetch = "Reports.FetchSuccess";
+    }
 }
 

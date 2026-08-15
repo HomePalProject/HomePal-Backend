@@ -21,37 +21,37 @@ public class AdminAnalyticsService : IAdminAnalyticsService
     public async Task<Result<AnalyticsOverviewDto>> GetAnalyticsOverviewAsync(CancellationToken cancellationToken = default)
     {
         var data = await _unitOfWork.AdminAnalytics.GetAnalyticsOverviewAsync(cancellationToken);
-        return Result<AnalyticsOverviewDto>.Ok(data, "Analytics.FetchSuccess");
+        return Result<AnalyticsOverviewDto>.Ok(data, SuccessMessages.Analytics.Fetch);
     }
 
     public async Task<Result<GeographicDemographicsDto>> GetGeographicDemographicsAsync(CancellationToken cancellationToken = default)
     {
         var data = await _unitOfWork.AdminAnalytics.GetGeographicDemographicsAsync(cancellationToken);
-        return Result<GeographicDemographicsDto>.Ok(data, "Analytics.FetchSuccess");
+        return Result<GeographicDemographicsDto>.Ok(data, SuccessMessages.Analytics.Fetch);
     }
 
     public async Task<Result<HouseholdsSummaryDto>> GetHouseholdsSummaryAsync(CancellationToken cancellationToken = default)
     {
         var data = await _unitOfWork.AdminAnalytics.GetHouseholdsSummaryAsync(cancellationToken);
-        return Result<HouseholdsSummaryDto>.Ok(data, "Analytics.FetchSuccess");
+        return Result<HouseholdsSummaryDto>.Ok(data, SuccessMessages.Analytics.Fetch);
     }
 
     public async Task<Result<MealPlansSummaryDto>> GetMealPlansSummaryAsync(CancellationToken cancellationToken = default)
     {
         var data = await _unitOfWork.AdminAnalytics.GetMealPlansSummaryAsync(cancellationToken);
-        return Result<MealPlansSummaryDto>.Ok(data, "Analytics.FetchSuccess");
+        return Result<MealPlansSummaryDto>.Ok(data, SuccessMessages.Analytics.Fetch);
     }
 
     public async Task<Result<ShoppingTrendsDto>> GetShoppingTrendsAsync(CancellationToken cancellationToken = default)
     {
         var data = await _unitOfWork.AdminAnalytics.GetShoppingTrendsAsync(cancellationToken);
-        return Result<ShoppingTrendsDto>.Ok(data, "Analytics.FetchSuccess");
+        return Result<ShoppingTrendsDto>.Ok(data, SuccessMessages.Analytics.Fetch);
     }
 
     public async Task<Result<UserDemographicsDto>> GetUserDemographicsAsync(CancellationToken cancellationToken = default)
     {
         var data = await _unitOfWork.AdminAnalytics.GetUserDemographicsAsync(cancellationToken);
-        return Result<UserDemographicsDto>.Ok(data, "Analytics.FetchSuccess");
+        return Result<UserDemographicsDto>.Ok(data, SuccessMessages.Analytics.Fetch);
     }
 
     public async Task<Result<TokenUsageMetricsDto>> GetTokenMetricsAsync(TokenMetricsFilterDto? filter = null, CancellationToken cancellationToken = default)

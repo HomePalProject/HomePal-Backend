@@ -286,6 +286,10 @@
   <data name="Locations.GetCitySuccess" xml:space="preserve"><value>تم استرداد تفاصيل المدينة بنجاح.</value></data>
   <data name="Locations.GovernorateNotFound" xml:space="preserve"><value>المحافظة غير موجودة.</value></data>
   <data name="Locations.CityNotFound" xml:space="preserve"><value>المدينة غير موجودة.</value></data>
+
+  <!-- Analytics & Reports -->
+  <data name="Analytics.FetchSuccess" xml:space="preserve"><value>تم استرداد بيانات التحليلات بنجاح.</value></data>
+  <data name="Reports.FetchSuccess" xml:space="preserve"><value>تم استرداد تقرير الأسرة بنجاح.</value></data>
 </root>
 
 
