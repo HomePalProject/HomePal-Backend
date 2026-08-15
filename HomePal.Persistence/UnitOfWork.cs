@@ -34,6 +34,7 @@ public class UnitOfWork : IUnitOfWork
     private HomePal.Application.Features.AgentChat.Interfaces.IAgentChatRepository? _agentChats;
     private HomePal.Application.Features.MealPlanning.Interfaces.IMealPlanRepository? _mealPlans;
     private HomePal.Application.Features.Reports.Interfaces.IHouseholdReportRepository? _reports;
+    private HomePal.Application.Features.Reports.Interfaces.IAdminAnalyticsRepository? _adminAnalytics;
     private HomePal.Application.Features.Locations.Interfaces.IGovernorateRepository? _governorates;
     private HomePal.Application.Features.Locations.Interfaces.ICityRepository? _cities;
 
@@ -62,6 +63,7 @@ public class UnitOfWork : IUnitOfWork
     public HomePal.Application.Features.AgentChat.Interfaces.IAgentChatRepository AgentChats => _agentChats ??= new AgentChatRepository(_context);
     public HomePal.Application.Features.MealPlanning.Interfaces.IMealPlanRepository MealPlans => _mealPlans ??= new MealPlanRepository(_context);
     public HomePal.Application.Features.Reports.Interfaces.IHouseholdReportRepository Reports => _reports ??= new HouseholdReportRepository(_context);
+    public HomePal.Application.Features.Reports.Interfaces.IAdminAnalyticsRepository AdminAnalytics => _adminAnalytics ??= new AdminAnalyticsRepository(_context);
     public HomePal.Application.Features.Locations.Interfaces.IGovernorateRepository Governorates => _governorates ??= new GovernorateRepository(_context);
     public HomePal.Application.Features.Locations.Interfaces.ICityRepository Cities => _cities ??= new CityRepository(_context);
 

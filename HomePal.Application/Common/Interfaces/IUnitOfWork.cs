@@ -28,6 +28,7 @@ public interface IUnitOfWork : IDisposable
     HomePal.Application.Features.AgentChat.Interfaces.IAgentChatRepository AgentChats { get; }
     HomePal.Application.Features.MealPlanning.Interfaces.IMealPlanRepository MealPlans { get; }
     HomePal.Application.Features.Reports.Interfaces.IHouseholdReportRepository Reports { get; }
+    HomePal.Application.Features.Reports.Interfaces.IAdminAnalyticsRepository AdminAnalytics { get; }
     HomePal.Application.Features.Locations.Interfaces.IGovernorateRepository Governorates { get; }
     HomePal.Application.Features.Locations.Interfaces.ICityRepository Cities { get; }
 

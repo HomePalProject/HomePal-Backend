@@ -371,4 +371,5 @@ spec.md
 
 # Household management test UI
 **/wwwroot/household-management.html
-
+
+user-secrets.ps1
