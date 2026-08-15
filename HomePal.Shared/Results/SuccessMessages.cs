@@ -131,4 +131,13 @@ public static class SuccessMessages
         public const string Update = "MealPlan.UpdateSuccess";
         public const string Delete = "MealPlan.DeleteSuccess";
     }
+
+    public static class Locations
+    {
+        public const string GetAllGovernorates = "Locations.GetAllGovernoratesSuccess";
+        public const string GetGovernorate = "Locations.GetGovernorateSuccess";
+        public const string GetAllCities = "Locations.GetAllCitiesSuccess";
+        public const string GetCity = "Locations.GetCitySuccess";
+    }
 }
+

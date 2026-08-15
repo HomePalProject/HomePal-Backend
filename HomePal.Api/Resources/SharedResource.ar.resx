@@ -278,6 +278,15 @@
   <data name="MealPlan.GetLastSuccess" xml:space="preserve"><value>تم جلب آخر خطة وجبات بنجاح.</value></data>
   <data name="MealPlan.UpdateSuccess" xml:space="preserve"><value>تم تحديث خطة الوجبات بنجاح.</value></data>
   <data name="MealPlan.DeleteSuccess" xml:space="preserve"><value>تم حذف خطة الوجبات بنجاح.</value></data>
+
+  <!-- Locations -->
+  <data name="Locations.GetAllGovernoratesSuccess" xml:space="preserve"><value>تم استرداد المحافظات بنجاح.</value></data>
+  <data name="Locations.GetGovernorateSuccess" xml:space="preserve"><value>تم استرداد تفاصيل المحافظة بنجاح.</value></data>
+  <data name="Locations.GetAllCitiesSuccess" xml:space="preserve"><value>تم استرداد المدن بنجاح.</value></data>
+  <data name="Locations.GetCitySuccess" xml:space="preserve"><value>تم استرداد تفاصيل المدينة بنجاح.</value></data>
+  <data name="Locations.GovernorateNotFound" xml:space="preserve"><value>المحافظة غير موجودة.</value></data>
+  <data name="Locations.CityNotFound" xml:space="preserve"><value>المدينة غير موجودة.</value></data>
 </root>
+
 
 

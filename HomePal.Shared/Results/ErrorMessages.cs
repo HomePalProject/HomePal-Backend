@@ -124,5 +124,12 @@ public static class ErrorMessages
         public const string InvalidDates = "MealPlan.InvalidDates";
         public const string NoHousehold = "MealPlan.NoHousehold";
     }
+
+    public static class Locations
+    {
+        public const string GovernorateNotFound = "Locations.GovernorateNotFound";
+        public const string CityNotFound = "Locations.CityNotFound";
+    }
 }
+
 

@@ -65,6 +65,8 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.AgentChat.Interfaces.IAgentChatRepository, AgentChatRepository>();
         services.AddScoped<HomePal.Application.Features.MealPlanning.Interfaces.IMealPlanRepository, MealPlanRepository>();
         services.AddScoped<HomePal.Application.Features.Reports.Interfaces.IHouseholdReportRepository, HouseholdReportRepository>();
+        services.AddScoped<HomePal.Application.Features.Locations.Interfaces.IGovernorateRepository, GovernorateRepository>();
+        services.AddScoped<HomePal.Application.Features.Locations.Interfaces.ICityRepository, CityRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<ITokenProvider, TokenProvider>();
@@ -98,6 +100,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.UserManagement.Interfaces.IUserManagementService, HomePal.Application.Features.UserManagement.Services.UserManagementService>();
         services.AddScoped<HomePal.Application.Features.MealPlanning.Interfaces.IMealPlanService, HomePal.Application.Features.MealPlanning.Services.MealPlanService>();
         services.AddScoped<HomePal.Application.Features.Reports.Interfaces.IHouseholdReportService, HomePal.Application.Features.Reports.Services.HouseholdReportService>();
+        services.AddScoped<HomePal.Application.Features.Locations.Interfaces.ILocationService, HomePal.Application.Features.Locations.Services.LocationService>();
 
         services.AddControllers()
             .AddDataAnnotationsLocalization(options =>

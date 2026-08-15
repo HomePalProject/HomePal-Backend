@@ -278,6 +278,15 @@
   <data name="MealPlan.GetLastSuccess" xml:space="preserve"><value>Last meal plan retrieved successfully.</value></data>
   <data name="MealPlan.UpdateSuccess" xml:space="preserve"><value>Meal plan updated successfully.</value></data>
   <data name="MealPlan.DeleteSuccess" xml:space="preserve"><value>Meal plan deleted successfully.</value></data>
+
+  <!-- Locations -->
+  <data name="Locations.GetAllGovernoratesSuccess" xml:space="preserve"><value>Governorates retrieved successfully.</value></data>
+  <data name="Locations.GetGovernorateSuccess" xml:space="preserve"><value>Governorate details retrieved successfully.</value></data>
+  <data name="Locations.GetAllCitiesSuccess" xml:space="preserve"><value>Cities retrieved successfully.</value></data>
+  <data name="Locations.GetCitySuccess" xml:space="preserve"><value>City details retrieved successfully.</value></data>
+  <data name="Locations.GovernorateNotFound" xml:space="preserve"><value>Governorate not found.</value></data>
+  <data name="Locations.CityNotFound" xml:space="preserve"><value>City not found.</value></data>
 </root>
+
 
 

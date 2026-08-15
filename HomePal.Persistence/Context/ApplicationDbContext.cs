@@ -34,6 +34,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<AgentChatSession> AgentChatSessions => Set<AgentChatSession>();
     public DbSet<AgentChatMessage> AgentChatMessages => Set<AgentChatMessage>();
     public DbSet<MealPlan> MealPlans => Set<MealPlan>();
+    public DbSet<Governorate> Governorates => Set<Governorate>();
+    public DbSet<City> Cities => Set<City>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

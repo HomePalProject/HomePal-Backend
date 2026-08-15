@@ -1,0 +1,218 @@
+[
+  {
+    "id": 1,
+    "code": "CAI",
+    "name": "القاهرة",
+    "nameEn": "Cairo",
+    "latitude": 30.062631,
+    "longitude": 31.249666
+  },
+  {
+    "id": 2,
+    "code": "ALX",
+    "name": "الإسكندرية",
+    "nameEn": "Alexandria",
+    "latitude": 31.20176,
+    "longitude": 29.91582
+  },
+  {
+    "id": 3,
+    "code": "GIZ",
+    "name": "الجيزة",
+    "nameEn": "Giza",
+    "latitude": 30.009444,
+    "longitude": 31.208611
+  },
+  {
+    "id": 4,
+    "code": "PTS",
+    "name": "بورسعيد",
+    "nameEn": "Port Said",
+    "latitude": 31.26531,
+    "longitude": 32.3019
+  },
+  {
+    "id": 5,
+    "code": "SUZ",
+    "name": "السويس",
+    "nameEn": "Suez",
+    "latitude": 29.973714,
+    "longitude": 32.526267
+  },
+  {
+    "id": 6,
+    "code": "DKH",
+    "name": "الدقهلية",
+    "nameEn": "Dakahlia",
+    "latitude": 31.036373,
+    "longitude": 31.380691
+  },
+  {
+    "id": 7,
+    "code": "SHR",
+    "name": "الشرقية",
+    "nameEn": "Sharqia",
+    "latitude": 30.587676,
+    "longitude": 31.501997
+  },
+  {
+    "id": 8,
+    "code": "QLB",
+    "name": "القليوبية",
+    "nameEn": "Qalyubia",
+    "latitude": 30.466,
+    "longitude": 31.184
+  },
+  {
+    "id": 9,
+    "code": "KFS",
+    "name": "كفر الشيخ",
+    "nameEn": "Kafr El Sheikh",
+    "latitude": 31.1107,
+    "longitude": 30.9388
+  },
+  {
+    "id": 10,
+    "code": "GHR",
+    "name": "الغربية",
+    "nameEn": "Gharbia",
+    "latitude": 30.788471,
+    "longitude": 31.001921
+  },
+  {
+    "id": 11,
+    "code": "MNF",
+    "name": "المنوفية",
+    "nameEn": "Monufia",
+    "latitude": 30.5581,
+    "longitude": 31.0106
+  },
+  {
+    "id": 12,
+    "code": "BHR",
+    "name": "البحيرة",
+    "nameEn": "Beheira",
+    "latitude": 31.034084,
+    "longitude": 30.468233
+  },
+  {
+    "id": 13,
+    "code": "ISM",
+    "name": "الإسماعيلية",
+    "nameEn": "Ismailia",
+    "latitude": 30.604272,
+    "longitude": 32.272252
+  },
+  {
+    "id": 14,
+    "code": "DMT",
+    "name": "دمياط",
+    "nameEn": "Damietta",
+    "latitude": 31.416477,
+    "longitude": 31.813316
+  },
+  {
+    "id": 15,
+    "code": "FYM",
+    "name": "الفيوم",
+    "nameEn": "Faiyum",
+    "latitude": 29.309949,
+    "longitude": 30.841804
+  },
+  {
+    "id": 16,
+    "code": "BNS",
+    "name": "بني سويف",
+    "nameEn": "Beni Suef",
+    "latitude": 29.0744,
+    "longitude": 31.0978
+  },
+  {
+    "id": 17,
+    "code": "MNY",
+    "name": "المنيا",
+    "nameEn": "Minya",
+    "latitude": 28.1099,
+    "longitude": 30.7503
+  },
+  {
+    "id": 18,
+    "code": "AST",
+    "name": "أسيوط",
+    "nameEn": "Asyut",
+    "latitude": 27.180956,
+    "longitude": 31.183683
+  },
+  {
+    "id": 19,
+    "code": "SHG",
+    "name": "سوهاج",
+    "nameEn": "Sohag",
+    "latitude": 26.556952,
+    "longitude": 31.694785
+  },
+  {
+    "id": 20,
+    "code": "QNA",
+    "name": "قنا",
+    "nameEn": "Qena",
+    "latitude": 26.1551,
+    "longitude": 32.716
+  },
+  {
+    "id": 21,
+    "code": "LXR",
+    "name": "الأقصر",
+    "nameEn": "Luxor",
+    "latitude": 25.698927,
+    "longitude": 32.642097
+  },
+  {
+    "id": 22,
+    "code": "ASN",
+    "name": "أسوان",
+    "nameEn": "Aswan",
+    "latitude": 24.09082,
+    "longitude": 32.89942
+  },
+  {
+    "id": 23,
+    "code": "RED",
+    "name": "البحر الأحمر",
+    "nameEn": "Red Sea",
+    "latitude": 27.257376,
+    "longitude": 33.812914
+  },
+  {
+    "id": 24,
+    "code": "WAD",
+    "name": "الوادي الجديد",
+    "nameEn": "New Valley",
+    "latitude": 25.44,
+    "longitude": 30.55
+  },
+  {
+    "id": 25,
+    "code": "MTR",
+    "name": "مطروح",
+    "nameEn": "Matruh",
+    "latitude": 31.3529,
+    "longitude": 27.23725
+  },
+  {
+    "id": 26,
+    "code": "SIN",
+    "name": "شمال سيناء",
+    "nameEn": "North Sinai",
+    "latitude": 31.131592,
+    "longitude": 33.798437
+  },
+  {
+    "id": 27,
+    "code": "SIS",
+    "name": "جنوب سيناء",
+    "nameEn": "South Sinai",
+    "latitude": 27.9158,
+    "longitude": 34.3299
+  }
+]
