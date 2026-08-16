@@ -15,6 +15,7 @@ public static class BudgetAndShoppingInstructions
           * Update quantities, units, categories, prices, purchased state, or notes using 'UpdateShoppingListItem'.
           * Remove items using 'DeleteShoppingListItem'.
         - Perform accurate arithmetic and percentage calculations using 'Calculate'.
+        - Search supermarket discounts and catalog offers using 'SearchOffers' (providing search query and optional limit) to find discounted items, compare prices across supermarkets, and attach best deal prices.
         - Calculate estimated preparation costs for individual meals and weekly plans within the remaining budget.
         - Cross-reference ingredient requirements with available supermarket deals to maximize household savings.
         """;

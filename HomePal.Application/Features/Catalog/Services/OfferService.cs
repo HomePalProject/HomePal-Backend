@@ -215,4 +215,23 @@ public class OfferService : IOfferService
 
         return Result.Ok(SuccessMessages.Catalog.DeleteOffer);
     }
+
+    public async Task<Result<IReadOnlyList<OfferResponse>>> SearchOffersAsync(string query, int limit = 10, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            return Result<IReadOnlyList<OfferResponse>>.Ok(Array.Empty<OfferResponse>(), SuccessMessages.Catalog.GetOffers);
+        }
+
+        var clampedLimit = Math.Clamp(limit, 1, 50);
+        var queryEmbedding = await _embeddingService.GenerateSqlVectorAsync(query, cancellationToken);
+
+        var offers = await _unitOfWork.Offers.SearchSemanticAsync(
+            queryEmbedding,
+            take: clampedLimit,
+            cancellationToken: cancellationToken);
+
+        var dtos = offers.Select(o => o.ToResponse()).ToList();
+        return Result<IReadOnlyList<OfferResponse>>.Ok(dtos, SuccessMessages.Catalog.GetOffers);
+    }
 }

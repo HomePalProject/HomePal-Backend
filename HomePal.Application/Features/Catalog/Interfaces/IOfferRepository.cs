@@ -14,4 +14,9 @@ public interface IOfferRepository : IRepository<Offer>
         Guid? supermarketId = null,
         bool onlyVerified = true,
         CancellationToken cancellationToken = default);
+
+    Task<List<Offer>> SearchSemanticAsync(
+        Microsoft.Data.SqlTypes.SqlVector<float>? queryEmbedding,
+        int take = 10,
+        CancellationToken cancellationToken = default);
 }

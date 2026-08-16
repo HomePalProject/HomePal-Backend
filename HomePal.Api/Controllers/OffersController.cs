@@ -50,6 +50,18 @@ public class OffersController : BaseApiController
     }
 
     /// <summary>
+    /// Semantic vector search offers by meaning and similarity
+    /// </summary>
+    [HttpGet("semantic-search")]
+    [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.HouseholdMember},{Roles.Admin}")]
+    [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<OfferResponse>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> SemanticSearchOffers([FromQuery] string query, [FromQuery] int limit = 10, CancellationToken cancellationToken = default)
+    {
+        var result = await _offerService.SearchOffersAsync(query, limit, cancellationToken);
+        return HandleResult(result);
+    }
+
+    /// <summary>
     /// Get single offer by ID
     /// </summary>
     [HttpGet("{offerId:guid}")]

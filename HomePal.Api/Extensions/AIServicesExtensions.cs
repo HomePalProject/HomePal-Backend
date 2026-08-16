@@ -162,6 +162,7 @@ public static class AIServicesExtensions
         services.AddScoped<IIngredientSearchService, IngredientSearchService>();
         services.AddScoped<RecipeSearchTools>();
         services.AddScoped<IngredientSearchTools>();
+        services.AddScoped<OfferSearchTools>();
 
         services.AddScoped<ChatHistoryProvider, HomePal.Infrastructure.AI.AgentChat.Services.DbChatHistoryProvider>();
         services.AddScoped<HomePal.Infrastructure.AI.AgentChat.Services.AgentSseStream>();
@@ -183,6 +184,7 @@ public static class AIServicesExtensions
             var catalogTools = sp.GetRequiredService<CatalogReferenceTools>();
             var recipeTools = sp.GetRequiredService<RecipeSearchTools>();
             var ingredientTools = sp.GetRequiredService<IngredientSearchTools>();
+            var offerTools = sp.GetRequiredService<OfferSearchTools>();
             return chatClient.AsAIAgent(new ChatClientAgentOptions
             {
                 Name = "MealAndInventoryAgent",
@@ -198,7 +200,8 @@ public static class AIServicesExtensions
                         AIFunctionFactory.Create(pantryTools.DeletePantryItemAsync),
                         AIFunctionFactory.Create(catalogTools.GetCategoriesAndUnitsAsync),
                         AIFunctionFactory.Create(recipeTools.SearchRecipesAsync),
-                        AIFunctionFactory.Create(ingredientTools.SearchIngredientsAsync)
+                        AIFunctionFactory.Create(ingredientTools.SearchIngredientsAsync),
+                        AIFunctionFactory.Create(offerTools.SearchOffersAsync)
                     ]
                 }
             });
@@ -234,6 +237,7 @@ public static class AIServicesExtensions
             var budgetTools = sp.GetRequiredService<BudgetTools>();
             var shoppingListTools = sp.GetRequiredService<ShoppingListTools>();
             var catalogTools = sp.GetRequiredService<CatalogReferenceTools>();
+            var offerTools = sp.GetRequiredService<OfferSearchTools>();
             return chatClient.AsAIAgent(new ChatClientAgentOptions
             {
                 Name = "BudgetAndShoppingAgent",
@@ -249,7 +253,8 @@ public static class AIServicesExtensions
                         AIFunctionFactory.Create(shoppingListTools.AddShoppingListItemAsync),
                         AIFunctionFactory.Create(shoppingListTools.UpdateShoppingListItemAsync),
                         AIFunctionFactory.Create(shoppingListTools.DeleteShoppingListItemAsync),
-                        AIFunctionFactory.Create(catalogTools.GetCategoriesAndUnitsAsync)
+                        AIFunctionFactory.Create(catalogTools.GetCategoriesAndUnitsAsync),
+                        AIFunctionFactory.Create(offerTools.SearchOffersAsync)
                     ]
                 }
             });

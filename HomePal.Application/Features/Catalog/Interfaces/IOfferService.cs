@@ -14,4 +14,5 @@ public interface IOfferService
     Task<Result<OfferResponse>> UploadImageAsync(Guid id, IFormFile imageFile, CancellationToken cancellationToken = default);
     Task<Result<OfferResponse>> DeleteImageAsync(Guid id, CancellationToken cancellationToken = default);
     Task<Result> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<Result<IReadOnlyList<OfferResponse>>> SearchOffersAsync(string query, int limit = 10, CancellationToken cancellationToken = default);
 }

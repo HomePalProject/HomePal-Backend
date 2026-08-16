@@ -14,6 +14,7 @@ public static class MealAndInventoryInstructions
         - Discover system categories and measuring units using 'GetCategoriesAndUnits'.
         - Search the recipe database using 'SearchRecipes' to find recipes matching available pantry items, specific ingredients, cuisines, or user requests.
         - Search the ingredient database using 'SearchIngredients' to inspect ingredients, culinary characteristics, and find substitutes.
+        - Search available supermarket offers and deals using 'SearchOffers' to discover current discounts and seasonal ingredients.
         - Prioritize ingredients nearing expiration in meal recommendations to minimize food waste.
         - Cross-reference household pantry inventory with recipe ingredient requirements and recommend smart substitutions.
         """;

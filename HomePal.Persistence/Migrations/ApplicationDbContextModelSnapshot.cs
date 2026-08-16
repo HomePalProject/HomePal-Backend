@@ -57,7 +57,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasIndex("ChatSessionId");
 
-                    b.ToTable("AgentChatMessages");
+                    b.ToTable("AgentChatMessages", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.AgentChatSession", b =>
@@ -89,7 +89,7 @@ namespace HomePal.Persistence.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("AgentChatSessions");
+                    b.ToTable("AgentChatSessions", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.ApplicationUser", b =>
@@ -236,7 +236,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasIndex("GovernorateId");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.Governorate", b =>
@@ -273,7 +273,7 @@ namespace HomePal.Persistence.Migrations
                     b.HasIndex("Code")
                         .IsUnique();
 
-                    b.ToTable("Governorates");
+                    b.ToTable("Governorates", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.Household", b =>
@@ -315,7 +315,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasIndex("GovernorateId");
 
-                    b.ToTable("Households");
+                    b.ToTable("Households", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.HouseholdExpense", b =>
@@ -359,7 +359,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasIndex("HouseholdId");
 
-                    b.ToTable("HouseholdExpenses");
+                    b.ToTable("HouseholdExpenses", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.HouseholdInvitation", b =>
@@ -413,7 +413,7 @@ namespace HomePal.Persistence.Migrations
                     b.HasIndex("Token")
                         .IsUnique();
 
-                    b.ToTable("HouseholdInvitations");
+                    b.ToTable("HouseholdInvitations", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.HouseholdMember", b =>
@@ -467,7 +467,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("HouseholdMembers");
+                    b.ToTable("HouseholdMembers", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.HouseholdMonthlyBudget", b =>
@@ -506,7 +506,7 @@ namespace HomePal.Persistence.Migrations
                     b.HasIndex("HouseholdId", "BudgetDate")
                         .IsUnique();
 
-                    b.ToTable("HouseholdMonthlyBudgets");
+                    b.ToTable("HouseholdMonthlyBudgets", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.MealPlan", b =>
@@ -552,7 +552,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasIndex("HouseholdId");
 
-                    b.ToTable("MealPlans");
+                    b.ToTable("MealPlans", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.MeasuringUnit", b =>
@@ -575,7 +575,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MeasuringUnits");
+                    b.ToTable("MeasuringUnits", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.Offer", b =>
@@ -641,7 +641,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasIndex("UnitId");
 
-                    b.ToTable("Offers");
+                    b.ToTable("Offers", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.Pantry", b =>
@@ -670,7 +670,7 @@ namespace HomePal.Persistence.Migrations
                     b.HasIndex("HouseholdId")
                         .IsUnique();
 
-                    b.ToTable("Pantries");
+                    b.ToTable("Pantries", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.PantryItem", b =>
@@ -720,7 +720,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasIndex("PantryId");
 
-                    b.ToTable("PantryItems");
+                    b.ToTable("PantryItems", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.Preference", b =>
@@ -748,7 +748,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Preferences");
+                    b.ToTable("Preferences", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.PreferenceCategory", b =>
@@ -771,7 +771,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PreferenceCategories");
+                    b.ToTable("PreferenceCategories", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.ProductCategory", b =>
@@ -798,7 +798,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategories");
+                    b.ToTable("ProductCategories", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.RefreshToken", b =>
@@ -835,7 +835,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.ShoppingList", b =>
@@ -864,7 +864,7 @@ namespace HomePal.Persistence.Migrations
                     b.HasIndex("HouseholdId")
                         .IsUnique();
 
-                    b.ToTable("ShoppingLists");
+                    b.ToTable("ShoppingLists", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.ShoppingListItem", b =>
@@ -935,7 +935,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasIndex("ShoppingListId");
 
-                    b.ToTable("ShoppingListItems");
+                    b.ToTable("ShoppingListItems", (string)null);
                 });
 
             modelBuilder.Entity("HomePal.Domain.Entities.Supermarket", b =>
@@ -970,7 +970,7 @@ namespace HomePal.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Supermarkets");
+                    b.ToTable("Supermarkets", (string)null);
                 });
 
             modelBuilder.Entity("HouseholdMemberPreference", b =>
@@ -1181,7 +1181,7 @@ namespace HomePal.Persistence.Migrations
 
                             b1.HasKey("CityId", "__synthesizedOrdinal");
 
-                            b1.ToTable("Cities");
+                            b1.ToTable("Cities", (string)null);
 
                             b1
                                 .ToJson("Name")
@@ -1213,7 +1213,7 @@ namespace HomePal.Persistence.Migrations
 
                             b1.HasKey("GovernorateId", "__synthesizedOrdinal");
 
-                            b1.ToTable("Governorates");
+                            b1.ToTable("Governorates", (string)null);
 
                             b1
                                 .ToJson("Name")
@@ -1337,7 +1337,7 @@ namespace HomePal.Persistence.Migrations
 
                             b1.HasKey("MeasuringUnitId", "__synthesizedOrdinal");
 
-                            b1.ToTable("MeasuringUnits");
+                            b1.ToTable("MeasuringUnits", (string)null);
 
                             b1
                                 .ToJson("Name")
@@ -1362,7 +1362,7 @@ namespace HomePal.Persistence.Migrations
 
                             b1.HasKey("MeasuringUnitId", "__synthesizedOrdinal");
 
-                            b1.ToTable("MeasuringUnits");
+                            b1.ToTable("MeasuringUnits", (string)null);
 
                             b1
                                 .ToJson("Symbol")
@@ -1410,7 +1410,7 @@ namespace HomePal.Persistence.Migrations
 
                             b1.HasKey("OfferId", "__synthesizedOrdinal");
 
-                            b1.ToTable("Offers");
+                            b1.ToTable("Offers", (string)null);
 
                             b1
                                 .ToJson("Description")
@@ -1435,7 +1435,7 @@ namespace HomePal.Persistence.Migrations
 
                             b1.HasKey("OfferId", "__synthesizedOrdinal");
 
-                            b1.ToTable("Offers");
+                            b1.ToTable("Offers", (string)null);
 
                             b1
                                 .ToJson("Name")
@@ -1515,7 +1515,7 @@ namespace HomePal.Persistence.Migrations
 
                             b1.HasKey("PreferenceId", "__synthesizedOrdinal");
 
-                            b1.ToTable("Preferences");
+                            b1.ToTable("Preferences", (string)null);
 
                             b1
                                 .ToJson("Description")
@@ -1540,7 +1540,7 @@ namespace HomePal.Persistence.Migrations
 
                             b1.HasKey("PreferenceId", "__synthesizedOrdinal");
 
-                            b1.ToTable("Preferences");
+                            b1.ToTable("Preferences", (string)null);
 
                             b1
                                 .ToJson("Name")
@@ -1574,7 +1574,7 @@ namespace HomePal.Persistence.Migrations
 
                             b1.HasKey("PreferenceCategoryId", "__synthesizedOrdinal");
 
-                            b1.ToTable("PreferenceCategories");
+                            b1.ToTable("PreferenceCategories", (string)null);
 
                             b1
                                 .ToJson("Description")
@@ -1599,7 +1599,7 @@ namespace HomePal.Persistence.Migrations
 
                             b1.HasKey("PreferenceCategoryId", "__synthesizedOrdinal");
 
-                            b1.ToTable("PreferenceCategories");
+                            b1.ToTable("PreferenceCategories", (string)null);
 
                             b1
                                 .ToJson("Name")
@@ -1631,7 +1631,7 @@ namespace HomePal.Persistence.Migrations
 
                             b1.HasKey("ProductCategoryId", "__synthesizedOrdinal");
 
-                            b1.ToTable("ProductCategories");
+                            b1.ToTable("ProductCategories", (string)null);
 
                             b1
                                 .ToJson("Description")
@@ -1656,7 +1656,7 @@ namespace HomePal.Persistence.Migrations
 
                             b1.HasKey("ProductCategoryId", "__synthesizedOrdinal");
 
-                            b1.ToTable("ProductCategories");
+                            b1.ToTable("ProductCategories", (string)null);
 
                             b1
                                 .ToJson("Name")
@@ -1748,7 +1748,7 @@ namespace HomePal.Persistence.Migrations
 
                             b1.HasKey("SupermarketId", "__synthesizedOrdinal");
 
-                            b1.ToTable("Supermarkets");
+                            b1.ToTable("Supermarkets", (string)null);
 
                             b1
                                 .ToJson("Name")
