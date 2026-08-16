@@ -185,6 +185,7 @@ public static class AIServicesExtensions
             var recipeTools = sp.GetRequiredService<RecipeSearchTools>();
             var ingredientTools = sp.GetRequiredService<IngredientSearchTools>();
             var offerTools = sp.GetRequiredService<OfferSearchTools>();
+            var calcTools = sp.GetRequiredService<CalculatorTools>();
             return chatClient.AsAIAgent(new ChatClientAgentOptions
             {
                 Name = "MealAndInventoryAgent",
@@ -201,7 +202,8 @@ public static class AIServicesExtensions
                         AIFunctionFactory.Create(catalogTools.GetCategoriesAndUnitsAsync),
                         AIFunctionFactory.Create(recipeTools.SearchRecipesAsync),
                         AIFunctionFactory.Create(ingredientTools.SearchIngredientsAsync),
-                        AIFunctionFactory.Create(offerTools.SearchOffersAsync)
+                        AIFunctionFactory.Create(offerTools.SearchOffersAsync),
+                        AIFunctionFactory.Create(calcTools.Calculate)
                     ]
                 }
             });
@@ -213,6 +215,7 @@ public static class AIServicesExtensions
             var householdTools = sp.GetRequiredService<HouseholdTools>();
             var ingredientTools = sp.GetRequiredService<IngredientSearchTools>();
             var recipeTools = sp.GetRequiredService<RecipeSearchTools>();
+            var calcTools = sp.GetRequiredService<CalculatorTools>();
             return chatClient.AsAIAgent(new ChatClientAgentOptions
             {
                 Name = "NutritionAndHealthAgent",
@@ -224,7 +227,8 @@ public static class AIServicesExtensions
                     [
                         AIFunctionFactory.Create(householdTools.GetHouseholdMembersWithPreferencesAsync),
                         AIFunctionFactory.Create(ingredientTools.SearchIngredientsAsync),
-                        AIFunctionFactory.Create(recipeTools.SearchRecipesAsync)
+                        AIFunctionFactory.Create(recipeTools.SearchRecipesAsync),
+                        AIFunctionFactory.Create(calcTools.Calculate)
                     ]
                 }
             });
@@ -266,6 +270,7 @@ public static class AIServicesExtensions
             var chatClient = sp.GetRequiredService<IChatClient>();
             var historyProvider = sp.GetRequiredService<ChatHistoryProvider>();
             var mealPlanTools = sp.GetRequiredService<MealPlanTools>();
+            var calcTools = sp.GetRequiredService<CalculatorTools>();
 
             var mealAndInventoryAgent = sp.GetRequiredKeyedService<AIAgent>("MealAndInventoryAgent");
             var nutritionAndHealthAgent = sp.GetRequiredKeyedService<AIAgent>("NutritionAndHealthAgent");
@@ -284,7 +289,8 @@ public static class AIServicesExtensions
                         budgetAndShoppingAgent.AsAIFunction(),
                         AIFunctionFactory.Create(mealPlanTools.SaveMealPlanAsync),
                         AIFunctionFactory.Create(mealPlanTools.GetLastMealPlanAsync),
-                        AIFunctionFactory.Create(mealPlanTools.UpdateLastMealPlanAsync)
+                        AIFunctionFactory.Create(mealPlanTools.UpdateLastMealPlanAsync),
+                        AIFunctionFactory.Create(calcTools.Calculate)
                     ]
                 },
                 ChatHistoryProvider = historyProvider
