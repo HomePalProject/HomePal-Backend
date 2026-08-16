@@ -5,4 +5,5 @@
   <Project Path="HomePal.Persistence/HomePal.Persistence.csproj" />
   <Project Path="HomePal.Infrastructure/HomePal.Infrastructure.csproj" />
   <Project Path="HomePal.Api/HomePal.Api.csproj" />
+  <Project Path="HomePal.UnitTests/HomePal.UnitTests.csproj" />
 </Solution>
