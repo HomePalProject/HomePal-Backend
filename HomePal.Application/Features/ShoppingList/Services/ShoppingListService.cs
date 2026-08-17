@@ -4,6 +4,7 @@ using HomePal.Application.Features.ShoppingList.DTOs;
 using HomePal.Application.Features.ShoppingList.Interfaces;
 using HomePal.Application.Features.ShoppingList.Mappers;
 using HomePal.Domain.Common;
+using HomePal.Domain.Entities;
 using HomePal.Shared.Results;
 
 namespace HomePal.Application.Features.ShoppingList.Services;
@@ -213,7 +214,7 @@ public class ShoppingListService : IShoppingListService
 
             var newExpenses = purchasedItems
                 .Where(i => i.Price.HasValue && i.Price.Value > 0)
-                .Select(i => new Domain.Entities.HouseholdExpense
+                .Select(i => new HouseholdExpense
                 {
                     Id = Guid.NewGuid(),
                     HouseholdId = householdId.Value,
@@ -229,6 +230,25 @@ public class ShoppingListService : IShoppingListService
             {
                 await _unitOfWork.HouseholdExpenses.AddRangeAsync(newExpenses, cancellationToken);
             }
+
+            var pantry = await _unitOfWork.Pantries.GetByHouseholdIdAsync(householdId.Value, cancellationToken);
+            if (pantry == null)
+            {
+                return Result.Fail(ErrorMessages.Pantry.PantryNotFound, ResultStatus.NotFound);
+            }
+
+            var newPantryItems = purchasedItems.Select(i => new PantryItem
+            {
+                Id = Guid.NewGuid(),
+                PantryId = pantry.Id,
+                Name = i.Name,
+                Quantity = (decimal)((i.Quantity > 0 ? i.Quantity : 1) * (i.PortionCount > 0 ? i.PortionCount : 1)),
+                MeasuringUnitId = i.MeasuringUnitId,
+                CategoryId = i.CategoryId,
+                CreatedAt = now
+            }).ToList();
+
+            await _unitOfWork.PantryItems.AddRangeAsync(newPantryItems, cancellationToken);
         }
 
         await _unitOfWork.ShoppingListItems.ClearPurchasedAsync(shoppingList.Id, cancellationToken);
