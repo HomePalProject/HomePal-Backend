@@ -180,29 +180,29 @@ public static class AIServicesExtensions
         services.AddKeyedScoped<AIAgent>("MealAndInventoryAgent", (sp, key) =>
         {
             var chatClient = sp.GetRequiredService<IChatClient>();
+            var mealPlanTools = sp.GetRequiredService<MealPlanTools>();
             var pantryTools = sp.GetRequiredService<PantryTools>();
-            var catalogTools = sp.GetRequiredService<CatalogReferenceTools>();
             var recipeTools = sp.GetRequiredService<RecipeSearchTools>();
-            var ingredientTools = sp.GetRequiredService<IngredientSearchTools>();
-            var offerTools = sp.GetRequiredService<OfferSearchTools>();
+            var catalogTools = sp.GetRequiredService<CatalogReferenceTools>();
             var calcTools = sp.GetRequiredService<CalculatorTools>();
             return chatClient.AsAIAgent(new ChatClientAgentOptions
             {
                 Name = "MealAndInventoryAgent",
-                Description = "Evaluates pantry stock, expiration dates, available ingredients, manages pantry inventory items (viewing, adding, updating, and removing stock), and searches real recipes and ingredients.",
+                Description = "Evaluates pantry stock, expiration dates, available ingredients, discovers recipes, manages meal plans, and updates pantry items.",
                 ChatOptions = new ChatOptions
                 {
                     Instructions = MealAndInventoryInstructions.SystemInstructions,
                     Tools =
                     [
+                        AIFunctionFactory.Create(mealPlanTools.SaveMealPlanAsync),
+                        AIFunctionFactory.Create(mealPlanTools.GetLastMealPlanAsync),
+                        AIFunctionFactory.Create(mealPlanTools.UpdateLastMealPlanAsync),
                         AIFunctionFactory.Create(pantryTools.GetPantryAsync),
                         AIFunctionFactory.Create(pantryTools.AddPantryItemAsync),
                         AIFunctionFactory.Create(pantryTools.UpdatePantryAsync),
                         AIFunctionFactory.Create(pantryTools.DeletePantryItemAsync),
-                        AIFunctionFactory.Create(catalogTools.GetCategoriesAndUnitsAsync),
                         AIFunctionFactory.Create(recipeTools.SearchRecipesAsync),
-                        AIFunctionFactory.Create(ingredientTools.SearchIngredientsAsync),
-                        AIFunctionFactory.Create(offerTools.SearchOffersAsync),
+                        AIFunctionFactory.Create(catalogTools.GetCategoriesAndUnitsAsync),
                         AIFunctionFactory.Create(calcTools.Calculate)
                     ]
                 }
@@ -214,12 +214,11 @@ public static class AIServicesExtensions
             var chatClient = sp.GetRequiredService<IChatClient>();
             var householdTools = sp.GetRequiredService<HouseholdTools>();
             var ingredientTools = sp.GetRequiredService<IngredientSearchTools>();
-            var recipeTools = sp.GetRequiredService<RecipeSearchTools>();
             var calcTools = sp.GetRequiredService<CalculatorTools>();
             return chatClient.AsAIAgent(new ChatClientAgentOptions
             {
                 Name = "NutritionAndHealthAgent",
-                Description = "Analyzes dietary guidelines, macronutrients, calorie targets, allergies, health restrictions, and searches ingredients and recipes for nutritional details.",
+                Description = "Analyzes dietary guidelines, macronutrients, calorie targets, allergies, health restrictions, and searches ingredients for nutritional details.",
                 ChatOptions = new ChatOptions
                 {
                     Instructions = NutritionAndHealthInstructions.SystemInstructions,
@@ -227,7 +226,6 @@ public static class AIServicesExtensions
                     [
                         AIFunctionFactory.Create(householdTools.GetHouseholdMembersWithPreferencesAsync),
                         AIFunctionFactory.Create(ingredientTools.SearchIngredientsAsync),
-                        AIFunctionFactory.Create(recipeTools.SearchRecipesAsync),
                         AIFunctionFactory.Create(calcTools.Calculate)
                     ]
                 }
@@ -237,39 +235,37 @@ public static class AIServicesExtensions
         services.AddKeyedScoped<AIAgent>("BudgetAndShoppingAgent", (sp, key) =>
         {
             var chatClient = sp.GetRequiredService<IChatClient>();
-            var calcTools = sp.GetRequiredService<CalculatorTools>();
-            var budgetTools = sp.GetRequiredService<BudgetTools>();
             var shoppingListTools = sp.GetRequiredService<ShoppingListTools>();
-            var catalogTools = sp.GetRequiredService<CatalogReferenceTools>();
+            var budgetTools = sp.GetRequiredService<BudgetTools>();
             var offerTools = sp.GetRequiredService<OfferSearchTools>();
+            var calcTools = sp.GetRequiredService<CalculatorTools>();
             return chatClient.AsAIAgent(new ChatClientAgentOptions
             {
                 Name = "BudgetAndShoppingAgent",
-                Description = "Checks household budget constraints, current monthly budget, remaining balance, estimates meal preparation costs, and manages shopping lists (adding, updating, viewing, and removing shopping list items).",
+                Description = "Monitors household budget limits, manages shopping list items, estimates grocery costs, and searches supermarket offers and discounts.",
                 ChatOptions = new ChatOptions
                 {
                     Instructions = BudgetAndShoppingInstructions.SystemInstructions,
                     Tools =
                     [
-                        AIFunctionFactory.Create(calcTools.Calculate),
-                        AIFunctionFactory.Create(budgetTools.GetCurrentBudgetAsync),
                         AIFunctionFactory.Create(shoppingListTools.GetShoppingListAsync),
                         AIFunctionFactory.Create(shoppingListTools.AddShoppingListItemAsync),
                         AIFunctionFactory.Create(shoppingListTools.UpdateShoppingListItemAsync),
                         AIFunctionFactory.Create(shoppingListTools.DeleteShoppingListItemAsync),
-                        AIFunctionFactory.Create(catalogTools.GetCategoriesAndUnitsAsync),
-                        AIFunctionFactory.Create(offerTools.SearchOffersAsync)
+                        AIFunctionFactory.Create(budgetTools.GetCurrentBudgetAsync),
+                        AIFunctionFactory.Create(offerTools.SearchOffersAsync),
+                        AIFunctionFactory.Create(calcTools.Calculate)
                     ]
                 }
             });
         });
 
         // Master Meal Planning Supervisor Agent (Registered as "Agent")
+        // Orchestrates specialist sub-agents, delegates tasks, and synthesizes answers.
         services.AddKeyedScoped<AIAgent>("Agent", (sp, key) =>
         {
             var chatClient = sp.GetRequiredService<IChatClient>();
             var historyProvider = sp.GetRequiredService<ChatHistoryProvider>();
-            var mealPlanTools = sp.GetRequiredService<MealPlanTools>();
             var calcTools = sp.GetRequiredService<CalculatorTools>();
 
             var mealAndInventoryAgent = sp.GetRequiredKeyedService<AIAgent>("MealAndInventoryAgent");
@@ -284,12 +280,12 @@ public static class AIServicesExtensions
                     Instructions = MealPlanningSupervisorInstructions.SystemInstructions,
                     Tools =
                     [
+                        // Sub-Agents (Specialized domain advisors)
                         mealAndInventoryAgent.AsAIFunction(),
                         nutritionAndHealthAgent.AsAIFunction(),
                         budgetAndShoppingAgent.AsAIFunction(),
-                        AIFunctionFactory.Create(mealPlanTools.SaveMealPlanAsync),
-                        AIFunctionFactory.Create(mealPlanTools.GetLastMealPlanAsync),
-                        AIFunctionFactory.Create(mealPlanTools.UpdateLastMealPlanAsync),
+
+                        // Utilities
                         AIFunctionFactory.Create(calcTools.Calculate)
                     ]
                 },
