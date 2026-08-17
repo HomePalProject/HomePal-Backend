@@ -25,6 +25,7 @@ public class Program
         await AdminSeeder.SeedAdminUserAsync(app.Services, builder.Configuration);
         await CatalogSeeder.SeedCatalogDataAsync(app.Services);
         await LocationSeeder.SeedLocationsAsync(app.Services);
+        await SubscriptionPlanSeeder.SeedSubscriptionPlansAsync(app.Services);
 
         app.UseMiddleware<ExceptionMiddleware>();
 

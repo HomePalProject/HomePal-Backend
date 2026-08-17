@@ -26,6 +26,7 @@ public sealed class AgentSseStream
         string runId,
         string threadId,
         string messageId,
+        Func<string, Task>? onCompletedAsync = null,
         [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken ct = default)
     {
         var sb = new StringBuilder();
@@ -45,6 +46,11 @@ public sealed class AgentSseStream
             yield return Evt(new { type = "TEXT_MESSAGE_END", messageId });
 
         yield return Evt(new { type = "RUN_FINISHED", runId, threadId });
+
+        if (onCompletedAsync != null)
+        {
+            await onCompletedAsync(sb.ToString());
+        }
     }
 
     private async IAsyncEnumerable<SseItem<string>> MapContentAsync(

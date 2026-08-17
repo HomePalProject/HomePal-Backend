@@ -1,8 +1,14 @@
-using HomePal.Application.Common.Interfaces;
+using HomePal.Application.Features.AgentChat.Interfaces;
 using HomePal.Application.Features.Auth.Interfaces;
+using HomePal.Application.Features.Budgeting.Interfaces;
 using HomePal.Application.Features.Catalog.Interfaces;
 using HomePal.Application.Features.HouseholdManagement.Interfaces;
+using HomePal.Application.Features.Locations.Interfaces;
+using HomePal.Application.Features.MealPlanning.Interfaces;
 using HomePal.Application.Features.PantryManagement.Interfaces;
+using HomePal.Application.Features.Reports.Interfaces;
+using HomePal.Application.Features.ShoppingList.Interfaces;
+using HomePal.Application.Features.Subscriptions.Interfaces;
 
 namespace HomePal.Application.Common.Interfaces;
 
@@ -21,17 +27,19 @@ public interface IUnitOfWork : IDisposable
     IOfferRepository Offers { get; }
     IPantryRepository Pantries { get; }
     IPantryItemRepository PantryItems { get; }
-    HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListRepository ShoppingLists { get; }
-    HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListItemRepository ShoppingListItems { get; }
-    HomePal.Application.Features.Budgeting.Interfaces.IHouseholdMonthlyBudgetRepository MonthlyBudgets { get; }
-    HomePal.Application.Features.Budgeting.Interfaces.IHouseholdExpenseRepository HouseholdExpenses { get; }
-    HomePal.Application.Features.AgentChat.Interfaces.IAgentChatRepository AgentChats { get; }
-    HomePal.Application.Features.MealPlanning.Interfaces.IMealPlanRepository MealPlans { get; }
-    HomePal.Application.Features.Reports.Interfaces.IHouseholdReportRepository Reports { get; }
-    HomePal.Application.Features.Reports.Interfaces.IAdminAnalyticsRepository AdminAnalytics { get; }
-    HomePal.Application.Features.Locations.Interfaces.IGovernorateRepository Governorates { get; }
-    HomePal.Application.Features.Locations.Interfaces.ICityRepository Cities { get; }
-
+    IShoppingListRepository ShoppingLists { get; }
+    IShoppingListItemRepository ShoppingListItems { get; }
+    IHouseholdMonthlyBudgetRepository MonthlyBudgets { get; }
+    IHouseholdExpenseRepository HouseholdExpenses { get; }
+    IAgentChatRepository AgentChats { get; }
+    IMealPlanRepository MealPlans { get; }
+    IHouseholdReportRepository Reports { get; }
+    IAdminAnalyticsRepository AdminAnalytics { get; }
+    IGovernorateRepository Governorates { get; }
+    ICityRepository Cities { get; }
+    ISubscriptionPlanRepository SubscriptionPlans { get; }
+    IUserSubscriptionRepository UserSubscriptions { get; }
+    IPaymentTransactionRepository PaymentTransactions { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     Task BeginTransactionAsync(CancellationToken cancellationToken = default);

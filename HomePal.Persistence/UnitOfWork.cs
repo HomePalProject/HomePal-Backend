@@ -1,8 +1,15 @@
 using HomePal.Application.Common.Interfaces;
+using HomePal.Application.Features.AgentChat.Interfaces;
 using HomePal.Application.Features.Auth.Interfaces;
+using HomePal.Application.Features.Budgeting.Interfaces;
 using HomePal.Application.Features.Catalog.Interfaces;
 using HomePal.Application.Features.HouseholdManagement.Interfaces;
+using HomePal.Application.Features.Locations.Interfaces;
+using HomePal.Application.Features.MealPlanning.Interfaces;
 using HomePal.Application.Features.PantryManagement.Interfaces;
+using HomePal.Application.Features.Reports.Interfaces;
+using HomePal.Application.Features.ShoppingList.Interfaces;
+using HomePal.Application.Features.Subscriptions.Interfaces;
 using HomePal.Persistence.Context;
 using HomePal.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -27,16 +34,19 @@ public class UnitOfWork : IUnitOfWork
     private IOfferRepository? _offers;
     private IPantryRepository? _pantries;
     private IPantryItemRepository? _pantryItems;
-    private HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListRepository? _shoppingLists;
-    private HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListItemRepository? _shoppingListItems;
-    private HomePal.Application.Features.Budgeting.Interfaces.IHouseholdMonthlyBudgetRepository? _monthlyBudgets;
-    private HomePal.Application.Features.Budgeting.Interfaces.IHouseholdExpenseRepository? _householdExpenses;
-    private HomePal.Application.Features.AgentChat.Interfaces.IAgentChatRepository? _agentChats;
-    private HomePal.Application.Features.MealPlanning.Interfaces.IMealPlanRepository? _mealPlans;
-    private HomePal.Application.Features.Reports.Interfaces.IHouseholdReportRepository? _reports;
-    private HomePal.Application.Features.Reports.Interfaces.IAdminAnalyticsRepository? _adminAnalytics;
-    private HomePal.Application.Features.Locations.Interfaces.IGovernorateRepository? _governorates;
-    private HomePal.Application.Features.Locations.Interfaces.ICityRepository? _cities;
+    private IShoppingListRepository? _shoppingLists;
+    private IShoppingListItemRepository? _shoppingListItems;
+    private IHouseholdMonthlyBudgetRepository? _monthlyBudgets;
+    private IHouseholdExpenseRepository? _householdExpenses;
+    private IAgentChatRepository? _agentChats;
+    private IMealPlanRepository? _mealPlans;
+    private IHouseholdReportRepository? _reports;
+    private IAdminAnalyticsRepository? _adminAnalytics;
+    private IGovernorateRepository? _governorates;
+    private ICityRepository? _cities;
+    private ISubscriptionPlanRepository? _subscriptionPlans;
+    private IUserSubscriptionRepository? _userSubscriptions;
+    private IPaymentTransactionRepository? _paymentTransactions;
 
     public UnitOfWork(ApplicationDbContext context)
     {
@@ -56,16 +66,19 @@ public class UnitOfWork : IUnitOfWork
     public IOfferRepository Offers => _offers ??= new OfferRepository(_context);
     public IPantryRepository Pantries => _pantries ??= new PantryRepository(_context);
     public IPantryItemRepository PantryItems => _pantryItems ??= new PantryItemRepository(_context);
-    public HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListRepository ShoppingLists => _shoppingLists ??= new ShoppingListRepository(_context);
-    public HomePal.Application.Features.ShoppingList.Interfaces.IShoppingListItemRepository ShoppingListItems => _shoppingListItems ??= new ShoppingListItemRepository(_context);
-    public HomePal.Application.Features.Budgeting.Interfaces.IHouseholdMonthlyBudgetRepository MonthlyBudgets => _monthlyBudgets ??= new HouseholdMonthlyBudgetRepository(_context);
-    public HomePal.Application.Features.Budgeting.Interfaces.IHouseholdExpenseRepository HouseholdExpenses => _householdExpenses ??= new HouseholdExpenseRepository(_context);
-    public HomePal.Application.Features.AgentChat.Interfaces.IAgentChatRepository AgentChats => _agentChats ??= new AgentChatRepository(_context);
-    public HomePal.Application.Features.MealPlanning.Interfaces.IMealPlanRepository MealPlans => _mealPlans ??= new MealPlanRepository(_context);
-    public HomePal.Application.Features.Reports.Interfaces.IHouseholdReportRepository Reports => _reports ??= new HouseholdReportRepository(_context);
-    public HomePal.Application.Features.Reports.Interfaces.IAdminAnalyticsRepository AdminAnalytics => _adminAnalytics ??= new AdminAnalyticsRepository(_context);
-    public HomePal.Application.Features.Locations.Interfaces.IGovernorateRepository Governorates => _governorates ??= new GovernorateRepository(_context);
-    public HomePal.Application.Features.Locations.Interfaces.ICityRepository Cities => _cities ??= new CityRepository(_context);
+    public IShoppingListRepository ShoppingLists => _shoppingLists ??= new ShoppingListRepository(_context);
+    public IShoppingListItemRepository ShoppingListItems => _shoppingListItems ??= new ShoppingListItemRepository(_context);
+    public IHouseholdMonthlyBudgetRepository MonthlyBudgets => _monthlyBudgets ??= new HouseholdMonthlyBudgetRepository(_context);
+    public IHouseholdExpenseRepository HouseholdExpenses => _householdExpenses ??= new HouseholdExpenseRepository(_context);
+    public IAgentChatRepository AgentChats => _agentChats ??= new AgentChatRepository(_context);
+    public IMealPlanRepository MealPlans => _mealPlans ??= new MealPlanRepository(_context);
+    public IHouseholdReportRepository Reports => _reports ??= new HouseholdReportRepository(_context);
+    public IAdminAnalyticsRepository AdminAnalytics => _adminAnalytics ??= new AdminAnalyticsRepository(_context);
+    public IGovernorateRepository Governorates => _governorates ??= new GovernorateRepository(_context);
+    public ICityRepository Cities => _cities ??= new CityRepository(_context);
+    public ISubscriptionPlanRepository SubscriptionPlans => _subscriptionPlans ??= new SubscriptionPlanRepository(_context);
+    public IUserSubscriptionRepository UserSubscriptions => _userSubscriptions ??= new UserSubscriptionRepository(_context);
+    public IPaymentTransactionRepository PaymentTransactions => _paymentTransactions ??= new PaymentTransactionRepository(_context);
 
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

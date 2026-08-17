@@ -290,6 +290,22 @@
   <!-- Analytics & Reports -->
   <data name="Analytics.FetchSuccess" xml:space="preserve"><value>تم استرداد بيانات التحليلات بنجاح.</value></data>
   <data name="Reports.FetchSuccess" xml:space="preserve"><value>تم استرداد تقرير الأسرة بنجاح.</value></data>
+
+  <!-- Subscriptions -->
+  <data name="Subscriptions.PlanNotFound" xml:space="preserve"><value>خطة الاشتراك غير موجودة.</value></data>
+  <data name="Subscriptions.PlanInactive" xml:space="preserve"><value>خطة الاشتراك غير مفعلة حالياً.</value></data>
+  <data name="Subscriptions.AlreadySubscribed" xml:space="preserve"><value>لديك اشتراك نشط بالفعل.</value></data>
+  <data name="Subscriptions.PaymentInitiationFailed" xml:space="preserve"><value>فشل الاتصال ببوابة الدفع الإلكتروني.</value></data>
+  <data name="Subscriptions.TransactionNotFound" xml:space="preserve"><value>عملية الدفع غير موجودة.</value></data>
+  <data name="Subscriptions.InvalidWebhookPayload" xml:space="preserve"><value>بيانات إشعار الدفع غير صالحة.</value></data>
+  <data name="Subscriptions.HmacVerificationFailed" xml:space="preserve"><value>فشل التحقق من التوقيع الأمني للدفعة (HMAC).</value></data>
+  <data name="Subscriptions.OrderIdMissing" xml:space="preserve"><value>رقم الطلب مفقود في إشعار الدفع.</value></data>
+  <data name="Subscriptions.ActiveSubscriptionRequired" xml:space="preserve"><value>يلزم وجود اشتراك نشط للوصول إلى هذه الميزة.</value></data>
+  <data name="Subscriptions.GetPlansSuccess" xml:space="preserve"><value>تم استرداد خطط الاشتراك بنجاح.</value></data>
+  <data name="Subscriptions.GetCurrentSubscriptionSuccess" xml:space="preserve"><value>تم استرداد بيانات الاشتراك الحالي بنجاح.</value></data>
+  <data name="Subscriptions.InitiatePaymentSuccess" xml:space="preserve"><value>تم بدء عملية الدفع بنجاح.</value></data>
+  <data name="Subscriptions.GetPaymentHistorySuccess" xml:space="preserve"><value>تم استرداد سجل المدفوعات بنجاح.</value></data>
+  <data name="Subscriptions.WebhookProcessedSuccess" xml:space="preserve"><value>تمت معالجة إشعار الدفع بنجاح.</value></data>
 </root>
 
 

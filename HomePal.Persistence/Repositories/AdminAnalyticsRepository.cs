@@ -586,6 +586,63 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
         };
     }
 
+    public async Task<RevenueAnalyticsDto> GetRevenueAnalyticsAsync(CancellationToken cancellationToken = default)
+    {
+        var now = DateTime.UtcNow;
+        var startOfMonth = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        var totalRevenue = await _context.PaymentTransactions
+            .Where(t => t.Status == PaymentStatus.Success)
+            .SumAsync(t => (decimal?)t.Amount, cancellationToken) ?? 0m;
+
+        var monthlyRevenue = await _context.PaymentTransactions
+            .Where(t => t.Status == PaymentStatus.Success && t.CreatedAt >= startOfMonth)
+            .SumAsync(t => (decimal?)t.Amount, cancellationToken) ?? 0m;
+
+        var activeSubscribers = await _context.UserSubscriptions
+            .CountAsync(s => s.Status == SubscriptionStatus.Active && s.EndDate > now, cancellationToken);
+
+        var totalTransactions = await _context.PaymentTransactions
+            .CountAsync(cancellationToken);
+
+        var successfulTransactions = await _context.PaymentTransactions
+            .CountAsync(t => t.Status == PaymentStatus.Success, cancellationToken);
+
+        // 6-Month Monthly Revenue Trend
+        var monthlyTrend = new List<MonthlyRevenueTrendDto>();
+        for (int i = 5; i >= 0; i--)
+        {
+            var targetMonth = now.AddMonths(-i);
+            var mStart = new DateTime(targetMonth.Year, targetMonth.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+            var mEnd = mStart.AddMonths(1);
+
+            var monthRev = await _context.PaymentTransactions
+                .Where(t => t.Status == PaymentStatus.Success && t.CreatedAt >= mStart && t.CreatedAt < mEnd)
+                .SumAsync(t => (decimal?)t.Amount, cancellationToken) ?? 0m;
+
+            var monthTxns = await _context.PaymentTransactions
+                .CountAsync(t => t.Status == PaymentStatus.Success && t.CreatedAt >= mStart && t.CreatedAt < mEnd, cancellationToken);
+
+            monthlyTrend.Add(new MonthlyRevenueTrendDto
+            {
+                Month = targetMonth.ToString("MMM yyyy", CultureInfo.InvariantCulture),
+                Revenue = monthRev,
+                TransactionsCount = monthTxns
+            });
+        }
+
+        return new RevenueAnalyticsDto
+        {
+            TotalRevenue = totalRevenue,
+            MonthlyRevenue = monthlyRevenue,
+            Currency = "EGP",
+            ActiveSubscribers = activeSubscribers,
+            TotalTransactions = totalTransactions,
+            SuccessfulTransactions = successfulTransactions,
+            MonthlyTrend = monthlyTrend
+        };
+    }
+
     private static int CalculateAge(DateOnly birthDate)
     {
         var today = DateOnly.FromDateTime(DateTime.UtcNow);

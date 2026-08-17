@@ -141,11 +141,44 @@ public class AgentChatService : IAgentChatService
                 yield break;
             }
 
+            // Manually persist user message
+            await _unitOfWork.AgentChats.AddMessageAsync(new Domain.Entities.AgentChatMessage
+            {
+                Id = Guid.NewGuid(),
+                ChatSessionId = chatSession.Id,
+                Role = "user",
+                Content = msgText,
+                CreatedAt = DateTime.UtcNow
+            }, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
             updates = _agent.RunStreamingAsync(msgText, session, cancellationToken: cancellationToken);
         }
 
+        // ── Callback to persist assistant message & session state after streaming completes ─
+        var onCompletedAsync = async (string assistantText) =>
+        {
+            if (!string.IsNullOrWhiteSpace(assistantText))
+            {
+                await _unitOfWork.AgentChats.AddMessageAsync(new Domain.Entities.AgentChatMessage
+                {
+                    Id = Guid.NewGuid(),
+                    ChatSessionId = chatSession.Id,
+                    Role = "assistant",
+                    Content = assistantText,
+                    CreatedAt = DateTime.UtcNow
+                }, cancellationToken);
+            }
+
+            var sessionJson = await _agent.SerializeSessionAsync(session, cancellationToken: cancellationToken);
+            chatSession.SessionStateJson = sessionJson.GetRawText();
+            chatSession.UpdatedAt = DateTime.UtcNow;
+
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        };
+
         // ── Delegate to SSE Stream ──────────────────────────────────────────
-        await foreach (var sseItem in _sseStream.RunAsync(updates, chatSession.Id, runId, threadId, messageId, cancellationToken))
+        await foreach (var sseItem in _sseStream.RunAsync(updates, chatSession.Id, runId, threadId, messageId, onCompletedAsync, cancellationToken))
         {
             yield return sseItem;
         }

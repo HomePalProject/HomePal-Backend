@@ -130,6 +130,19 @@ public static class ErrorMessages
         public const string GovernorateNotFound = "Locations.GovernorateNotFound";
         public const string CityNotFound = "Locations.CityNotFound";
     }
+
+    public static class Subscriptions
+    {
+        public const string PlanNotFound = "Subscriptions.PlanNotFound";
+        public const string PlanInactive = "Subscriptions.PlanInactive";
+        public const string AlreadySubscribed = "Subscriptions.AlreadySubscribed";
+        public const string PaymentInitiationFailed = "Subscriptions.PaymentInitiationFailed";
+        public const string TransactionNotFound = "Subscriptions.TransactionNotFound";
+        public const string InvalidWebhookPayload = "Subscriptions.InvalidWebhookPayload";
+        public const string HmacVerificationFailed = "Subscriptions.HmacVerificationFailed";
+        public const string OrderIdMissing = "Subscriptions.OrderIdMissing";
+        public const string ActiveSubscriptionRequired = "Subscriptions.ActiveSubscriptionRequired";
+    }
 }
 
 

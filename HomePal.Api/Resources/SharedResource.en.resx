@@ -290,6 +290,22 @@
   <!-- Analytics & Reports -->
   <data name="Analytics.FetchSuccess" xml:space="preserve"><value>Analytics data retrieved successfully.</value></data>
   <data name="Reports.FetchSuccess" xml:space="preserve"><value>Household report retrieved successfully.</value></data>
+
+  <!-- Subscriptions -->
+  <data name="Subscriptions.PlanNotFound" xml:space="preserve"><value>Subscription plan not found.</value></data>
+  <data name="Subscriptions.PlanInactive" xml:space="preserve"><value>Subscription plan is currently inactive.</value></data>
+  <data name="Subscriptions.AlreadySubscribed" xml:space="preserve"><value>You already have an active subscription.</value></data>
+  <data name="Subscriptions.PaymentInitiationFailed" xml:space="preserve"><value>Failed to initialize payment gateway.</value></data>
+  <data name="Subscriptions.TransactionNotFound" xml:space="preserve"><value>Payment transaction not found.</value></data>
+  <data name="Subscriptions.InvalidWebhookPayload" xml:space="preserve"><value>Invalid or empty webhook payload.</value></data>
+  <data name="Subscriptions.HmacVerificationFailed" xml:space="preserve"><value>HMAC signature verification failed.</value></data>
+  <data name="Subscriptions.OrderIdMissing" xml:space="preserve"><value>Order ID is missing from payment callback.</value></data>
+  <data name="Subscriptions.ActiveSubscriptionRequired" xml:space="preserve"><value>An active subscription is required to access this feature.</value></data>
+  <data name="Subscriptions.GetPlansSuccess" xml:space="preserve"><value>Subscription plans retrieved successfully.</value></data>
+  <data name="Subscriptions.GetCurrentSubscriptionSuccess" xml:space="preserve"><value>Current subscription retrieved successfully.</value></data>
+  <data name="Subscriptions.InitiatePaymentSuccess" xml:space="preserve"><value>Payment initiated successfully.</value></data>
+  <data name="Subscriptions.GetPaymentHistorySuccess" xml:space="preserve"><value>Payment history retrieved successfully.</value></data>
+  <data name="Subscriptions.WebhookProcessedSuccess" xml:space="preserve"><value>Payment webhook processed successfully.</value></data>
 </root>
 
 

@@ -42,6 +42,12 @@ public static class ApplicationServicesExtensions
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
+        services.Configure<HomePal.Application.Features.Subscriptions.Options.PaymobOptions>(
+            configuration.GetSection(HomePal.Application.Features.Subscriptions.Options.PaymobOptions.SectionName));
+
+        services.Configure<HomePal.Application.Features.Subscriptions.Options.SubscriptionOptions>(
+            configuration.GetSection(HomePal.Application.Features.Subscriptions.Options.SubscriptionOptions.SectionName));
+
         services.AddHttpContextAccessor();
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -68,6 +74,9 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.Reports.Interfaces.IAdminAnalyticsRepository, AdminAnalyticsRepository>();
         services.AddScoped<HomePal.Application.Features.Locations.Interfaces.IGovernorateRepository, GovernorateRepository>();
         services.AddScoped<HomePal.Application.Features.Locations.Interfaces.ICityRepository, CityRepository>();
+        services.AddScoped<HomePal.Application.Features.Subscriptions.Interfaces.ISubscriptionPlanRepository, SubscriptionPlanRepository>();
+        services.AddScoped<HomePal.Application.Features.Subscriptions.Interfaces.IUserSubscriptionRepository, UserSubscriptionRepository>();
+        services.AddScoped<HomePal.Application.Features.Subscriptions.Interfaces.IPaymentTransactionRepository, PaymentTransactionRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<ITokenProvider, TokenProvider>();
@@ -75,6 +84,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<IGoogleTokenValidator, GoogleTokenValidator>();
         services.AddScoped<IFileStorageService, HomePal.Infrastructure.Storage.FileStorageService>();
         services.AddHttpClient<HomePal.Application.Features.Reports.Interfaces.ILangfuseMetricsService, HomePal.Infrastructure.AI.Services.LangfuseMetricsService>();
+        services.AddHttpClient<HomePal.Application.Features.Subscriptions.Interfaces.IPaymobService, HomePal.Infrastructure.Payment.PaymobService>();
 
         services.AddLocalization();
         services.Configure<RequestLocalizationOptions>(options =>
@@ -104,6 +114,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.Reports.Interfaces.IHouseholdReportService, HomePal.Application.Features.Reports.Services.HouseholdReportService>();
         services.AddScoped<HomePal.Application.Features.Reports.Interfaces.IAdminAnalyticsService, HomePal.Application.Features.Reports.Services.AdminAnalyticsService>();
         services.AddScoped<HomePal.Application.Features.Locations.Interfaces.ILocationService, HomePal.Application.Features.Locations.Services.LocationService>();
+        services.AddScoped<HomePal.Application.Features.Subscriptions.Interfaces.ISubscriptionService, HomePal.Application.Features.Subscriptions.Services.SubscriptionService>();
 
         services.AddControllers()
             .AddDataAnnotationsLocalization(options =>

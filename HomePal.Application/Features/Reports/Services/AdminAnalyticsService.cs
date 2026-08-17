@@ -58,4 +58,10 @@ public class AdminAnalyticsService : IAdminAnalyticsService
     {
         return await _langfuseMetricsService.GetTokenMetricsAsync(filter, cancellationToken);
     }
+
+    public async Task<Result<RevenueAnalyticsDto>> GetRevenueAnalyticsAsync(CancellationToken cancellationToken = default)
+    {
+        var data = await _unitOfWork.AdminAnalytics.GetRevenueAnalyticsAsync(cancellationToken);
+        return Result<RevenueAnalyticsDto>.Ok(data, SuccessMessages.Analytics.Fetch);
+    }
 }

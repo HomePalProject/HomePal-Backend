@@ -149,5 +149,14 @@ public static class SuccessMessages
     {
         public const string Fetch = "Reports.FetchSuccess";
     }
+
+    public static class Subscriptions
+    {
+        public const string GetPlans = "Subscriptions.GetPlansSuccess";
+        public const string GetCurrentSubscription = "Subscriptions.GetCurrentSubscriptionSuccess";
+        public const string InitiatePayment = "Subscriptions.InitiatePaymentSuccess";
+        public const string GetPaymentHistory = "Subscriptions.GetPaymentHistorySuccess";
+        public const string WebhookProcessed = "Subscriptions.WebhookProcessedSuccess";
+    }
 }
 

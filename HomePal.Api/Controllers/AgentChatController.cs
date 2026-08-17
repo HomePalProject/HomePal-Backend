@@ -1,3 +1,4 @@
+using HomePal.Api.Attributes;
 using HomePal.Application.Features.AgentChat.DTOs;
 using HomePal.Application.Features.AgentChat.Interfaces;
 using HomePal.Shared.Responses;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HomePal.Api.Controllers;
 
 [Authorize]
+[RequireActiveSubscription]
 [Route("api/agent-chat")]
 public class AgentChatController : BaseApiController
 {

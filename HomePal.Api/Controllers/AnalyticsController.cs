@@ -95,4 +95,17 @@ public class AnalyticsController : BaseApiController
         var result = await _analyticsService.GetTokenMetricsAsync(filter, cancellationToken);
         return HandleResult(result);
     }
+
+    /// <summary>
+    /// Financial and subscription KPIs, revenue breakdown by plan, and monthly trend
+    /// </summary>
+    [HttpGet("revenue")]
+    [ProducesResponseType(typeof(ApiResponse<RevenueAnalyticsDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> GetRevenue(CancellationToken cancellationToken)
+    {
+        var result = await _analyticsService.GetRevenueAnalyticsAsync(cancellationToken);
+        return HandleResult(result);
+    }
 }

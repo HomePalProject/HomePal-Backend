@@ -27,6 +27,8 @@ using OpenTelemetry.Exporter;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
+using Microsoft.Agents.AI.Workflows;
+
 namespace HomePal.Api.Extensions;
 
 public static class AIServicesExtensions
@@ -71,7 +73,6 @@ public static class AIServicesExtensions
                         .AddSource("Experimental.Microsoft.Extensions.AI")
                         .AddSource("Microsoft.Extensions.AI")
                         .AddSource("Microsoft.Agents.AI")
-                        .AddSource("OpenAI")
                         .AddSource("*")
                         .AddOtlpExporter(options =>
                         {
@@ -164,7 +165,6 @@ public static class AIServicesExtensions
         services.AddScoped<IngredientSearchTools>();
         services.AddScoped<OfferSearchTools>();
 
-        services.AddScoped<ChatHistoryProvider, HomePal.Infrastructure.AI.AgentChat.Services.DbChatHistoryProvider>();
         services.AddScoped<HomePal.Infrastructure.AI.AgentChat.Services.AgentSseStream>();
         services.AddScoped<HomePal.Infrastructure.AI.Common.AgentUserContext>();
         services.AddSingleton<CalculatorTools>();
@@ -184,24 +184,33 @@ public static class AIServicesExtensions
             var pantryTools = sp.GetRequiredService<PantryTools>();
             var recipeTools = sp.GetRequiredService<RecipeSearchTools>();
             var catalogTools = sp.GetRequiredService<CatalogReferenceTools>();
+            var householdTools = sp.GetRequiredService<HouseholdTools>();
+            var budgetTools = sp.GetRequiredService<BudgetTools>();
+            var offerTools = sp.GetRequiredService<OfferSearchTools>();
+            var shoppingListTools = sp.GetRequiredService<ShoppingListTools>();
             var calcTools = sp.GetRequiredService<CalculatorTools>();
             return chatClient.AsAIAgent(new ChatClientAgentOptions
             {
+                Id = "meal-and-inventory-agent",
                 Name = "MealAndInventoryAgent",
-                Description = "Evaluates pantry stock, expiration dates, available ingredients, discovers recipes, manages meal plans, and updates pantry items.",
+                Description = "Handles household-aware recipes, pantry inventory, expiration tracking, meal plans, and budget evaluation for missing ingredients.",
                 ChatOptions = new ChatOptions
                 {
                     Instructions = MealAndInventoryInstructions.SystemInstructions,
                     Tools =
                     [
-                        AIFunctionFactory.Create(mealPlanTools.SaveMealPlanAsync),
-                        AIFunctionFactory.Create(mealPlanTools.GetLastMealPlanAsync),
-                        AIFunctionFactory.Create(mealPlanTools.UpdateLastMealPlanAsync),
+                        AIFunctionFactory.Create(householdTools.GetHouseholdMembersWithPreferencesAsync),
                         AIFunctionFactory.Create(pantryTools.GetPantryAsync),
                         AIFunctionFactory.Create(pantryTools.AddPantryItemAsync),
                         AIFunctionFactory.Create(pantryTools.UpdatePantryAsync),
                         AIFunctionFactory.Create(pantryTools.DeletePantryItemAsync),
                         AIFunctionFactory.Create(recipeTools.SearchRecipesAsync),
+                        AIFunctionFactory.Create(budgetTools.GetCurrentBudgetAsync),
+                        AIFunctionFactory.Create(offerTools.SearchOffersAsync),
+                        AIFunctionFactory.Create(shoppingListTools.AddShoppingListItemAsync),
+                        AIFunctionFactory.Create(mealPlanTools.SaveMealPlanAsync),
+                        AIFunctionFactory.Create(mealPlanTools.GetLastMealPlanAsync),
+                        AIFunctionFactory.Create(mealPlanTools.UpdateLastMealPlanAsync),
                         AIFunctionFactory.Create(catalogTools.GetCategoriesAndUnitsAsync),
                         AIFunctionFactory.Create(calcTools.Calculate)
                     ]
@@ -217,8 +226,9 @@ public static class AIServicesExtensions
             var calcTools = sp.GetRequiredService<CalculatorTools>();
             return chatClient.AsAIAgent(new ChatClientAgentOptions
             {
+                Id = "nutrition-and-health-agent",
                 Name = "NutritionAndHealthAgent",
-                Description = "Analyzes dietary guidelines, macronutrients, calorie targets, allergies, health restrictions, and searches ingredients for nutritional details.",
+                Description = "Handles dietary guidelines, macronutrients, calorie targets, allergies, health restrictions, and ingredient nutrition.",
                 ChatOptions = new ChatOptions
                 {
                     Instructions = NutritionAndHealthInstructions.SystemInstructions,
@@ -241,8 +251,9 @@ public static class AIServicesExtensions
             var calcTools = sp.GetRequiredService<CalculatorTools>();
             return chatClient.AsAIAgent(new ChatClientAgentOptions
             {
+                Id = "budget-and-shopping-agent",
                 Name = "BudgetAndShoppingAgent",
-                Description = "Monitors household budget limits, manages shopping list items, estimates grocery costs, and searches supermarket offers and discounts.",
+                Description = "Handles household budget limits, shopping lists, grocery cost estimates, and supermarket offers.",
                 ChatOptions = new ChatOptions
                 {
                     Instructions = BudgetAndShoppingInstructions.SystemInstructions,
@@ -260,39 +271,50 @@ public static class AIServicesExtensions
             });
         });
 
-        // Master Meal Planning Supervisor Agent (Registered as "Agent")
-        // Orchestrates specialist sub-agents, delegates tasks, and synthesizes answers.
+
         services.AddKeyedScoped<AIAgent>("Agent", (sp, key) =>
         {
             var chatClient = sp.GetRequiredService<IChatClient>();
-            var historyProvider = sp.GetRequiredService<ChatHistoryProvider>();
             var calcTools = sp.GetRequiredService<CalculatorTools>();
 
             var mealAndInventoryAgent = sp.GetRequiredKeyedService<AIAgent>("MealAndInventoryAgent");
             var nutritionAndHealthAgent = sp.GetRequiredKeyedService<AIAgent>("NutritionAndHealthAgent");
             var budgetAndShoppingAgent = sp.GetRequiredKeyedService<AIAgent>("BudgetAndShoppingAgent");
 
-            var options = new ChatClientAgentOptions
+            var triageAgent = chatClient.AsAIAgent(new ChatClientAgentOptions
             {
-                Name = "MealPlanningSupervisorAgent",
+                Id = "triage-agent",
+                Name = "TriageAgent",
+                Description = "Primary entry point that routes user conversations to the appropriate specialist agent.",
                 ChatOptions = new ChatOptions
                 {
-                    Instructions = MealPlanningSupervisorInstructions.SystemInstructions,
+                    Instructions = TriageAgentInstructions.SystemInstructions,
                     Tools =
                     [
-                        // Sub-Agents (Specialized domain advisors)
-                        mealAndInventoryAgent.AsAIFunction(),
-                        nutritionAndHealthAgent.AsAIFunction(),
-                        budgetAndShoppingAgent.AsAIFunction(),
-
-                        // Utilities
                         AIFunctionFactory.Create(calcTools.Calculate)
                     ]
-                },
-                ChatHistoryProvider = historyProvider
-            };
+                }
+            });
 
-            return chatClient.AsAIAgent(options);
+            // Build Handoff Workflow
+            var handoffBuilder = AgentWorkflowBuilder.CreateHandoffBuilderWith(triageAgent);
+
+            // Triage -> Specialists
+            handoffBuilder.WithHandoffs(
+                triageAgent,
+                [mealAndInventoryAgent, nutritionAndHealthAgent, budgetAndShoppingAgent]);
+
+            // Specialists -> Triage
+            handoffBuilder.WithHandoffs(
+                [mealAndInventoryAgent, nutritionAndHealthAgent, budgetAndShoppingAgent],
+                triageAgent);
+
+            var workflow = handoffBuilder.Build();
+
+            return workflow.AsAIAgent(
+                id: "homepal-handoff",
+                name: "HomePal Handoff Agent",
+                description: "HomePal multi-agent handoff workflow.");
         });
 
         return services;

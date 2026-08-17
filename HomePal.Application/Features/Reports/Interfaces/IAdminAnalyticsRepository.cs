@@ -10,4 +10,5 @@ public interface IAdminAnalyticsRepository
     Task<MealPlansSummaryDto> GetMealPlansSummaryAsync(CancellationToken cancellationToken = default);
     Task<ShoppingTrendsDto> GetShoppingTrendsAsync(CancellationToken cancellationToken = default);
     Task<UserDemographicsDto> GetUserDemographicsAsync(CancellationToken cancellationToken = default);
+    Task<RevenueAnalyticsDto> GetRevenueAnalyticsAsync(CancellationToken cancellationToken = default);
 }
