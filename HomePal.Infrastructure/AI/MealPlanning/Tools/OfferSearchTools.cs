@@ -50,6 +50,8 @@ public class OfferSearchTools
                 category = o.CategoryName,
                 originalPrice = o.OriginalPrice,
                 discountedPrice = o.DiscountedPrice,
+                unitId=o.UnitId,
+                categoryId=o.CategoryId,
                 quantity = o.Quantity,
                 unit = o.UnitSymbol ?? o.UnitName,
                 sourceUrl = o.SourceUrl,
