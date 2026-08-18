@@ -58,6 +58,13 @@ public class ShoppingListService : IShoppingListService
                 return Result<ShoppingListItemResponse>.Fail(ErrorMessages.Catalog.ProductCategoryNotFound, ResultStatus.BadRequest);
         }
 
+        if (request.OfferId.HasValue)
+        {
+            var offer = await _unitOfWork.Offers.GetByIdAsync(request.OfferId.Value, cancellationToken);
+            if (offer == null)
+                return Result<ShoppingListItemResponse>.Fail(ErrorMessages.Catalog.OfferNotFound, ResultStatus.BadRequest);
+        }
+
         var newItem = request.ToEntity(shoppingList.Id);
 
         await _unitOfWork.ShoppingListItems.AddAsync(newItem, cancellationToken);
@@ -126,6 +133,13 @@ public class ShoppingListService : IShoppingListService
             var category = await _unitOfWork.ProductCategories.GetByIdAsync(request.CategoryId.Value, cancellationToken);
             if (category == null)
                 return Result<ShoppingListItemResponse>.Fail(ErrorMessages.Catalog.ProductCategoryNotFound, ResultStatus.BadRequest);
+        }
+
+        if (request.OfferId.HasValue)
+        {
+            var offer = await _unitOfWork.Offers.GetByIdAsync(request.OfferId.Value, cancellationToken);
+            if (offer == null)
+                return Result<ShoppingListItemResponse>.Fail(ErrorMessages.Catalog.OfferNotFound, ResultStatus.BadRequest);
         }
 
         item.UpdateEntity(request);

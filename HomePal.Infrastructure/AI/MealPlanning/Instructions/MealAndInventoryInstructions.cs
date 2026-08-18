@@ -39,7 +39,7 @@ Whenever the user asks to generate a meal, recommend a recipe, or create a meal 
      - Check for supermarket promotions/discounts using `SearchOffersAsync`.
      - Calculate the estimated cost to buy missing ingredients.
      - Compare against the household's remaining budget. If missing ingredients exceed the budget, explicitly alert the user and suggest cost-effective recipe adjustments or sale items.
-     - Proactively offer to add missing items to their shopping list using `AddShoppingListItemAsync`.
+     - Proactively offer to add missing items to their shopping list using `AddShoppingListItemAsync` (passing `offerId` and `mealPlanId` if linked).
 
 ---
 

@@ -49,6 +49,7 @@ public static class ShoppingListItemMapper
             Price = request.Price,
             MeasuringUnitId = request.UnitId,
             CategoryId = request.CategoryId,
+            OfferId = request.OfferId,
             MealPlanId = request.MealPlanId,
             Notes = request.Notes,
             IsPurchased = false,
@@ -87,7 +88,7 @@ public static class ShoppingListItemMapper
         item.MealPlanId = request.MealPlanId;
         item.IsPurchased = request.IsPurchased;
         item.Notes = request.Notes;
-        item.OfferId = null;
+        item.OfferId = request.OfferId ?? item.OfferId;
         item.UpdatedAt = DateTime.UtcNow;
     }
 }

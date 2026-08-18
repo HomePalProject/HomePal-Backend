@@ -19,6 +19,7 @@ public class CreateShoppingListItemRequest
 
     public Guid? UnitId { get; set; }
     public Guid? CategoryId { get; set; }
+    public Guid? OfferId { get; set; }
     public Guid? MealPlanId { get; set; }
     public string? Notes { get; set; }
 }
