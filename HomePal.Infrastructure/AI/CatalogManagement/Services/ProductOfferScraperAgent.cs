@@ -70,7 +70,7 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
         var imageBytes = memoryStream.ToArray();
 
         var resultDto = new OfferScraperResultDto { TotalScrapedImages = 1 };
-        await ProcessImageBytesWithServicesAsync(_unitOfWork, _embeddingService, _fileStorageService, _logger, imageBytes, request.ImageFile.ContentType, request.SupermarketId, request.Caption, request.OcrText, resultDto, cancellationToken);
+        await ProcessImageBytesWithServicesAsync(_unitOfWork, _embeddingService, _fileStorageService, _logger, imageBytes, request.ImageFile.ContentType, request.SupermarketId, request.Caption, request.OcrText, request.SourceUrl, resultDto, cancellationToken);
 
         return Result<OfferScraperResultDto>.Ok(resultDto, SuccessMessages.Catalog.GetOffers);
     }
@@ -128,7 +128,7 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
 
                             await ProcessImageBytesWithServicesAsync(
                                 scopedUnitOfWork, scopedEmbedding, scopedStorage, scopedLogger,
-                                imageBytes, "image/jpeg", request.SupermarketId, post.Text, media.OcrText, resultDto, CancellationToken.None);
+                                imageBytes, "image/jpeg", request.SupermarketId, post.Text, media.OcrText, post.PostUrl, resultDto, CancellationToken.None);
 
                             var extractedInThisImage = resultDto.TotalExtractedOffers - prevOffers;
                             _jobTracker.UpdateProgress(1, extractedInThisImage);
@@ -163,6 +163,7 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
         Guid supermarketId,
         string? caption,
         string? ocrText,
+        string? sourceUrl,
         OfferScraperResultDto resultDto,
         CancellationToken cancellationToken)
     {
@@ -267,6 +268,7 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
                 ValidTo = validToDate,
                 CategoryId = categoryId,
                 ImagePath = croppedImagePath,
+                SourceUrl = sourceUrl,
                 SupermarketId = supermarketId,
                 Embedding = sqlVector,
                 IsVerified = false,

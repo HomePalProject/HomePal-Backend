@@ -22,6 +22,9 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
         builder.Property(o => o.Embedding)
             .HasColumnType("vector(1536)");
 
+        builder.Property(o => o.SourceUrl)
+            .HasMaxLength(2048);
+
         builder.Property(o => o.IsVerified)
             .HasDefaultValue(true);
 

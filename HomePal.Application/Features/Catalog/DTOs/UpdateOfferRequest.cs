@@ -26,6 +26,7 @@ public class UpdateOfferRequest
     public DateTime? ValidTo { get; set; }
     public Guid? CategoryId { get; set; }
     public string? ImagePath { get; set; }
+    public string? SourceUrl { get; set; }
 
     [Required(ErrorMessage = ErrorMessages.Validation.Required)]
     public Guid SupermarketId { get; set; }

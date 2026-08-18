@@ -52,6 +52,7 @@ public class OfferSearchTools
                 discountedPrice = o.DiscountedPrice,
                 quantity = o.Quantity,
                 unit = o.UnitSymbol ?? o.UnitName,
+                sourceUrl = o.SourceUrl,
                 validFrom = o.ValidFrom,
                 validTo = o.ValidTo
             })

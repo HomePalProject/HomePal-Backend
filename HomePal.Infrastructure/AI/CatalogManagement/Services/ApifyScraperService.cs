@@ -66,6 +66,7 @@ public class ApifyScraperService : IApifyScraperService
             {
                 Id = index,
                 Text = p.Text,
+                PostUrl = p.PostUrl ?? p.Url ?? p.FacebookUrl,
                 Media = p.Media?.Select(m => new FacebookMediaDto
                 {
                     ImgUrl = m.Photo_Image?.Uri ?? m.Image?.Uri,
@@ -85,6 +86,9 @@ public class ApifyScraperService : IApifyScraperService
     private class ApifyRawPost
     {
         public string? Text { get; set; }
+        public string? Url { get; set; }
+        public string? PostUrl { get; set; }
+        public string? FacebookUrl { get; set; }
         public List<ApifyRawMedia>? Media { get; set; }
     }
 

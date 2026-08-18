@@ -26,6 +26,7 @@ public class ProcessOfferImageRequest
 
     public string? OcrText { get; set; }
     public string? Caption { get; set; }
+    public string? SourceUrl { get; set; }
 }
 
 public class OfferScraperResultDto

@@ -24,6 +24,7 @@ public static class OfferMapper
             CategoryId = offer.CategoryId,
             CategoryName = offer.Category?.Name.Get(culture),
             ImagePath = offer.ImagePath,
+            SourceUrl = offer.SourceUrl,
             SupermarketId = offer.SupermarketId,
             SupermarketName = offer.Supermarket?.Name.Get(culture) ?? string.Empty,
             SupermarketLogoPath = offer.Supermarket?.LogoPath,
@@ -48,6 +49,7 @@ public static class OfferMapper
             ValidTo = request.ValidTo,
             CategoryId = request.CategoryId,
             ImagePath = request.ImagePath,
+            SourceUrl = request.SourceUrl,
             SupermarketId = request.SupermarketId,
             IsVerified = request.IsVerified,
             CreatedAt = DateTime.UtcNow
@@ -66,6 +68,7 @@ public static class OfferMapper
         offer.ValidTo = request.ValidTo;
         offer.CategoryId = request.CategoryId;
         offer.ImagePath = request.ImagePath;
+        offer.SourceUrl = request.SourceUrl;
         offer.SupermarketId = request.SupermarketId;
         offer.IsVerified = request.IsVerified;
         offer.UpdatedAt = DateTime.UtcNow;

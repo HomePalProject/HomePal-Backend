@@ -16,6 +16,7 @@ public class OfferResponse
     public Guid? CategoryId { get; set; }
     public string? CategoryName { get; set; }
     public string? ImagePath { get; set; }
+    public string? SourceUrl { get; set; }
     public Guid SupermarketId { get; set; }
     public string SupermarketName { get; set; } = string.Empty;
     public string? SupermarketLogoPath { get; set; }

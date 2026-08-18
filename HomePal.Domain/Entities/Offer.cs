@@ -23,6 +23,7 @@ public class Offer : BaseAuditableEntity
     public ProductCategory? Category { get; set; }
 
     public string? ImagePath { get; set; }
+    public string? SourceUrl { get; set; }
 
     public Guid SupermarketId { get; set; }
     public Supermarket Supermarket { get; set; } = null!;
