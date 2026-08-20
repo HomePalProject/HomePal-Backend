@@ -8,6 +8,7 @@ public class CalculatorTools
 {
     [Description(
         "Perform mathematical calculations when an exact numerical result is required. " +
+        "Use this instead of mental arithmetic for all cost totals, budget subtraction, caloric sums, and portion scaling — always calculate, never estimate. " +
         "Supports standard math expressions ('250 * 0.2', '500 + 350', '2000 / 4') and percentage formulas ('15% of 800', '20% * 500')."
     )]
     public double Calculate(

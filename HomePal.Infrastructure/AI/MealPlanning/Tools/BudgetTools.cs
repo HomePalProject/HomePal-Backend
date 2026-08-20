@@ -20,7 +20,7 @@ public class BudgetTools
         _userContext = userContext;
     }
 
-    [Description("Retrieves the current month's household budget, total amount spent so far, and remaining available balance.")]
+    [Description("Retrieves the current month's household grocery budget, total amount spent so far, and remaining available balance. 'hasBudget: false' means no budget has been set for this month — inform the user and skip budget comparisons. 'isOverBudget: true' means total spending exceeds the budget limit — alert the user and suggest cost-saving alternatives.")]
     public async Task<object> GetCurrentBudgetAsync(CancellationToken cancellationToken = default)
     {
         var userId = _userContext.GetCurrentUserId();

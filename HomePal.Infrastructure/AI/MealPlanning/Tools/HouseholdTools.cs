@@ -23,7 +23,7 @@ public class HouseholdTools
         _userContext = userContext;
     }
 
-    [Description("Gets all members in the user's household along with their dietary preferences, allergies, health restrictions, age, gender, and roles.")]
+    [Description("Gets all members in the user's household along with their dietary preferences, allergies, health restrictions, age, gender, and roles. Preferences include food allergies — treat any registered allergy as a hard safety constraint that must never be violated. IMPORTANT: Always call this tool before generating any meal recommendations or recipe suggestions.")]
     public async Task<object> GetHouseholdMembersWithPreferencesAsync(CancellationToken cancellationToken = default)
     {
         var userId = _userContext.GetCurrentUserId();

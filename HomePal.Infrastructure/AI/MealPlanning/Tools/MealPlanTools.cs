@@ -26,7 +26,7 @@ public class MealPlanTools
         [Description("Descriptive title for the meal plan (e.g. 'Low-Carb Weekly Plan', 'Family Weekend Dinners').")] string title,
         [Description("Start date of the meal plan (e.g. '2026-08-15').")] DateTime startDate,
         [Description("End date of the meal plan (e.g. '2026-08-21').")] DateTime endDate,
-        [Description("The full meal plan content (Markdown formatted text or JSON string).")] string planData,
+        [Description("The complete meal plan content including all days, meals, and ingredients (Markdown formatted text or structured JSON string). This is the primary content field — do not leave it empty.")]  string planData,
         [Description("Total estimated cost for all ingredients in the plan.")] decimal totalEstimatedCost = 0,
         CancellationToken cancellationToken = default)
     {
@@ -73,7 +73,7 @@ public class MealPlanTools
         };
     }
 
-    [Description("Updates the user's most recent saved meal plan with new title, dates, cost, or plan content.")]
+    [Description("Updates the user's most recent saved meal plan with new title, dates, cost, or plan content. IMPORTANT: This tool operates only on the most recently saved plan. Call GetLastMealPlanAsync first to retrieve current values before performing a partial update.")]
     public async Task<object> UpdateLastMealPlanAsync(
         [Description("Updated title for the meal plan (if changing).")] string? title = null,
         [Description("Updated start date (if changing).")] DateTime? startDate = null,

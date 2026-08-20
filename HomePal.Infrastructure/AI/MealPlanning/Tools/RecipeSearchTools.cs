@@ -17,7 +17,7 @@ public class RecipeSearchTools
 
     [Description("Searches the recipe database using semantic vector search for recipes matching dish names, ingredients, meal types, cuisines, or dietary preferences.")]
     public async Task<object> SearchRecipesAsync(
-        [Description("The search query (e.g. 'grilled chicken with vegetables', 'quick high protein breakfast', 'vegetarian pasta').")] string query,
+        [Description("The search query combining dietary constraints, ingredients, and meal type for best results (e.g., 'halal high-protein grilled chicken dinner for family', 'vegetarian pasta with available pantry items', 'quick low-carb breakfast').")] string query,
         [Description("The maximum number of recipe results to return (1-10). Default is 5.")] int limit = 5,
         CancellationToken cancellationToken = default)
     {

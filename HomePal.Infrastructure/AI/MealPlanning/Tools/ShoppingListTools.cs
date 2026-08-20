@@ -41,14 +41,14 @@ public class ShoppingListTools
         };
     }
 
-    [Description("Adds an item to the user's household shopping list with optional unitId, categoryId, price, offerId, and optional meal plan attachment.")]
+    [Description("Adds an item to the user's household shopping list. Before adding, call GetShoppingListAsync to check for duplicates — if the item already exists, use UpdateShoppingListItemAsync instead to merge quantities.")]
     public async Task<object> AddShoppingListItemAsync(
         [Description("The name of the item to add to the shopping list (e.g. 'Tomatoes', 'Olive Oil').")] string name,
         [Description("The quantity of the item (e.g. 2, 1.5). Default is 1.")] double quantity = 1,
         [Description("The portion count for recipes/meals. Default is 1.")] int portionCount = 1,
-        [Description("Optional unique ID of the measuring unit.")] Guid? unitId = null,
-        [Description("Optional unique ID of the product category.")] Guid? categoryId = null,
-        [Description("Optional unique ID of the supermarket offer to link this item to (e.g. from SearchOffersAsync).")] Guid? offerId = null,
+        [Description("Optional unique ID of the measuring unit. Retrieve from GetCategoriesAndUnitsAsync if needed. Never guess or fabricate this GUID.")] Guid? unitId = null,
+        [Description("Optional unique ID of the product category. Retrieve from GetCategoriesAndUnitsAsync if needed. Never guess or fabricate this GUID.")] Guid? categoryId = null,
+        [Description("Optional unique ID of the supermarket offer to link this item to. Use the 'id' field returned by SearchOffersAsync — passing it here links the discount to this shopping list item.")] Guid? offerId = null,
         [Description("Optional estimated or known price for the item.")] decimal? price = null,
         [Description("Optional notes or brand preferences.")] string? notes = null,
         [Description("Optional unique ID of the meal plan this item belongs to.")] Guid? mealPlanId = null,
@@ -83,7 +83,7 @@ public class ShoppingListTools
         };
     }
 
-    [Description("Updates an existing item on the shopping list (e.g. mark as purchased, change quantity, unitId, categoryId, price, offerId, or attach/detach meal plan).")]
+    [Description("Updates an existing item on the shopping list (e.g., mark as purchased, change quantity, price, or attach a meal plan). The item is located by exact ID match if itemId is provided, or by exact then fuzzy name match using itemName.")]
     public async Task<object> UpdateShoppingListItemAsync(
         [Description("The name of the item to update (e.g. 'Tomatoes') if ID is not specified.")] string? itemName = null,
         [Description("The unique ID of the shopping list item to update (if known).")] Guid? itemId = null,
@@ -143,7 +143,7 @@ public class ShoppingListTools
         };
     }
 
-    [Description("Deletes an item from the user's household shopping list.")]
+    [Description("Deletes an item from the user's household shopping list. The item is located by exact ID match if itemId is provided, or by exact then fuzzy name match using itemName.")]
     public async Task<object> DeleteShoppingListItemAsync(
         [Description("The name of the item to delete (if ID is not specified).")] string? itemName = null,
         [Description("The unique ID of the item to delete (if known).")] Guid? itemId = null,

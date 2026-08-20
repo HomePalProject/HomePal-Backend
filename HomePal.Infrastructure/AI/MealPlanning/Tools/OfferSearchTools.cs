@@ -15,7 +15,7 @@ public class OfferSearchTools
         _offerService = offerService;
     }
 
-    [Description("Searches active supermarket offers, catalog items, and grocery deals using semantic vector search. Useful for price comparison, checking supermarket discounts, and finding cheap ingredients.")]
+    [Description("Searches active supermarket offers, catalog items, and grocery deals using semantic vector search. Useful for price comparison, checking supermarket discounts, and finding cheap ingredients. IMPORTANT: Store the 'id' field from each returned offer and pass it as the 'offerId' parameter when calling AddShoppingListItemAsync — this links the discount to the shopping list item.")]
     public async Task<object> SearchOffersAsync(
         [Description("The search query describing the product, ingredient, or item (e.g. 'fresh whole milk', 'extra virgin olive oil', 'chicken breast', 'cheddar cheese').")] string query,
         [Description("The maximum number of offer results to return (1-10). Default is 5.")] int limit = 5,

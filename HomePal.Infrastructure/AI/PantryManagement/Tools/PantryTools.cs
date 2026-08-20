@@ -21,7 +21,7 @@ public class PantryTools
         _userContext = userContext;
     }
 
-    [Description("Gets the list of all food items currently in the user's household pantry with their names, quantities, measuring units, categories, and expiration dates.")]
+    [Description("Gets the list of all food items currently in the user's household pantry with their names, quantities, measuring units, categories, and expiration dates. Use expiration dates to prioritize soon-to-expire items first when planning meals or suggesting recipes.")]
     public async Task<object> GetPantryAsync(CancellationToken cancellationToken = default)
     {
         var userId = _userContext.GetCurrentUserId();
@@ -44,8 +44,8 @@ public class PantryTools
     public async Task<object> AddPantryItemAsync(
         [Description("The name of the pantry item to add (e.g. 'Milk', 'Flour', 'Eggs').")] string name,
         [Description("The quantity of the item (e.g. 2, 1.5). Default is 1.")] decimal quantity = 1,
-        [Description("The unique ID of the measuring unit.")] Guid unitId = default,
-        [Description("The unique ID of the product category.")] Guid categoryId = default,
+        [Description("The unique ID of the measuring unit. Retrieve from GetCategoriesAndUnitsAsync before calling this tool. Never guess or fabricate this GUID.")] Guid unitId = default,
+        [Description("The unique ID of the product category. Retrieve from GetCategoriesAndUnitsAsync before calling this tool. Never guess or fabricate this GUID.")] Guid categoryId = default,
         [Description("Optional expiration date for the item (e.g. '2026-08-30').")] DateTime? expireDate = null,
         CancellationToken cancellationToken = default)
     {
@@ -79,8 +79,8 @@ public class PantryTools
         [Description("The name of the item to update (e.g. 'Milk', 'Eggs') if ID is not specified.")] string? itemName = null,
         [Description("The unique ID of the pantry item to update (if known).")] Guid? itemId = null,
         [Description("The updated quantity for the item (e.g. 3, 1.5).")] decimal? quantity = null,
-        [Description("Updated measuring unit ID.")] Guid? unitId = null,
-        [Description("Updated product category ID.")] Guid? categoryId = null,
+        [Description("Updated measuring unit ID. Retrieve from GetCategoriesAndUnitsAsync if changing. Never guess or fabricate this GUID.")] Guid? unitId = null,
+        [Description("Updated product category ID. Retrieve from GetCategoriesAndUnitsAsync if changing. Never guess or fabricate this GUID.")] Guid? categoryId = null,
         [Description("The updated expiration date (e.g. '2026-08-25').")] DateTime? expireDate = null,
         [Description("The updated name for the item if renaming.")] string? newName = null,
         CancellationToken cancellationToken = default)
@@ -124,7 +124,7 @@ public class PantryTools
         };
     }
 
-    [Description("Deletes an item from the user's household pantry.")]
+    [Description("Deletes an item from the user's household pantry. The item is located by exact ID match if itemId is provided, or by exact then fuzzy name match if only itemName is provided.")]
     public async Task<object> DeletePantryItemAsync(
         [Description("The name of the item to delete (if ID is not specified).")] string? itemName = null,
         [Description("The unique ID of the item to delete (if known).")] Guid? itemId = null,

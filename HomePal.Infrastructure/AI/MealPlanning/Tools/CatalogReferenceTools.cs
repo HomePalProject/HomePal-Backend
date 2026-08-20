@@ -19,7 +19,7 @@ public class CatalogReferenceTools
         _unitService = unitService;
     }
 
-    [Description("Gets all available product categories and measuring units supported by the system with IDs, names, and symbols.")]
+    [Description("Gets all available product categories and measuring units supported by the system with their IDs, names, and symbols. IMPORTANT: Call this tool before any Add or Update operation that requires a unitId or categoryId — never guess, invent, or fabricate these IDs. An incorrect GUID will corrupt the database.")]
     public async Task<object> GetCategoriesAndUnitsAsync(CancellationToken cancellationToken = default)
     {
         var categoriesResult = await _categoryService.GetAllAsync(null, cancellationToken);

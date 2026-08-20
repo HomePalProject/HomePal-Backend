@@ -17,7 +17,7 @@ public class IngredientSearchTools
 
     [Description("Searches the ingredient knowledge base using semantic vector search for food ingredients, culinary properties, nutritional facts, and ingredient specifications.")]
     public async Task<object> SearchIngredientsAsync(
-        [Description("The ingredient search query (e.g. 'almond flour', 'olive oil', 'greek yogurt substitute', 'chia seeds').")] string query,
+        [Description("The ingredient search query (e.g. 'almond flour', 'olive oil', 'greek yogurt substitute', 'chia seeds'). If no results are returned, broaden the query or try a common alternative name for the ingredient.")] string query,
         [Description("The maximum number of ingredient results to return (1-10). Default is 5.")] int limit = 5,
         CancellationToken cancellationToken = default)
     {
