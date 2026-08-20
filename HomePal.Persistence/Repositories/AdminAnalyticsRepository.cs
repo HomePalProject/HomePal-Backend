@@ -174,7 +174,8 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
                 .Average();
 
             var intensity = Math.Round(Math.Clamp((double)hhCount / maxHhInCity, 0.0, 1.0), 2);
-            var hhDensity = hhCount >= 10 ? "High" : (hhCount >= 4 ? "Medium" : "Low");
+            var hhDensity = GetDensityLabel(hhCount);
+            var currency = GetCurrency();
 
             districts.Add(new DistrictDemographicDto
             {
@@ -182,7 +183,7 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
                 Name = city.Name.Get(),
                 Growth = $"{(growthPct >= 0 ? "+" : "")}{growthPct:0.#}%",
                 HhDensity = hhDensity,
-                AvgIncome = $"{avgCityBudget:N0} EGP",
+                AvgIncome = $"{avgCityBudget:N0} {currency}",
                 Pop = popCount.ToString("N0", CultureInfo.InvariantCulture),
                 Intensity = intensity,
                 Lat = city.Latitude,
@@ -207,12 +208,14 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
         var avgCurrentBudget = currentBudgets.Count > 0 ? currentBudgets.Average() : 0m;
         var avgLastBudget = lastBudgets.Count > 0 ? lastBudgets.Average() : 0m;
         var budgetChangePct = avgLastBudget > 0 ? ((avgCurrentBudget - avgLastBudget) / avgLastBudget) * 100 : 0;
+        var budgetCurrency = GetCurrency();
+        var isArabic = IsArabicCulture();
 
         var budgetMetric = new BudgetMetricDto
         {
-            Value = $"{avgCurrentBudget:N0} EGP",
+            Value = $"{avgCurrentBudget:N0} {budgetCurrency}",
             Change = $"{(budgetChangePct >= 0 ? "+" : "")}{budgetChangePct:0.#}%",
-            Region = "Citywide"
+            Region = isArabic ? "على مستوى المدينة" : "Citywide"
         };
 
         var allBudgets = await _context.HouseholdMonthlyBudgets
@@ -258,9 +261,9 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
 
         var householdSize = new List<HouseholdSizeDistributionDto>
         {
-            new() { Size = "1-2 Members", Value = totalHhCount > 0 ? Math.Round((double)size1To2 / totalHhCount * 100, 1) : 0 },
-            new() { Size = "3-4 Members", Value = totalHhCount > 0 ? Math.Round((double)size3To4 / totalHhCount * 100, 1) : 0 },
-            new() { Size = "5+ Members", Value = totalHhCount > 0 ? Math.Round((double)size5Plus / totalHhCount * 100, 1) : 0 }
+            new() { Size = GetHouseholdMembersBucket(1), Value = totalHhCount > 0 ? Math.Round((double)size1To2 / totalHhCount * 100, 1) : 0 },
+            new() { Size = GetHouseholdMembersBucket(2), Value = totalHhCount > 0 ? Math.Round((double)size3To4 / totalHhCount * 100, 1) : 0 },
+            new() { Size = GetHouseholdMembersBucket(3), Value = totalHhCount > 0 ? Math.Round((double)size5Plus / totalHhCount * 100, 1) : 0 }
         };
 
         // 5. Gender Split
@@ -270,8 +273,8 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
 
         var genderSplit = new List<GenderSplitDto>
         {
-            new() { Gender = "Female", Percentage = totalGender > 0 ? Math.Round((double)femaleCount / totalGender * 100, 1) : 0 },
-            new() { Gender = "Male", Percentage = totalGender > 0 ? Math.Round((double)maleCount / totalGender * 100, 1) : 0 }
+            new() { Gender = GetGenderLabel(Gender.Female), Percentage = totalGender > 0 ? Math.Round((double)femaleCount / totalGender * 100, 1) : 0 },
+            new() { Gender = GetGenderLabel(Gender.Male), Percentage = totalGender > 0 ? Math.Round((double)maleCount / totalGender * 100, 1) : 0 }
         };
 
         // 6. Age Split
@@ -302,7 +305,7 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
         {
             Districts = districts,
             Budget = budgetMetric,
-            AvgBudgetPerHousehold = $"{avgBudgetPerHh:N0} EGP",
+            AvgBudgetPerHousehold = $"{avgBudgetPerHh:N0} {budgetCurrency}",
             TopCategories = topCategories,
             HouseholdSize = householdSize,
             GenderSplit = genderSplit,
@@ -373,11 +376,14 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
             else size5Plus++;
         }
 
+        var hhCurrency = GetCurrency();
+        var momSuffix = IsArabicCulture() ? "شهرياً" : "MoM";
+
         var sizeDistribution = new List<HouseholdSizeCountDto>
         {
-            new() { Size = "1-2 People", Count = size1To2 },
-            new() { Size = "3-4 People", Count = size3To4 },
-            new() { Size = "5+ People", Count = size5Plus }
+            new() { Size = GetHouseholdPeopleBucket(1), Count = size1To2 },
+            new() { Size = GetHouseholdPeopleBucket(2), Count = size3To4 },
+            new() { Size = GetHouseholdPeopleBucket(3), Count = size5Plus }
         };
 
         return new HouseholdsSummaryDto
@@ -385,8 +391,8 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
             TotalHouseholds = totalHouseholds,
             ActiveHouseholds = activeHouseholds,
             AvgHouseholdSize = avgHouseholdSize,
-            AvgHouseholdIncome = $"{avgIncome:N0} EGP",
-            GrowthRate = $"{(growthPct >= 0 ? "+" : "")}{growthPct:0.#}% MoM",
+            AvgHouseholdIncome = $"{avgIncome:N0} {hhCurrency}",
+            GrowthRate = $"{(growthPct >= 0 ? "+" : "")}{growthPct:0.#}% {momSuffix}",
             TotalUsers = totalUsers,
             TopRegions = topRegions,
             SizeDistribution = sizeDistribution
@@ -562,8 +568,8 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
 
         var genderSplitUsers = new List<GenderSplitDto>
         {
-            new() { Gender = "Female", Percentage = totalUserGender > 0 ? Math.Round((double)femaleUsers / totalUserGender * 100, 1) : 0 },
-            new() { Gender = "Male", Percentage = totalUserGender > 0 ? Math.Round((double)maleUsers / totalUserGender * 100, 1) : 0 }
+            new() { Gender = GetGenderLabel(Gender.Female), Percentage = totalUserGender > 0 ? Math.Round((double)femaleUsers / totalUserGender * 100, 1) : 0 },
+            new() { Gender = GetGenderLabel(Gender.Male), Percentage = totalUserGender > 0 ? Math.Round((double)maleUsers / totalUserGender * 100, 1) : 0 }
         };
 
         // 4. Gender Split Householders
@@ -573,8 +579,8 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
 
         var genderSplitHouseholders = new List<GenderSplitDto>
         {
-            new() { Gender = "Female", Percentage = totalHhGender > 0 ? Math.Round((double)femaleHh / totalHhGender * 100, 1) : 0 },
-            new() { Gender = "Male", Percentage = totalHhGender > 0 ? Math.Round((double)maleHh / totalHhGender * 100, 1) : 0 }
+            new() { Gender = GetGenderLabel(Gender.Female), Percentage = totalHhGender > 0 ? Math.Round((double)femaleHh / totalHhGender * 100, 1) : 0 },
+            new() { Gender = GetGenderLabel(Gender.Male), Percentage = totalHhGender > 0 ? Math.Round((double)maleHh / totalHhGender * 100, 1) : 0 }
         };
 
         return new UserDemographicsDto
@@ -625,7 +631,7 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
 
             monthlyTrend.Add(new MonthlyRevenueTrendDto
             {
-                Month = targetMonth.ToString("MMM yyyy", CultureInfo.InvariantCulture),
+                Month = targetMonth.ToString("MMM yyyy", CultureInfo.CurrentUICulture),
                 Revenue = monthRev,
                 TransactionsCount = monthTxns
             });
@@ -635,7 +641,7 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
         {
             TotalRevenue = totalRevenue,
             MonthlyRevenue = monthlyRevenue,
-            Currency = "EGP",
+            Currency = GetCurrency(),
             ActiveSubscribers = activeSubscribers,
             TotalTransactions = totalTransactions,
             SuccessfulTransactions = successfulTransactions,
@@ -650,5 +656,51 @@ public class AdminAnalyticsRepository : IAdminAnalyticsRepository
         if (birthDate > today.AddYears(-age))
             age--;
         return Math.Max(age, 0);
+    }
+
+    private static bool IsArabicCulture()
+    {
+        var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+        return culture.Equals("ar", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string GetCurrency() => IsArabicCulture() ? "ج.م" : "EGP";
+
+    private static string GetDensityLabel(int hhCount)
+    {
+        var isArabic = IsArabicCulture();
+        if (hhCount >= 10) return isArabic ? "مرتفع" : "High";
+        if (hhCount >= 4) return isArabic ? "متوسط" : "Medium";
+        return isArabic ? "منخفض" : "Low";
+    }
+
+    private static string GetHouseholdMembersBucket(int bucket)
+    {
+        var isArabic = IsArabicCulture();
+        return bucket switch
+        {
+            1 => isArabic ? "1-2 أفراد" : "1-2 Members",
+            2 => isArabic ? "3-4 أفراد" : "3-4 Members",
+            _ => isArabic ? "5+ أفراد" : "5+ Members"
+        };
+    }
+
+    private static string GetHouseholdPeopleBucket(int bucket)
+    {
+        var isArabic = IsArabicCulture();
+        return bucket switch
+        {
+            1 => isArabic ? "1-2 أشخاص" : "1-2 People",
+            2 => isArabic ? "3-4 أشخاص" : "3-4 People",
+            _ => isArabic ? "5+ أشخاص" : "5+ People"
+        };
+    }
+
+    private static string GetGenderLabel(Gender gender)
+    {
+        var isArabic = IsArabicCulture();
+        return gender == Gender.Female
+            ? (isArabic ? "أنثى" : "Female")
+            : (isArabic ? "ذكر" : "Male");
     }
 }
