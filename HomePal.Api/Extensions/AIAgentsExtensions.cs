@@ -115,6 +115,7 @@ public static class AIAgentsExtensions
             var shoppingListTools = sp.GetRequiredService<ShoppingListTools>();
             var budgetTools = sp.GetRequiredService<BudgetTools>();
             var offerTools = sp.GetRequiredService<OfferSearchTools>();
+            var catalogTools = sp.GetRequiredService<CatalogReferenceTools>();
             var calcTools = sp.GetRequiredService<CalculatorTools>();
 
             return chatClient.AsAIAgent(new ChatClientAgentOptions
@@ -133,6 +134,7 @@ public static class AIAgentsExtensions
                         AIFunctionFactory.Create(shoppingListTools.DeleteShoppingListItemAsync),
                         AIFunctionFactory.Create(budgetTools.GetCurrentBudgetAsync),
                         AIFunctionFactory.Create(offerTools.SearchOffersAsync),
+                        AIFunctionFactory.Create(catalogTools.GetCategoriesAndUnitsAsync),
                         AIFunctionFactory.Create(calcTools.Calculate)
                     ]
                 }
@@ -147,7 +149,6 @@ public static class AIAgentsExtensions
         services.AddKeyedScoped<AIAgent>("Agent", (sp, key) =>
         {
             var chatClient = sp.GetRequiredService<IChatClient>();
-            var calcTools = sp.GetRequiredService<CalculatorTools>();
 
             var mealAndInventoryAgent = sp.GetRequiredKeyedService<AIAgent>("MealAndInventoryAgent");
             var nutritionAndHealthAgent = sp.GetRequiredKeyedService<AIAgent>("NutritionAndHealthAgent");
@@ -160,28 +161,36 @@ public static class AIAgentsExtensions
                 Description = "Primary entry point that routes user conversations to the appropriate specialist agent.",
                 ChatOptions = new ChatOptions
                 {
-                    Instructions = TriageAgentInstructions.SystemInstructions,
-                    Tools =
-                    [
-                        AIFunctionFactory.Create(calcTools.Calculate)
-                    ]
+                    Instructions = TriageAgentInstructions.SystemInstructions
                 }
             });
 
-            // Build Handoff Workflow
+            // Build Full Mesh Handoff Workflow
             var handoffBuilder = AgentWorkflowBuilder.CreateHandoffBuilderWith(triageAgent);
 
-            // Triage -> Specialists
+            // Explicit Full Mesh Handoff Configuration
+            // 1. TriageAgent -> All Specialists
             handoffBuilder.WithHandoffs(
                 triageAgent,
                 [mealAndInventoryAgent, nutritionAndHealthAgent, budgetAndShoppingAgent]);
 
-            // Specialists -> Triage
+            // 2. MealAndInventoryAgent -> Triage & Other Specialists
             handoffBuilder.WithHandoffs(
-                [mealAndInventoryAgent, nutritionAndHealthAgent, budgetAndShoppingAgent],
-                triageAgent);
+                mealAndInventoryAgent,
+                [triageAgent, nutritionAndHealthAgent, budgetAndShoppingAgent]);
 
-            var workflow = handoffBuilder.Build();
+            // 3. NutritionAndHealthAgent -> Triage & Other Specialists
+            handoffBuilder.WithHandoffs(
+                nutritionAndHealthAgent,
+                [triageAgent, mealAndInventoryAgent, budgetAndShoppingAgent]);
+
+            // 4. BudgetAndShoppingAgent -> Triage & Other Specialists
+            handoffBuilder.WithHandoffs(
+                budgetAndShoppingAgent,
+                [triageAgent, mealAndInventoryAgent, nutritionAndHealthAgent]);
+
+            var workflow = handoffBuilder
+                .Build();
 
             return workflow.AsAIAgent(
                 id: "homepal-handoff",
