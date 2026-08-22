@@ -193,15 +193,11 @@ public class SubscriptionService : ISubscriptionService
 
         var transactionObj = payload.Obj;
 
-        // Verify HMAC if provided
-        if (!string.IsNullOrWhiteSpace(payload.Hmac))
+        // Mandatory HMAC Signature Verification
+        if (string.IsNullOrWhiteSpace(payload.Hmac) || !_paymobService.VerifyHmac(transactionObj, payload.Hmac))
         {
-            var isHmacValid = _paymobService.VerifyHmac(transactionObj, payload.Hmac);
-            if (!isHmacValid)
-            {
-                _logger.LogWarning("Paymob HMAC signature mismatch for transaction ID {TxnId}", transactionObj.Id);
-                return Result.Fail(ErrorMessages.Subscriptions.HmacVerificationFailed, ResultStatus.Unauthorized);
-            }
+            _logger.LogWarning("Paymob HMAC signature verification failed or missing for transaction ID {TxnId}", transactionObj.Id);
+            return Result.Fail(ErrorMessages.Subscriptions.HmacVerificationFailed, ResultStatus.Unauthorized);
         }
 
         var paymobOrderId = transactionObj.Order?.Id.ToString();
