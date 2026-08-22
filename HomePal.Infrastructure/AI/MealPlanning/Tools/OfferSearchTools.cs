@@ -22,7 +22,7 @@ public class OfferSearchTools
         CancellationToken cancellationToken = default)
     {
         var clampedLimit = Math.Clamp(limit, 1, 10);
-        var result = await _offerService.SearchOffersAsync(query, clampedLimit, cancellationToken);
+        var result = await _offerService.SearchOffersAsync(query, clampedLimit, onlyActive: true, cancellationToken);
 
         if (!result.Success || result.Data == null)
         {

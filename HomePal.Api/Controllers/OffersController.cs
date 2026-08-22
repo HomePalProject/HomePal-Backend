@@ -1,6 +1,7 @@
 using HomePal.Application.Features.Catalog.DTOs;
 using HomePal.Application.Features.Catalog.Interfaces;
 using HomePal.Domain.Constants;
+using HomePal.Domain.Enums;
 using HomePal.Shared.Pagination;
 using HomePal.Shared.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -37,13 +38,21 @@ public class OffersController : BaseApiController
     [HttpGet("search")]
     [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.HouseholdMember},{Roles.Admin}")]
     [ProducesResponseType(typeof(ApiResponse<PaginatedList<OfferResponse>>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> SearchOffers([FromQuery] string? query, [FromQuery] Guid? categoryId, [FromQuery] Guid? supermarketId, CancellationToken cancellationToken)
+    public async Task<IActionResult> SearchOffers(
+        [FromQuery] string? query,
+        [FromQuery] Guid? categoryId,
+        [FromQuery] Guid? supermarketId,
+        [FromQuery] bool? isActiveNow,
+        [FromQuery] SortBy? sortBy,
+        CancellationToken cancellationToken)
     {
         var request = new OfferQueryRequest
         {
             Query = query,
             CategoryId = categoryId,
-            SupermarketId = supermarketId
+            SupermarketId = supermarketId,
+            IsActiveNow = isActiveNow,
+            SortBy = sortBy
         };
         var result = await _offerService.GetPagedAsync(request, cancellationToken);
         return HandleResult(result);
@@ -55,9 +64,13 @@ public class OffersController : BaseApiController
     [HttpGet("semantic-search")]
     [Authorize(Roles = $"{Roles.HouseholdManager},{Roles.HouseholdMember},{Roles.Admin}")]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<OfferResponse>>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> SemanticSearchOffers([FromQuery] string query, [FromQuery] int limit = 10, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> SemanticSearchOffers(
+        [FromQuery] string query,
+        [FromQuery] int limit = 10,
+        [FromQuery] bool onlyActive = true,
+        CancellationToken cancellationToken = default)
     {
-        var result = await _offerService.SearchOffersAsync(query, limit, cancellationToken);
+        var result = await _offerService.SearchOffersAsync(query, limit, onlyActive, cancellationToken);
         return HandleResult(result);
     }
 

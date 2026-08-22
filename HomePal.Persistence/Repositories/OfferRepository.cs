@@ -1,5 +1,6 @@
 using HomePal.Application.Features.Catalog.Interfaces;
 using HomePal.Domain.Entities;
+using HomePal.Domain.Enums;
 using HomePal.Persistence.Context;
 using HomePal.Shared.Pagination;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,9 @@ public class OfferRepository : Repository<Offer>, IOfferRepository
         string? query = null,
         Guid? categoryId = null,
         Guid? supermarketId = null,
+        bool? isActiveNow = null,
         bool onlyVerified = true,
+        SortBy? sortBy = null,
         CancellationToken cancellationToken = default)
     {
         var dbQuery = _dbSet.AsNoTracking()
@@ -38,6 +41,13 @@ public class OfferRepository : Repository<Offer>, IOfferRepository
         if (onlyVerified)
         {
             dbQuery = dbQuery.Where(o => o.IsVerified);
+        }
+
+        if (isActiveNow == true)
+        {
+            var now = DateTime.UtcNow;
+            dbQuery = dbQuery.Where(o => (o.ValidFrom == null || o.ValidFrom <= now) &&
+                                        (o.ValidTo == null || o.ValidTo >= now));
         }
 
         if (categoryId.HasValue)
@@ -59,8 +69,17 @@ public class OfferRepository : Repository<Offer>, IOfferRepository
 
         var count = await dbQuery.CountAsync(cancellationToken);
 
+        dbQuery = sortBy switch
+        {
+            SortBy.Oldest => dbQuery.OrderBy(o => o.CreatedAt),
+            SortBy.PriceAscending => dbQuery.OrderBy(o => o.DiscountedPrice),
+            SortBy.PriceDescending => dbQuery.OrderByDescending(o => o.DiscountedPrice),
+            SortBy.NameAscending => dbQuery.OrderBy(o => o.Name.Select(x => x.Value).FirstOrDefault()),
+            SortBy.NameDescending => dbQuery.OrderByDescending(o => o.Name.Select(x => x.Value).FirstOrDefault()),
+            SortBy.Newest or _ => dbQuery.OrderByDescending(o => o.CreatedAt)
+        };
+
         var items = await dbQuery
-            .OrderByDescending(o => o.CreatedAt)
             .Skip((paginationRequest.PageNumber - 1) * paginationRequest.PageSize)
             .Take(paginationRequest.PageSize)
             .ToListAsync(cancellationToken);
@@ -71,6 +90,7 @@ public class OfferRepository : Repository<Offer>, IOfferRepository
     public async Task<List<Offer>> SearchSemanticAsync(
         Microsoft.Data.SqlTypes.SqlVector<float>? queryEmbedding,
         int take = 10,
+        bool onlyActive = true,
         CancellationToken cancellationToken = default)
     {
         if (queryEmbedding == null)
@@ -81,11 +101,20 @@ public class OfferRepository : Repository<Offer>, IOfferRepository
         take = Math.Clamp(take, 1, 50);
         var nonNullEmbedding = queryEmbedding.Value;
 
-        return await _dbSet.AsNoTracking()
+        var dbQuery = _dbSet.AsNoTracking()
             .Include(o => o.Supermarket)
             .Include(o => o.Category)
             .Include(o => o.Unit)
-            .Where(o => o.IsVerified && o.Embedding != null)
+            .Where(o => o.IsVerified && o.Embedding != null);
+
+        if (onlyActive)
+        {
+            var now = DateTime.UtcNow;
+            dbQuery = dbQuery.Where(o => (o.ValidFrom == null || o.ValidFrom <= now) &&
+                                        (o.ValidTo == null || o.ValidTo >= now));
+        }
+
+        return await dbQuery
             .OrderBy(o => EF.Functions.VectorDistance<float>("cosine", o.Embedding!.Value, nonNullEmbedding))
             .Take(take)
             .ToListAsync(cancellationToken);

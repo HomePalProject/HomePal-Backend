@@ -31,7 +31,9 @@ public class OfferService : IOfferService
             request.Query,
             request.CategoryId,
             request.SupermarketId,
+            request.IsActiveNow,
             request.OnlyVerified,
+            request.SortBy,
             cancellationToken);
 
         var dtos = pagedOffers.Items.Select(o => o.ToResponse()).ToList();
@@ -216,7 +218,7 @@ public class OfferService : IOfferService
         return Result.Ok(SuccessMessages.Catalog.DeleteOffer);
     }
 
-    public async Task<Result<IReadOnlyList<OfferResponse>>> SearchOffersAsync(string query, int limit = 10, CancellationToken cancellationToken = default)
+    public async Task<Result<IReadOnlyList<OfferResponse>>> SearchOffersAsync(string query, int limit = 10, bool onlyActive = true, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(query))
         {
@@ -229,6 +231,7 @@ public class OfferService : IOfferService
         var offers = await _unitOfWork.Offers.SearchSemanticAsync(
             queryEmbedding,
             take: clampedLimit,
+            onlyActive: onlyActive,
             cancellationToken: cancellationToken);
 
         var dtos = offers.Select(o => o.ToResponse()).ToList();

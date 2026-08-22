@@ -1,3 +1,4 @@
+using HomePal.Domain.Enums;
 using HomePal.Shared.Pagination;
 
 namespace HomePal.Application.Features.Catalog.DTOs;
@@ -9,4 +10,5 @@ public class OfferQueryRequest : PaginationRequest
     public Guid? SupermarketId { get; set; }
     public bool? IsActiveNow { get; set; }
     public bool OnlyVerified { get; set; } = true;
+    public SortBy? SortBy { get; set; }
 }
