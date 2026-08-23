@@ -306,7 +306,17 @@
   <data name="Subscriptions.InitiatePaymentSuccess" xml:space="preserve"><value>تم بدء عملية الدفع بنجاح.</value></data>
   <data name="Subscriptions.GetPaymentHistorySuccess" xml:space="preserve"><value>تم استرداد سجل المدفوعات بنجاح.</value></data>
   <data name="Subscriptions.WebhookProcessedSuccess" xml:space="preserve"><value>تمت معالجة إشعار الدفع بنجاح.</value></data>
+
+  <!-- Notifications -->
+  <data name="Notification.GetNotificationsSuccess" xml:space="preserve"><value>تم استرداد الإشعارات بنجاح.</value></data>
+  <data name="Notification.GetUnreadCountSuccess" xml:space="preserve"><value>تم استرداد عدد الإشعارات غير المقروءة بنجاح.</value></data>
+  <data name="Notification.MarkAsReadSuccess" xml:space="preserve"><value>تم تعيين الإشعار كمقروء بنجاح.</value></data>
+  <data name="Notification.MarkAllAsReadSuccess" xml:space="preserve"><value>تم تعيين جميع الإشعارات كمقروءة بنجاح.</value></data>
+  <data name="Notification.DeleteNotificationSuccess" xml:space="preserve"><value>تم حذف الإشعار بنجاح.</value></data>
+  <data name="Notification.NotificationNotFound" xml:space="preserve"><value>الإشعار غير موجود.</value></data>
+  <data name="Notification.UserNotFound" xml:space="preserve"><value>المستخدم غير موجود.</value></data>
 </root>
+
 
 
 

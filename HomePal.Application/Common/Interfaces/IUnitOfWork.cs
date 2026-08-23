@@ -5,6 +5,7 @@ using HomePal.Application.Features.Catalog.Interfaces;
 using HomePal.Application.Features.HouseholdManagement.Interfaces;
 using HomePal.Application.Features.Locations.Interfaces;
 using HomePal.Application.Features.MealPlanning.Interfaces;
+using HomePal.Application.Features.Notifications.Interfaces;
 using HomePal.Application.Features.PantryManagement.Interfaces;
 using HomePal.Application.Features.Reports.Interfaces;
 using HomePal.Application.Features.ShoppingList.Interfaces;
@@ -40,6 +41,8 @@ public interface IUnitOfWork : IDisposable
     ISubscriptionPlanRepository SubscriptionPlans { get; }
     IUserSubscriptionRepository UserSubscriptions { get; }
     IPaymentTransactionRepository PaymentTransactions { get; }
+    INotificationRepository Notifications { get; }
+
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     Task BeginTransactionAsync(CancellationToken cancellationToken = default);

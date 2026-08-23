@@ -306,7 +306,17 @@
   <data name="Subscriptions.InitiatePaymentSuccess" xml:space="preserve"><value>Payment initiated successfully.</value></data>
   <data name="Subscriptions.GetPaymentHistorySuccess" xml:space="preserve"><value>Payment history retrieved successfully.</value></data>
   <data name="Subscriptions.WebhookProcessedSuccess" xml:space="preserve"><value>Payment webhook processed successfully.</value></data>
+
+  <!-- Notifications -->
+  <data name="Notification.GetNotificationsSuccess" xml:space="preserve"><value>Notifications retrieved successfully.</value></data>
+  <data name="Notification.GetUnreadCountSuccess" xml:space="preserve"><value>Unread count retrieved successfully.</value></data>
+  <data name="Notification.MarkAsReadSuccess" xml:space="preserve"><value>Notification marked as read successfully.</value></data>
+  <data name="Notification.MarkAllAsReadSuccess" xml:space="preserve"><value>All notifications marked as read successfully.</value></data>
+  <data name="Notification.DeleteNotificationSuccess" xml:space="preserve"><value>Notification deleted successfully.</value></data>
+  <data name="Notification.NotificationNotFound" xml:space="preserve"><value>Notification not found.</value></data>
+  <data name="Notification.UserNotFound" xml:space="preserve"><value>User not found.</value></data>
 </root>
+
 
 
 

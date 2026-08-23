@@ -6,6 +6,7 @@ using HomePal.Application.Features.Catalog.Interfaces;
 using HomePal.Application.Features.HouseholdManagement.Interfaces;
 using HomePal.Application.Features.Locations.Interfaces;
 using HomePal.Application.Features.MealPlanning.Interfaces;
+using HomePal.Application.Features.Notifications.Interfaces;
 using HomePal.Application.Features.PantryManagement.Interfaces;
 using HomePal.Application.Features.Reports.Interfaces;
 using HomePal.Application.Features.ShoppingList.Interfaces;
@@ -47,6 +48,7 @@ public class UnitOfWork : IUnitOfWork
     private ISubscriptionPlanRepository? _subscriptionPlans;
     private IUserSubscriptionRepository? _userSubscriptions;
     private IPaymentTransactionRepository? _paymentTransactions;
+    private INotificationRepository? _notifications;
 
     public UnitOfWork(ApplicationDbContext context)
     {
@@ -79,6 +81,8 @@ public class UnitOfWork : IUnitOfWork
     public ISubscriptionPlanRepository SubscriptionPlans => _subscriptionPlans ??= new SubscriptionPlanRepository(_context);
     public IUserSubscriptionRepository UserSubscriptions => _userSubscriptions ??= new UserSubscriptionRepository(_context);
     public IPaymentTransactionRepository PaymentTransactions => _paymentTransactions ??= new PaymentTransactionRepository(_context);
+    public INotificationRepository Notifications => _notifications ??= new NotificationRepository(_context);
+
 
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

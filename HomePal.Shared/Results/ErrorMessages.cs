@@ -143,6 +143,13 @@ public static class ErrorMessages
         public const string OrderIdMissing = "Subscriptions.OrderIdMissing";
         public const string ActiveSubscriptionRequired = "Subscriptions.ActiveSubscriptionRequired";
     }
+
+    public static class Notification
+    {
+        public const string NotificationNotFound = "Notification.NotificationNotFound";
+        public const string UserNotFound = "Notification.UserNotFound";
+    }
 }
+
 
 

@@ -77,6 +77,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.Subscriptions.Interfaces.ISubscriptionPlanRepository, SubscriptionPlanRepository>();
         services.AddScoped<HomePal.Application.Features.Subscriptions.Interfaces.IUserSubscriptionRepository, UserSubscriptionRepository>();
         services.AddScoped<HomePal.Application.Features.Subscriptions.Interfaces.IPaymentTransactionRepository, PaymentTransactionRepository>();
+        services.AddScoped<HomePal.Application.Features.Notifications.Interfaces.INotificationRepository, NotificationRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<ITokenProvider, TokenProvider>();
@@ -85,6 +86,9 @@ public static class ApplicationServicesExtensions
         services.AddScoped<IFileStorageService, HomePal.Infrastructure.Storage.FileStorageService>();
         services.AddHttpClient<HomePal.Application.Features.Reports.Interfaces.ILangfuseMetricsService, HomePal.Infrastructure.AI.Services.LangfuseMetricsService>();
         services.AddHttpClient<HomePal.Application.Features.Subscriptions.Interfaces.IPaymobService, HomePal.Infrastructure.Payment.PaymobService>();
+
+        services.AddSignalR();
+        services.AddScoped<HomePal.Application.Features.Notifications.Interfaces.INotificationHubService, HomePal.Infrastructure.Notifications.NotificationHubService>();
 
         services.AddLocalization();
         services.Configure<RequestLocalizationOptions>(options =>
@@ -115,6 +119,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<HomePal.Application.Features.Reports.Interfaces.IAdminAnalyticsService, HomePal.Application.Features.Reports.Services.AdminAnalyticsService>();
         services.AddScoped<HomePal.Application.Features.Locations.Interfaces.ILocationService, HomePal.Application.Features.Locations.Services.LocationService>();
         services.AddScoped<HomePal.Application.Features.Subscriptions.Interfaces.ISubscriptionService, HomePal.Application.Features.Subscriptions.Services.SubscriptionService>();
+        services.AddScoped<HomePal.Application.Features.Notifications.Interfaces.INotificationService, HomePal.Application.Features.Notifications.Services.NotificationService>();
 
         services.AddControllers()
             .AddDataAnnotationsLocalization(options =>
@@ -135,11 +140,13 @@ public static class ApplicationServicesExtensions
         {
             options.AddPolicy("AllowAll", policy =>
             {
-                policy.AllowAnyOrigin()
+                policy.SetIsOriginAllowed(_ => true)
                       .AllowAnyHeader()
-                      .AllowAnyMethod();
+                      .AllowAnyMethod()
+                      .AllowCredentials();
             });
         });
+
 
         return services;
     }

@@ -1,5 +1,6 @@
 using HomePal.Api.Extensions;
 using HomePal.Api.Middleware;
+using HomePal.Infrastructure.Notifications;
 using HomePal.Persistence.Seeding;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -43,7 +44,9 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
+        app.MapHub<NotificationHub>("/hubs/notifications");
 
         await app.RunAsync();
     }
 }
+

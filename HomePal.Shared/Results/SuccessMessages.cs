@@ -158,5 +158,15 @@ public static class SuccessMessages
         public const string GetPaymentHistory = "Subscriptions.GetPaymentHistorySuccess";
         public const string WebhookProcessed = "Subscriptions.WebhookProcessedSuccess";
     }
+
+    public static class Notification
+    {
+        public const string GetNotifications = "Notification.GetNotificationsSuccess";
+        public const string GetUnreadCount = "Notification.GetUnreadCountSuccess";
+        public const string MarkAsRead = "Notification.MarkAsReadSuccess";
+        public const string MarkAllAsRead = "Notification.MarkAllAsReadSuccess";
+        public const string DeleteNotification = "Notification.DeleteNotificationSuccess";
+    }
 }
+
 
