@@ -1,16 +1,18 @@
 using HomePal.Api.Attributes;
 using HomePal.Application.Features.AgentChat.DTOs;
 using HomePal.Application.Features.AgentChat.Interfaces;
+using HomePal.Domain.Constants;
 using HomePal.Shared.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HomePal.Api.Controllers;
 
-[Authorize]
+[Authorize(Roles = $"{Roles.HouseholdManager},{Roles.HouseholdMember}")]
 [RequireActiveSubscription]
 [Route("api/agent-chat")]
 public class AgentChatController : BaseApiController
+
 {
     private readonly IAgentChatService _agentChatService;
 

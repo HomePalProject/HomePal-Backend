@@ -37,12 +37,13 @@ You output **ONLY valid JSON**. No preamble, no commentary, no markdown formatti
 </uncertainty_handling>
 """;
 
-    public static string BuildPrompt(string categoriesFormatted, string unitsFormatted, string culture)
+    public static string BuildPrompt(string categoriesFormatted, string unitsFormatted, DateTime currentDate, string culture)
     {
         return $$"""
             Analyze the provided image of a supermarket promotional flyer, advertisement, or social media post.
 
             Target Language/Culture: {{culture}}
+            Today's Reference Date: {{currentDate:yyyy-MM-dd}}
 
             Available Product Categories in Database:
             {{categoriesFormatted}}
@@ -54,9 +55,10 @@ You output **ONLY valid JSON**. No preamble, no commentary, no markdown formatti
             Include items a person buys to cook or prepare food and beverages at home (meat, poultry, seafood, dairy, produce, grains, bakery, canned goods, spices, oils, condiments).
             Skip all non-food items silently (cleaning supplies, electronics, cookware, clothing, cosmetics).
 
-            DATE FORMAT NOTE:
-            Egyptian flyers commonly use DD/MM/YYYY format. Always convert to ISO yyyy-MM-dd format in your output.
-            Example: 01/08/2026 → "2026-08-01", 15/08/2026 → "2026-08-15".
+            DATE FORMAT & INFERENCE RULES:
+            - Today's Reference Date is {{currentDate:yyyy-MM-dd}}. Use this to infer missing year or relative dates when not explicitly printed on the flyer (e.g. if the flyer says "1 to 15 August", use the current year from the reference date).
+            - Egyptian flyers commonly use DD/MM/YYYY format. Always convert to ISO yyyy-MM-dd format in your output.
+            - Example: 01/08/2026 → "2026-08-01", 15/08/2026 → "2026-08-15".
 
             PRICE RULES:
             - Use `null` (not `0`) for any price that is not shown. `0` means the item is free.

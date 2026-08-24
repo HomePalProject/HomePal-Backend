@@ -174,7 +174,7 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
         var categoriesFormatted = string.Join("\n", categories.Select(c => $"- ID: {c.Id}, Name: {c.Name.Get(culture)}"));
         var unitsFormatted = string.Join("\n", units.Select(u => $"- ID: {u.Id}, Name: {u.Name.Get(culture)}"));
 
-        var promptText = ProductScraperInstructions.BuildPrompt(categoriesFormatted, unitsFormatted, culture);
+        var promptText = ProductScraperInstructions.BuildPrompt(categoriesFormatted, unitsFormatted, DateTime.UtcNow, culture);
         if (!string.IsNullOrWhiteSpace(caption) || !string.IsNullOrWhiteSpace(ocrText))
         {
             promptText += $"\n\nContext - Caption: {caption}\nContext - Image OCR Text: {ocrText}";
