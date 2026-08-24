@@ -18,11 +18,9 @@ You output **ONLY valid JSON**. No preamble, no commentary, no markdown formatti
 <output_contract>
 - Return exactly the JSON schema provided in the user prompt — no extra fields, no missing fields.
 - Use `null` (not `0`) for any price or date field that is not shown in the image. (`0` means the item is free; `null` means the value was not shown.)
-- Use `null` for `boundingBox` if the product's location within the image cannot be determined.
 - Extract **only food and cooking ingredients** (meat, poultry, seafood, dairy, produce, grains, bakery, canned goods, spices, oils, condiments, beverages). Skip all non-food items silently (cleaning supplies, electronics, cookware, clothing, cosmetics).
 - Use only `unitName` and `categoryName` values that closely match the provided reference lists. Use `null` if no match exists — do not invent new names.
 - Never fabricate prices, dates, product names, or descriptions.
-- All `boundingBox` values (`x`, `y`, `width`, `height`) must be fractions strictly between 0.0 and 1.0.
 </output_contract>
 
 ---
@@ -32,7 +30,6 @@ You output **ONLY valid JSON**. No preamble, no commentary, no markdown formatti
 - If a price is visible but the currency symbol is ambiguous: record the numeric value only in the appropriate price field.
 - If `originalPrice` and `discountedPrice` are both shown but are identical: record both and do not infer a discount.
 - If only one price is shown with no indication of whether it is original or discounted: record it in `discountedPrice` and set `originalPrice` to `null`.
-- If a product's location in the image cannot be determined (e.g., the image is a text receipt rather than a visual flyer): set `"boundingBox": null`.
 - If a post caption or OCR text is provided alongside the image: use it as supplementary context to refine product names, prices, or descriptions that are truncated or unclear in the image.
 </uncertainty_handling>
 """;
@@ -79,12 +76,6 @@ You output **ONLY valid JSON**. No preamble, no commentary, no markdown formatti
             - DiscountedPrice: The offer / current price (numeric only); null if not shown.
             - ValidFrom: Offer start date in yyyy-MM-dd format; null if not specified.
             - ValidTo: Offer expiration date in yyyy-MM-dd format; null if not specified.
-            - BoundingBox: Location of this product's price/label area within the image as fractions strictly between 0.0 and 1.0:
-              - X: left edge fraction
-              - Y: top edge fraction
-              - Width: box width fraction
-              - Height: box height fraction
-              Set to null if the product's position in the image cannot be determined.
 
             OUTPUT FORMAT:
             Output ONLY a valid JSON object matching this schema exactly — no preamble, no commentary, no markdown:
@@ -101,13 +92,7 @@ You output **ONLY valid JSON**. No preamble, no commentary, no markdown formatti
                   "originalPrice": 100.0,
                   "discountedPrice": 75.0,
                   "validFrom": "2026-08-01",
-                  "validTo": "2026-08-15",
-                  "boundingBox": {
-                    "x": 0.1,
-                    "y": 0.2,
-                    "width": 0.3,
-                    "height": 0.4
-                  }
+                  "validTo": "2026-08-15"
                 }
               ]
             }

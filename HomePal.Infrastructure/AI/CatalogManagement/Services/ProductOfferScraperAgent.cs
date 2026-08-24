@@ -192,33 +192,39 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
         if (rawResult?.Products == null || rawResult.Products.Count == 0)
             return;
 
+        // 1. Save flyer image once for all extracted offers
+        string? flyerImagePath = null;
+        if (imageBytes != null && imageBytes.Length > 0)
+        {
+            var extension = contentType?.ToLowerInvariant() switch
+            {
+                "image/png" => ".png",
+                "image/webp" => ".webp",
+                _ => ".jpg"
+            };
+
+            using var flyerStream = new MemoryStream(imageBytes);
+            var formFile = new FormFile(flyerStream, 0, imageBytes.Length, "file", $"{Guid.NewGuid():N}{extension}")
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = !string.IsNullOrWhiteSpace(contentType) ? contentType : "image/jpeg"
+            };
+            try
+            {
+                flyerImagePath = await fileStorageService.SaveFileAsync(formFile, "offers", cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Failed to save flyer image.");
+            }
+        }
+
         foreach (var productRaw in rawResult.Products)
         {
             if (string.IsNullOrWhiteSpace(productRaw.Name))
                 continue;
 
             resultDto.TotalExtractedOffers++;
-
-            // 1. Crop image or fallback to full promotional image if box is unmapped/null
-            string? croppedImagePath = null;
-            var targetImageBytes = ImageCropperService.CropRegion(imageBytes, productRaw.BoundingBox) ?? imageBytes;
-            if (targetImageBytes != null && targetImageBytes.Length > 0)
-            {
-                using var cropStream = new MemoryStream(targetImageBytes);
-                var formFile = new FormFile(cropStream, 0, targetImageBytes.Length, "file", $"{Guid.NewGuid()}.jpg")
-                {
-                    Headers = new HeaderDictionary(),
-                    ContentType = "image/jpeg"
-                };
-                try
-                {
-                    croppedImagePath = await fileStorageService.SaveFileAsync(formFile, "products", cancellationToken);
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError(ex, "Failed to save product offer image.");
-                }
-            }
 
             // 2. Localized Name & Description
             var localizedNames = new List<LocalizedItem>
@@ -254,7 +260,7 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
             DateTime? validFromDate = ParseEgyptDateToUtc(productRaw.ValidFrom, isEndDate: false);
             DateTime? validToDate = ParseEgyptDateToUtc(productRaw.ValidTo, isEndDate: true);
 
-            // 5. Create Standalone Offer
+            // 5. Create Standalone Offer with the flyer image
             var newOffer = new Offer
             {
                 Id = Guid.NewGuid(),
@@ -267,7 +273,7 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
                 ValidFrom = validFromDate,
                 ValidTo = validToDate,
                 CategoryId = categoryId,
-                ImagePath = croppedImagePath,
+                ImagePath = flyerImagePath,
                 SourceUrl = sourceUrl,
                 SupermarketId = supermarketId,
                 Embedding = sqlVector,
@@ -300,7 +306,6 @@ public class ProductOfferScraperAgent : IProductOfferScraperService
         public decimal? DiscountedPrice { get; set; }
         public string? ValidFrom { get; set; }
         public string? ValidTo { get; set; }
-        public BoundingBoxDto? BoundingBox { get; set; }
     }
 
     private static DateTime? ParseEgyptDateToUtc(string? dateStr, bool isEndDate = false)
